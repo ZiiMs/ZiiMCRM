@@ -10,11 +10,11 @@ import {
   ModalHeader,
 } from '@chakra-ui/react';
 import { useContext } from 'react';
-import settingsToggle from 'src/context/settingsContext';
+import settingsToggle from '@/context/settingsContext';
 
 const SettingsModal = () => {
   const { showSettings, toggleSettings } = useContext(settingsToggle);
-  
+
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('Saving settings');

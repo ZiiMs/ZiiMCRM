@@ -23,7 +23,7 @@ const settingsToggle = createContext<ISettingsContext>(defaultState);
 export const SettingsToggleProvider = (props: any) => {
   const [showSettings, setShow] = useState(defaultState.showSettings);
   const togSettings = () => {
-    console.log('ToggleSetings', !showSettings);
+    console.log('ToggleSettings', !showSettings);
     setShow(!showSettings);
   };
   return (

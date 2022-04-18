@@ -17,7 +17,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useContext, useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaDiscord, FaFacebookSquare, FaGithub } from 'react-icons/fa';
-import loginToggle from 'src/context/loginContext';
+import loginToggle from '@/context/loginContext';
 
 const LoginModal = () => {
   const [error, setError] = useState<String | null>(null);
@@ -61,7 +61,7 @@ const LoginModal = () => {
       isOpen={showLogin}
       onClose={toggleLogin}
     >
-      <ModalOverlay bg={'blackAlpha.700'}/>
+      <ModalOverlay bg={'blackAlpha.700'} />
       <ModalContent>
         <ModalHeader>Login</ModalHeader>
         <ModalBody w={'fit-content'}>
@@ -113,12 +113,12 @@ const LoginModal = () => {
                 width={'100%'}
                 backgroundColor='#4266B3'
                 onClick={(e) => handleLogin(e, 'facebook')}
-                color='gray.100'
+                color='white'
                 variant='outline'
                 leftIcon={<FaFacebookSquare />}
                 _hover={{ bg: '#4376B3' }}
                 _active={{
-                  bg: 'gray.100',
+                  bg: '#4376B3',
                   transform: 'scale(0.95)',
                 }}
               >
@@ -128,12 +128,12 @@ const LoginModal = () => {
                 width={'100%'}
                 backgroundColor='#7288DB'
                 onClick={(e) => handleLogin(e, 'discord')}
-                color='gray.100'
+                color='white'
                 variant='outline'
                 leftIcon={<FaDiscord />}
                 _hover={{ bg: '#7398DB' }}
                 _active={{
-                  bg: 'gray.100',
+                  bg: '#7398DB',
                   transform: 'scale(0.95)',
                 }}
               >

@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { BiMenuAltLeft } from 'react-icons/bi';
 import { CgProfile, CgTimer } from 'react-icons/cg';
 import { RiHome2Line, RiSettings3Line } from 'react-icons/ri';
-import settingsToggle from 'src/context/settingsContext';
+import settingsToggle from '@/context/settingsContext';
 import BrandIcon from '../icon';
 import BrandIconButton from '../iconButton';
 

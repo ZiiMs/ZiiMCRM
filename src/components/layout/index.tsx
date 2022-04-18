@@ -1,8 +1,8 @@
-import { Box, Container, HStack, VStack } from '@chakra-ui/react';
+import { Box, Container, Flex, HStack, VStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useContext, useEffect } from 'react';
-import loginToggle from 'src/context/loginContext';
+import loginToggle from '@/context/loginContext';
 import LoginModal from '../login';
 import SettingsModal from '../settings';
 import Navbar from './navbar';
@@ -37,11 +37,9 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     >
       <SettingsModal />
       <LoginModal />
-      <HStack flex={1}>
+      <HStack key={'layoutstack'} m={0} p={0} flex={1}>
         <Navbar />
-        <Box h={'full'} w={'full'} flex={1}>
           {children}
-        </Box>
       </HStack>
     </Container>
   );
