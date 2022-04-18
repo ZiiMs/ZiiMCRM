@@ -1,7 +1,4 @@
-import {
-  Heading,
-  HStack, VStack
-} from '@chakra-ui/react';
+import { Flex, Heading, HStack, VStack } from '@chakra-ui/react';
 
 import Board from '@/components/board';
 import Card from '@/components/card';
@@ -39,9 +36,7 @@ const Home: NextPage = () => {
           <Board Title={'Title5'}></Board>
         </HStack>
       </VStack>
-      {drawer ? (
-        <Drawer />
-      ) : null}
+      {drawer ? <Drawer /> : null}
     </HStack>
   );
 };
