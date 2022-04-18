@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   Flex,
+  Heading,
   HStack,
   Icon,
   IconButton,
@@ -34,35 +35,40 @@ const Drawer = () => {
     <Flex h={'100vh'} backgroundColor={'brand.300'}>
       <VStack spacing={2.5} w='full'>
         <VStack spacing={2} w='full'>
-          <HStack
-            spacing={1}
-            w='full'
-            p={2}
+          <VStack
             justifyContent={'flex-start'}
-            alignItems={'center'}
+            alignItems={'flex-start'}
+            p={2}
+            w='full'
           >
-            <Button
-              variant={'unstyled'}
-              size={'xs'}
-              m={0}
-              p={0}
-              w={'16px'}
-              h={'16px'}
-              as={favorite ? AiFillStar : AiOutlineStar}
-              color={favorite ? 'yellow.500' : 'whiteAlpha.600'}
-              onClick={() => setFavorite(!favorite)}
-            />
+            <HStack spacing={1} w='full'>
+              <Button
+                variant={'unstyled'}
+                size={'2xs'}
+                m={0}
+                p={0}
+                w={'16px'}
+                h={'16px'}
+                as={favorite ? AiFillStar : AiOutlineStar}
+                color={favorite ? 'yellow.500' : 'whiteAlpha.600'}
+                onClick={() => setFavorite(!favorite)}
+              />
 
-            <Text color={'whiteAlpha.600'}>#0123456</Text>
-          </HStack>
+              <Text color={'whiteAlpha.600'}>#0123456</Text>
+            </HStack>
+            <Heading size={'md'} textColor={'gray.200'}>
+              Example Ticket Title
+            </Heading>
+          </VStack>
           <Divider borderColor={'brand.500'} p={0} m={0} w={'full'} />
           <VStack
             w={'full'}
+            p={'10px'}
             spacing={3}
             justify={'flex-start'}
             align={'flex-start'}
           >
-            <SimpleGrid columns={2} p={'10px'} w={'100%'}>
+            <SimpleGrid columns={2} w={'100%'}>
               <Text fontSize={'md'} color={'whiteAlpha.600'}>
                 Created:
               </Text>
@@ -158,18 +164,18 @@ const Drawer = () => {
                 </ListItem>
               </List>
             </SimpleGrid>
-            <Flex>
+            <Box w={'100%'}>
               <Text fontSize={'md'} color={'whiteAlpha.600'}>
                 Description:
               </Text>
-              <Text color={'gray.200'}>
+              <Text color={'gray.200'} noOfLines={4} maxWidth={'fit-content'}>
                 Reprehenderit eu commodo est non. Culpa aliquip ex veniam do.
                 Labore nostrud adipisicing id sit do aliquip occaecat sint et
                 magna velit eiusmod. Cupidatat cillum cupidatat eiusmod
                 pariatur. Eu non dolor aliqua cupidatat excepteur pariatur.
                 Lorem ut elit proident laboris labore ad.
               </Text>
-            </Flex>
+            </Box>
           </VStack>
         </VStack>
       </VStack>

@@ -27,6 +27,13 @@ const theme = extendTheme({
         }
       }
     },
+    Menu: {
+      baseStyle: {
+        list: {
+          bg: 'brand.400',
+        }
+      }
+    },
   },
   styles: {
     global: {
