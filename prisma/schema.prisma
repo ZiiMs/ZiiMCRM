@@ -6,8 +6,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+  CLIENT
 }
 
 model Account {
@@ -16,12 +22,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -42,7 +48,9 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  image         String?   @db.Text
+  image         String?
+  gender        String?
+  role          Role      @default(CLIENT)
   accounts      Account[]
   sessions      Session[]
 }

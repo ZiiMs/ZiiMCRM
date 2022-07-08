@@ -1,22 +1,24 @@
-import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
-import { SessionProvider, useSession } from 'next-auth/react';
-import theme from 'src/theme';
-import { SettingsToggleProvider } from '@/context/settingsContext';
 import Layout from '@/components/layout';
 import { LoginToggleProvider } from '@/context/loginContext';
-import { useRouter } from 'next/router';
+import { RegisterToggleProvider } from '@/context/registerContext';
+import { SettingsToggleProvider } from '@/context/settingsContext';
+import { ChakraProvider } from '@chakra-ui/react';
+import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
+import theme from 'src/theme';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider>
       <ChakraProvider theme={theme}>
         <LoginToggleProvider>
-          <SettingsToggleProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </SettingsToggleProvider>
+          <RegisterToggleProvider>
+            <SettingsToggleProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </SettingsToggleProvider>
+          </RegisterToggleProvider>
         </LoginToggleProvider>
       </ChakraProvider>
     </SessionProvider>

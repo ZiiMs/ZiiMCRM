@@ -14,7 +14,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { signIn, useSession } from 'next-auth/react';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaDiscord, FaFacebookSquare, FaGithub } from 'react-icons/fa';
 import loginToggle from '@/context/loginContext';
@@ -80,7 +80,9 @@ const LoginModal = () => {
               <Button
                 width={'100%'}
                 backgroundColor='white'
-                onClick={(e) => handleLogin(e, 'google')}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleLogin(e, 'google')
+                }
                 color='gray.900'
                 variant='outline'
                 leftIcon={<FcGoogle />}
@@ -95,7 +97,9 @@ const LoginModal = () => {
               <Button
                 width={'100%'}
                 backgroundColor='white'
-                onClick={(e) => handleLogin(e, 'github')}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleLogin(e, 'github')
+                }
                 color='gray.900'
                 variant='outline'
                 leftIcon={<FaGithub />}
@@ -112,7 +116,9 @@ const LoginModal = () => {
               <Button
                 width={'100%'}
                 backgroundColor='#4266B3'
-                onClick={(e) => handleLogin(e, 'facebook')}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleLogin(e, 'facebook')
+                }
                 color='white'
                 variant='outline'
                 leftIcon={<FaFacebookSquare />}
@@ -127,7 +133,9 @@ const LoginModal = () => {
               <Button
                 width={'100%'}
                 backgroundColor='#7288DB'
-                onClick={(e) => handleLogin(e, 'discord')}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleLogin(e, 'discord')
+                }
                 color='white'
                 variant='outline'
                 leftIcon={<FaDiscord />}

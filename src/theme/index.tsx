@@ -8,10 +8,14 @@ const theme = extendTheme({
   colors: {
     brand: {
       100: '#e5e5e5',
-      200: '#6e6e6e',
-      300: '#3a3a3a',
-      400: '#2d2d2d',
-      500: '#1d1d1d',
+      200: '#9e9e9e',
+      300: '#7e7e7e',
+      400: '#6e6e6e',
+      500: '#5a5a5a',
+      600: '#4a4a4a',
+      700: '#3a3a3a',
+      800: '#2d2d2d',
+      900: '#1d1d1d',
     },
   },
   components: {
@@ -23,14 +27,14 @@ const theme = extendTheme({
     Modal: {
       baseStyle: {
         dialog: {
-          bg: 'brand.400',
+          bg: 'brand.800',
         }
       }
     },
     Menu: {
       baseStyle: {
         list: {
-          bg: 'brand.400',
+          bg: 'brand.800',
         }
       }
     },
@@ -38,7 +42,7 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: 'brand.500',
+        bg: 'brand.900',
       },
     },
   },

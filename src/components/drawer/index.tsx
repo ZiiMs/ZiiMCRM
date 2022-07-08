@@ -7,34 +7,46 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton,
   List,
-  ListIcon,
   ListItem,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   SimpleGrid,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
   Text,
-  Tr,
   VStack,
 } from '@chakra-ui/react';
-import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { RiArrowDownSFill } from 'react-icons/ri';
+import Dropzone from '../dropzone';
+import Comment from '../comment';
 
 const Drawer = () => {
   const [favorite, setFavorite] = useState(false);
+  const [comments, setComments] = useState<any[]>();
   const [status, setStatus] = useState<string>('New Ticket');
+
+  useEffect(() => {
+    const getComments = async () => {
+      const res = await fetch('https://jsonplaceholder.typicode.com/comments');
+      if (!res.ok) {
+        throw new Error(res.statusText);
+      }
+      const data = await res.json();
+      if (data.length > 0) {
+        setComments(data);
+      }
+    };
+
+    getComments().catch(console.error);
+  }, []);
+
   return (
-    <Flex h={'100vh'} backgroundColor={'brand.300'}>
-      <VStack spacing={2.5} w='full'>
-        <VStack spacing={2} w='full'>
+    <Flex h={'100vh'} maxH={'100vh'} backgroundColor={'brand.700'}>
+      <VStack w='full' h={'100%'}>
+        <VStack w='full' h={'100%'}>
           <VStack
             justifyContent={'flex-start'}
             alignItems={'flex-start'}
@@ -60,10 +72,11 @@ const Drawer = () => {
               Example Ticket Title
             </Heading>
           </VStack>
-          <Divider borderColor={'brand.500'} p={0} m={0} w={'full'} />
+          <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
           <VStack
             w={'full'}
-            p={'10px'}
+            px={'10px'}
+            pt={'10px'}
             spacing={3}
             justify={'flex-start'}
             align={'flex-start'}
@@ -108,7 +121,7 @@ const Drawer = () => {
                 <MenuList>
                   {['New Ticket', 'In Progress', 'Resolved', 'Closed'].map(
                     (item) => (
-                      <MenuItem key={item} onClick={(e) => setStatus(item)}>
+                      <MenuItem key={item} onClick={() => setStatus(item)}>
                         <Text fontSize={'md'} color={'gray.200'}>
                           {item}
                         </Text>
@@ -176,7 +189,39 @@ const Drawer = () => {
                 Lorem ut elit proident laboris labore ad.
               </Text>
             </Box>
+            <Dropzone />
           </VStack>
+          <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
+          <Box
+            maxW={'fit-content'}
+            maxH={'100%'}
+            px={2}
+            overflowY={'scroll'}
+            sx={{
+              '&::-webkit-scrollbar': {
+                width: '12px',
+                borderRadius: '8px',
+                backgroundColor: `rgba(0, 0, 0, 0.15)`,
+              },
+              '&::-webkit-scrollbar-thumb': {
+                borderRadius: '8px',
+                backgroundColor: `rgba(0, 0, 0, 0.4)`,
+              },
+            }}
+          >
+            <VStack>
+              {comments
+                ? comments.map((comment) => {
+                    const user = {
+                      email: comment.email,
+                      id: 'cl20kslpk0006u0v94e0729bh',
+                    };
+
+                    return <Comment user={user} body={comment.body} />;
+                  })
+                : null}
+            </VStack>
+          </Box>
         </VStack>
       </VStack>
     </Flex>
@@ -184,81 +229,4 @@ const Drawer = () => {
 };
 
 export default Drawer;
-
-{
-  /* <TableContainer>
-  <TableContainer variant={'unstyled'} size='sm'>
-    <Tbody>
-      <VStack spacing={3}>
-        <Box p={0} m={0}>
-          <Tr>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Created:
-              </Text>
-            </Td>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'gray.200'}>
-                Today
-              </Text>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Due Date:
-              </Text>
-            </Td>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'gray.200'}>
-                April 4
-              </Text>
-            </Td>
-          </Tr>
-        </Box>
-        <Box p={0} m={0}>
-          <Tr>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Status:
-              </Text>
-            </Td>
-            <Td py={0} pb={1} pl={0}>
-              <Menu>
-                <MenuButton
-                  size={'sm'}
-                  as={Button}
-                  variant={'ghost'}
-                  rightIcon={
-                    <Icon
-                      as={RiArrowDownSFill}
-                      color={'blue.600'}
-                      w={'24px'}
-                      h={'24px'}
-                    />
-                  }
-                >
-                  New Ticket
-                </MenuButton>
-              </Menu>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Due Date:
-              </Text>
-            </Td>
-            <Td py={0} pb={1} pl={0}>
-              <Text fontSize={'md'} color={'gray.200'}>
-                April 4
-              </Text>
-            </Td>
-          </Tr>
-        </Box>
-      </VStack>
-    </Tbody>
-  </Table>
-</TableContainer>; */
-}
 

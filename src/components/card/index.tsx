@@ -8,7 +8,7 @@ interface ICard {
 
 const Card = ({ graph }: ICard) => {
   return (
-    <Box w={'full'} h='full' backgroundColor='brand.300' borderRadius={'6px'}>
+    <Box w={'full'} h='full' backgroundColor='brand.700' borderRadius={'6px'}>
       {graph ? (
         <Box>
           <Text>Graph1: {graph}</Text>

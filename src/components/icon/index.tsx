@@ -18,7 +18,7 @@ const BrandIcon = ({ Color, AsIcon, ...props }: BIconProps) => {
 };
 
 const defaultProps: BIconOptionalProps = {
-  Color: 'brand.200',
+  Color: 'brand.400',
 };
 
 BrandIcon.defaultProps = defaultProps;

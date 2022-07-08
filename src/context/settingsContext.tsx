@@ -1,11 +1,5 @@
 import {
-  createContext,
-  Dispatch,
-  ReactChild,
-  ReactFragment,
-  ReactPortal,
-  SetStateAction,
-  useState,
+  createContext, useState
 } from 'react';
 
 interface ISettingsContext {
