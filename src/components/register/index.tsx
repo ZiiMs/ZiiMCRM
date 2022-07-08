@@ -78,7 +78,11 @@ const RegisterModal = () => {
               <VStack align={'flex-start'} spacing={1}>
                 <FormControl>
                   <FormLabel htmlFor='name'>Name</FormLabel>
-                  <Input backgroundColor={'brand.900'} isDisabled value={name} />
+                  <Input
+                    backgroundColor={'brand.900'}
+                    isDisabled
+                    value={name}
+                  />
                 </FormControl>
               </VStack>
               <VStack align={'flex-start'} spacing={1}>
