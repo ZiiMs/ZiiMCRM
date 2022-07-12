@@ -1,7 +1,12 @@
 import settingsToggle from '@/context/settingsContext';
 import {
+  Avatar,
+  AvatarProps,
   Box,
+  Button,
+  forwardRef,
   IconButton,
+  IconButtonProps,
   Link,
   Menu,
   MenuButton,
@@ -10,19 +15,43 @@ import {
   Portal,
   VStack,
 } from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { BiMenuAltLeft } from 'react-icons/bi';
-import { CgProfile, CgTimer } from 'react-icons/cg';
+import { CgTimer } from 'react-icons/cg';
 import { RiHome2Line, RiSettings3Line } from 'react-icons/ri';
 import BrandIconButton from '../iconButton';
-import { signOut } from 'next-auth/react';
 
 const Navbar = () => {
   const { showSettings, toggleSettings } = useContext(settingsToggle);
+  const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+
+  const user = session?.user || null;
+
+  const customAvatar = forwardRef<AvatarProps, 'span'>((props, ref) => (
+    <Avatar ref={ref} size='sm' {...props} />
+  ));
+
+  const CustomMenuButton = forwardRef<IconButtonProps, 'button'>(
+    (props, ref) => (
+      <IconButton
+        ref={ref}
+        as={customAvatar}
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={!user}
+        color={
+          router.asPath === `/user/${user?.id}` ? 'brand.100' : 'brand.400'
+        }
+        variant={router.asPath === `/user/${user?.id}` ? 'solid' : 'ghost'}
+        size={'md'}
+        src={user?.image}
+        {...props}
+      />
+    )
+  );
 
   const router = useRouter();
 
@@ -71,22 +100,41 @@ const Navbar = () => {
       <VStack>
         <Menu placement='right'>
           <MenuButton
-            as={IconButton}
-            color={
-              router.asPath === `/user/${session?.user.id}`
-                ? 'brand.100'
-                : 'brand.400'
-            }
-            variant={
-              router.asPath === `/user/${session?.user.id}` ? 'solid' : 'ghost'
-            }
+            as={Button}
+            // style={{
+            //   padding: '0',
+            //   margin: '0',
+            // }}
+            p={0}
             size={'lg'}
-            aria-label={'profile button'}
-            icon={<CgProfile />}
-          />
+            disabled={!user}
+            color={
+              router.asPath === `/user/${user?.id}` ? 'brand.100' : 'brand.400'
+            }
+            variant={router.asPath === `/user/${user?.id}` ? 'solid' : 'ghost'}
+          >
+            <Avatar
+              size={'sm'}
+              m={0}
+              p={0}
+              src={user?.image ? user.image : undefined}
+            />
+          </MenuButton>
+          {/* <Avatar size={'xs'} src={user?.image ? user.image : undefined} /> */}
+          {/* {user?.image ? (
+              <Image
+                src={user?.image}
+                alt={''}
+                width={'24px'}
+                height={'24px'}
+                borderRadius={'full'}
+              />
+            ) : (
+              <Icon as={CgProfile} />
+            )} */}
           <Portal>
             <MenuList>
-              <NextLink href={`/user/${session?.user.id}`}>
+              <NextLink href={`/user/${user?.id}`}>
                 <MenuItem>Profile</MenuItem>
               </NextLink>
               <MenuItem onClick={() => signOut()}>Sign out</MenuItem>

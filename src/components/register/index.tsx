@@ -5,10 +5,12 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   HStack,
   Input,
   Modal,
-  Text,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -20,20 +22,16 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
-  useTheme,
-  VStack,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
+  Text,
+  VStack
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
-import { stringify } from 'querystring';
-import React, {
-  MouseEvent,
+import {
   ChangeEvent,
+  MouseEvent,
   useContext,
   useEffect,
-  useState,
+  useState
 } from 'react';
 
 const RegisterModal = () => {
@@ -47,7 +45,7 @@ const RegisterModal = () => {
     console.log('Login?', session, showRegister);
 
     return () => {};
-  }, []);
+  }, [session, showRegister]);
 
   const name = session?.user?.name ?? '';
   const email = session?.user?.email ?? '';

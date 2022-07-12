@@ -1,3 +1,4 @@
+import settingsToggle from '@/context/settingsContext';
 import {
   Button,
   FormControl,
@@ -7,10 +8,9 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader,
+  ModalHeader
 } from '@chakra-ui/react';
 import { useContext } from 'react';
-import settingsToggle from '@/context/settingsContext';
 
 const SettingsModal = () => {
   const { showSettings, toggleSettings } = useContext(settingsToggle);

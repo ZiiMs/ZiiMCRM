@@ -1,5 +1,4 @@
 import { IconButton, IconButtonProps } from '@chakra-ui/react';
-import React from 'react';
 
 interface BIconButtonProps extends IconButtonProps, BIconButtonOptionalProps {}
 interface BIconButtonOptionalProps {
@@ -17,3 +16,4 @@ const defaultProps: BIconButtonOptionalProps = {
 BrandIconButton.defaultProps = defaultProps;
 
 export default BrandIconButton;
+

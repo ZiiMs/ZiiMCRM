@@ -1,12 +1,12 @@
-import { Box, Container, Flex, HStack, Menu, VStack } from '@chakra-ui/react';
+import loginToggle from '@/context/loginContext';
+import { Container, HStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React, { PropsWithChildren, useContext, useEffect } from 'react';
-import loginToggle from '@/context/loginContext';
+import { PropsWithChildren, useContext, useEffect } from 'react';
 import LoginModal from '../login';
+import RegisterModal from '../register';
 import SettingsModal from '../settings';
 import Navbar from './navbar';
-import RegisterModal from '../register';
 
 const Layout = ({ children }: PropsWithChildren<{}>) => {
   const { showLogin, toggleLogin } = useContext(loginToggle);
@@ -22,7 +22,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
       toggleLogin();
     }
     return () => {};
-  }, [session]);
+  }, [router, session, showLogin, toggleLogin]);
 
   return (
     <Container

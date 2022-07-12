@@ -1,6 +1,4 @@
 import { Box, HStack, Icon, Text, VStack } from '@chakra-ui/react';
-import React from 'react';
-import { AiFillPicture, AiOutlinePicture } from 'react-icons/ai';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 
 const Dropzone = () => {

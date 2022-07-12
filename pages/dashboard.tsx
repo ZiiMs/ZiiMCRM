@@ -1,9 +1,9 @@
-import { Flex, Heading, HStack, VStack } from '@chakra-ui/react';
+import { Heading, HStack, VStack } from '@chakra-ui/react';
 
 import Board from '@/components/board';
 import Card from '@/components/card';
-import type { NextPage } from 'next';
 import Drawer from '@/components/drawer';
+import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
   const drawer = true;

@@ -3,11 +3,12 @@ import NextImage, { ImageProps as NextImageProps } from 'next/image';
 
 type Props = NextImageProps & Omit<ChakraImageProps, 'src'>;
 
-const ChakNextImage = chakra(NextImage, {
+const ChakraNextImage = chakra(NextImage, {
   shouldForwardProp: (prop) =>
     ['layout', 'src', 'alt', 'placeholder', 'width', 'height'].includes(prop),
 });
 
-const Image = (props: Props) => <ChakNextImage {...props} />;
+const Image = (props: Props) => <ChakraNextImage {...props} />;
 
 export default Image;
+

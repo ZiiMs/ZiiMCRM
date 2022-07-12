@@ -1,3 +1,4 @@
+import loginToggle from '@/context/loginContext';
 import {
   Alert,
   AlertDescription,
@@ -11,13 +12,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import { signIn, useSession } from 'next-auth/react';
 import React, { useContext, useEffect, useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import { FaDiscord, FaFacebookSquare, FaGithub } from 'react-icons/fa';
-import loginToggle from '@/context/loginContext';
+import { FcGoogle } from 'react-icons/fc';
 
 const LoginModal = () => {
   const [error, setError] = useState<String | null>(null);
@@ -28,7 +28,7 @@ const LoginModal = () => {
     console.log('Login?', session, showLogin);
 
     return () => {};
-  }, []);
+  }, [session, showLogin]);
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

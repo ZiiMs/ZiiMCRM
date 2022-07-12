@@ -1,7 +1,5 @@
-import { HStack, VStack, Box, Text, Avatar } from '@chakra-ui/react';
-import { User } from '@prisma/client';
+import { Avatar, Box, HStack, Text, VStack } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
 
 interface IComment {
   user: {

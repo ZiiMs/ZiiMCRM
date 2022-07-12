@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Icon, Text, VStack } from '@chakra-ui/react';
-import { CgCopy, CgMail, CgCheckO } from 'react-icons/cg';
+import { CgCheckO, CgCopy, CgMail } from 'react-icons/cg';
 import { RiArrowRightDownLine, RiArrowRightUpLine } from 'react-icons/ri';
 
 interface ICard {

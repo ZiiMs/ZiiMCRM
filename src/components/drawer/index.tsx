@@ -15,13 +15,13 @@ import {
   MenuList,
   SimpleGrid,
   Text,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { RiArrowDownSFill } from 'react-icons/ri';
-import Dropzone from '../dropzone';
 import Comment from '../comment';
+import Dropzone from '../dropzone';
 
 const Drawer = () => {
   const [favorite, setFavorite] = useState(false);
@@ -217,7 +217,7 @@ const Drawer = () => {
                       id: 'cl20kslpk0006u0v94e0729bh',
                     };
 
-                    return <Comment user={user} body={comment.body} />;
+                    return <Comment key={user.id} user={user} body={comment.body} />;
                   })
                 : null}
             </VStack>

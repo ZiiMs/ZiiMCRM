@@ -2,19 +2,17 @@ import {
   Box,
   Button,
   Flex,
-  HStack,
-  Icon,
-  IconButton,
+  HStack, IconButton,
   Text,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
-import React, { PropsWithChildren } from 'react';
 import { RiMoreFill } from 'react-icons/ri';
 
 interface IBoard {
   Title: string;
-  children?: PropsWithChildren<{}>;
+  children?: ReactNode;
 }
 
 const Board = ({ Title, children }: IBoard) => {
