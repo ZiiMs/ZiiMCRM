@@ -1,12 +1,9 @@
 import settingsToggle from '@/context/settingsContext';
 import {
   Avatar,
-  AvatarProps,
   Box,
   Button,
-  forwardRef,
-  IconButton,
-  IconButtonProps,
+  Icon,
   Link,
   Menu,
   MenuButton,
@@ -15,45 +12,59 @@ import {
   Portal,
   VStack,
 } from '@chakra-ui/react';
+import { Board } from '@prisma/client';
 import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
-import { BiMenuAltLeft } from 'react-icons/bi';
-import { CgTimer } from 'react-icons/cg';
-import { RiHome2Line, RiSettings3Line } from 'react-icons/ri';
+import { MouseEvent, useContext, useEffect, useState } from 'react';
+import { BiMenuAltLeft, BiPlus } from 'react-icons/bi';
+import { CgProfile } from 'react-icons/cg';
+import { RiSettings3Line } from 'react-icons/ri';
 import BrandIconButton from '../iconButton';
 
-const Navbar = () => {
+interface INavbarProps {
+  openBoard: (e: MouseEvent<HTMLButtonElement>) => void;
+}
+
+const Navbar = ({ openBoard }: INavbarProps) => {
   const { showSettings, toggleSettings } = useContext(settingsToggle);
-  const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  const [boards, setBoards] = useState<Board[]>([]);
 
   const user = session?.user || null;
 
-  const customAvatar = forwardRef<AvatarProps, 'span'>((props, ref) => (
-    <Avatar ref={ref} size='sm' {...props} />
-  ));
-
-  const CustomMenuButton = forwardRef<IconButtonProps, 'button'>(
-    (props, ref) => (
-      <IconButton
-        ref={ref}
-        as={customAvatar}
-        onClick={() => setIsOpen(!isOpen)}
-        disabled={!user}
-        color={
-          router.asPath === `/user/${user?.id}` ? 'brand.100' : 'brand.400'
-        }
-        variant={router.asPath === `/user/${user?.id}` ? 'solid' : 'ghost'}
-        size={'md'}
-        src={user?.image}
-        {...props}
-      />
-    )
-  );
-
   const router = useRouter();
+
+  const pathName = router.pathname.split('/')[1];
+
+  useEffect(() => {
+    if (!session) return;
+    (async () => {
+      console.log('Getting Data');
+      const res = await fetch('/api/board/fetchBoards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: session.user.id,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        console.log(data.message);
+        console.log(data.boards);
+        setBoards(data.boards);
+      }
+    })();
+
+    return () => {
+      console.log('clearing data');
+      setBoards([]);
+    };
+  }, [session]);
 
   return (
     <VStack
@@ -66,7 +77,7 @@ const Navbar = () => {
       h='100vh'
     >
       <VStack spacing={2.5} pt={2.5} px={2} m={0}>
-        <NextLink href={'/'}>
+        <NextLink passHref href={'/'}>
           <BrandIconButton
             as={Link}
             size={'lg'}
@@ -76,35 +87,49 @@ const Navbar = () => {
             icon={<BiMenuAltLeft />}
           />
         </NextLink>
-        <NextLink href={'/dashboard'}>
-          <BrandIconButton
-            as={Link}
-            size={'lg'}
-            Color={router.pathname === '/dashboard' ? 'brand.100' : 'brand.400'}
-            variant={router.pathname === '/dashboard' ? 'solid' : 'ghost'}
-            aria-label={'dashboard button'}
-            icon={<RiHome2Line />}
-          />
-        </NextLink>
-        <NextLink href={'/recent'}>
-          <BrandIconButton
-            as={Link}
-            Color={router.pathname === '/recent' ? 'brand.100' : 'brand.400'}
-            variant={router.pathname === '/recent' ? 'solid' : 'ghost'}
-            size={'lg'}
-            aria-label={'recent button'}
-            icon={<CgTimer />}
-          />
-        </NextLink>
+        {boards.length > 0
+          ? boards.map((board) => (
+              <NextLink key={board.id} passHref href={`/dashboard/${board.id}`}>
+                <Button
+                  p={0}
+                  size={'lg'}
+                  color={
+                    router.asPath === `/dashboard/${board.id}`
+                      ? 'brand.100'
+                      : 'brand.400'
+                  }
+                  variant={
+                    router.asPath === `/dashboard/${board.id}`
+                      ? 'solid'
+                      : 'ghost'
+                  }
+                >
+                  <Avatar
+                    name={board.name}
+                    size={'md'}
+                    m={0}
+                    backgroundColor={board.image ? 'transparent' : undefined}
+                    p={0}
+                    src={board.image ? board.image : undefined}
+                  />
+                </Button>
+              </NextLink>
+            ))
+          : null}
+        <BrandIconButton
+          onClick={openBoard}
+          size={'lg'}
+          disabled={!user}
+          Color={'brand.400'}
+          variant={'ghost'}
+          aria-label={'dashboard button'}
+          icon={<BiPlus />}
+        />
       </VStack>
       <VStack>
         <Menu placement='right'>
           <MenuButton
             as={Button}
-            // style={{
-            //   padding: '0',
-            //   margin: '0',
-            // }}
             p={0}
             size={'lg'}
             disabled={!user}
@@ -113,28 +138,21 @@ const Navbar = () => {
             }
             variant={router.asPath === `/user/${user?.id}` ? 'solid' : 'ghost'}
           >
-            <Avatar
-              size={'sm'}
-              m={0}
-              p={0}
-              src={user?.image ? user.image : undefined}
-            />
-          </MenuButton>
-          {/* <Avatar size={'xs'} src={user?.image ? user.image : undefined} /> */}
-          {/* {user?.image ? (
-              <Image
-                src={user?.image}
-                alt={''}
-                width={'24px'}
-                height={'24px'}
-                borderRadius={'full'}
+            {user?.image ? (
+              <Avatar
+                size={'sm'}
+                m={0}
+                backgroundColor={'transparent'}
+                p={0}
+                src={user?.image ? user.image : undefined}
               />
             ) : (
               <Icon as={CgProfile} />
-            )} */}
+            )}
+          </MenuButton>
           <Portal>
             <MenuList>
-              <NextLink href={`/user/${user?.id}`}>
+              <NextLink passHref href={`/user/${user?.id}`}>
                 <MenuItem>Profile</MenuItem>
               </NextLink>
               <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
@@ -148,6 +166,7 @@ const Navbar = () => {
             onClick={() => {
               toggleSettings();
             }}
+            disabled={!user}
             Color={showSettings ? 'brand.100' : 'brand.400'}
             variant={showSettings ? 'solid' : 'ghost'}
             size={'lg'}

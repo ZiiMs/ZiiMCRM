@@ -1,6 +1,4 @@
-import {
-  createContext, useState
-} from 'react';
+import { createContext, useState } from 'react';
 
 interface ILoginContext {
   showLogin: boolean;
@@ -13,7 +11,6 @@ const defaultState = {
 };
 
 const loginToggle = createContext<ILoginContext>(defaultState);
-
 export const LoginToggleProvider = (props: any) => {
   const [showLogin, setShow] = useState(defaultState.showLogin);
   const togLogin = () => {

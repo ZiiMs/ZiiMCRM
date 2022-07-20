@@ -1,8 +1,9 @@
 import registerToggle from '@/context/registerContext';
 import { useRouter } from 'next/router';
+import { NextPage } from 'next/types';
 import { useContext, useEffect } from 'react';
 
-const registerFilter = () => {
+const RegisterFilter: NextPage = () => {
   const { showRegister, toggleRegister } = useContext(registerToggle);
   const router = useRouter();
 
@@ -11,10 +12,10 @@ const registerFilter = () => {
       router.push('/');
       toggleRegister();
     }
-  }, []);
+  }, [router, showRegister, toggleRegister]);
 
   return <></>;
 };
 
-export default registerFilter;
+export default RegisterFilter;
 

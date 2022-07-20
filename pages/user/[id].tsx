@@ -1,12 +1,5 @@
 import { prisma } from '@/utils/database';
-import {
-  Avatar,
-  Button,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Avatar, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import { User } from '@prisma/client';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
@@ -39,6 +32,7 @@ const Profile = ({
             <HStack>
               <Avatar
                 size={'md'}
+                backgroundColor={user.image ? 'transparent' : undefined}
                 name={user.name ? user.name : 'nan'}
                 src={user.image ? user.image : 'nan'}
               />

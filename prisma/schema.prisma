@@ -44,15 +44,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?         @unique
   emailVerified DateTime?
   image         String?
   gender        String?
-  role          Role      @default(CLIENT)
+  age           Int?
+  boards        BoardsOnUsers[]
   accounts      Account[]
   sessions      Session[]
+  UserRoles     UserRoles[]
 }
 
 model VerificationToken {
@@ -61,4 +63,38 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Board {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  description String
+  image       String?
+  type        String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  users       BoardsOnUsers[]
+  UserRoles   UserRoles[]
+}
+
+model BoardsOnUsers {
+  boardId   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([boardId, userId])
+}
+
+model UserRoles {
+  id        BigInt   @id @default(autoincrement())
+  boardId   String
+  role      Role     @default(USER)
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  userId    String?
+  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([boardId, userId])
 }

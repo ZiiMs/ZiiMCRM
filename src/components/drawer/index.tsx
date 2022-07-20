@@ -15,7 +15,7 @@ import {
   MenuList,
   SimpleGrid,
   Text,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
@@ -214,10 +214,12 @@ const Drawer = () => {
                 ? comments.map((comment) => {
                     const user = {
                       email: comment.email,
-                      id: 'cl20kslpk0006u0v94e0729bh',
+                      id: comment.id,
                     };
 
-                    return <Comment key={user.id} user={user} body={comment.body} />;
+                    return (
+                      <Comment key={user.id} user={user} body={comment.body} />
+                    );
                   })
                 : null}
             </VStack>
