@@ -1,4 +1,5 @@
 import Layout from '@/components/layout';
+import { BoardProvider } from '@/context/boardsContext';
 import { LoginToggleProvider } from '@/context/loginContext';
 import { RegisterToggleProvider } from '@/context/registerContext';
 import { SettingsToggleProvider } from '@/context/settingsContext';
@@ -9,14 +10,16 @@ import theme from 'src/theme';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <ChakraProvider theme={theme}>
         <LoginToggleProvider>
           <RegisterToggleProvider>
             <SettingsToggleProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
+              <BoardProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </BoardProvider>
             </SettingsToggleProvider>
           </RegisterToggleProvider>
         </LoginToggleProvider>

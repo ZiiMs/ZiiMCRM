@@ -1,5 +1,5 @@
 import loginToggle from '@/context/loginContext';
-import { Container, HStack } from '@chakra-ui/react';
+import { Container, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import {
@@ -36,6 +36,23 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     e.preventDefault();
     setOpenBoard(true);
   };
+
+  if (!session)
+    return (
+      <VStack
+        w='full'
+        minH={{
+          base: 'auto',
+          md: '100vh',
+        }}
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Spinner size={'xl'} thickness={'4px'} />
+        <Text>Loading ...</Text>
+      </VStack>
+    );
 
   return (
     <Container

@@ -1,3 +1,4 @@
+import useBoards from '@/utils/swrFuncs';
 import {
   Alert,
   AlertDescription,
@@ -32,6 +33,8 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
   const { data: session } = useSession();
+
+  const { boards, mutate } = useBoards(session?.user.id);
 
   const CheckErrors = () => {
     if (boardName.length < 3) {
@@ -86,6 +89,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
       setBoardName('');
       setDescription('');
       setType('');
+      mutate({ ...boards, boards: data.board });
       toggleOpen();
     }
   };
