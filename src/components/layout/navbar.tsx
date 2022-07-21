@@ -40,37 +40,6 @@ const Navbar = ({ openBoard }: any) => {
     console.log('data2', boards);
   }, [boards]);
 
-  // const pathName = router.pathname.split('/')[1];
-
-  // useEffect(() => {
-  //   if (!session) return;
-  //   (async () => {
-  //     console.log('Getting Data');
-  //     const res = await fetch('/api/board/fetchBoards', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         userId: session.user.id,
-  //       }),
-  //     });
-  //     const data = await res.json();
-  //     if (data.error) {
-  //       console.error(data.error);
-  //     } else {
-  //       console.log(data.message);
-  //       console.log(data.boards);
-  //       setBoards(data.boards);
-  //     }
-  //   })();
-
-  //   return () => {
-  //     console.log('clearing data');
-  //     setBoards([]);
-  //   };
-  // }, [session, setBoards]);
-
   return (
     <VStack
       as={'nav'}
@@ -92,7 +61,7 @@ const Navbar = ({ openBoard }: any) => {
             icon={<BiMenuAltLeft />}
           />
         </NextLink>
-        {(!isLoading && !error && boards !== undefined) > 0
+        {!isLoading && !error && boards
           ? boards.map((board) => (
               <NextLink key={board.id} passHref href={`/dashboard/${board.id}`}>
                 <Button
@@ -139,15 +108,9 @@ const Navbar = ({ openBoard }: any) => {
             size={'lg'}
             disabled={!user}
             color={
-              router.asPath === `/user/${encodeURIComponent(user?.id)}`
-                ? 'brand.100'
-                : 'brand.400'
+              router.asPath === `/user/${user?.id}` ? 'brand.100' : 'brand.400'
             }
-            variant={
-              router.asPath === `/user/${encodeURIComponent(user?.id)}`
-                ? 'solid'
-                : 'ghost'
-            }
+            variant={router.asPath === `/user/${user?.id}` ? 'solid' : 'ghost'}
           >
             {user?.image ? (
               <Avatar
@@ -163,7 +126,7 @@ const Navbar = ({ openBoard }: any) => {
           </MenuButton>
           <Portal>
             <MenuList>
-              <NextLink passHref href={`/user/${encodeURIComponent(user?.id)}`}>
+              <NextLink passHref href={`/user/${user?.id}`}>
                 <MenuItem>Profile</MenuItem>
               </NextLink>
               <MenuItem onClick={() => signOut()}>Sign out</MenuItem>

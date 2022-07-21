@@ -18,6 +18,7 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import { Board } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
 interface ICreateBoard {
@@ -34,7 +35,9 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const [type, setType] = useState('');
   const { data: session } = useSession();
 
-  const { boards, mutate } = useBoards(session?.user.id);
+  const userId = session?.user?.id || '';
+
+  const { boards, mutate } = useBoards(userId);
 
   const CheckErrors = () => {
     if (boardName.length < 3) {
@@ -74,23 +77,43 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
     if (data.error) {
       setError(data.error);
     } else {
-      console.log(data.message);
-      toast({
-        position: 'top-right',
-        duration: 2000,
-        variant: 'solid',
-        render: () => (
-          <Alert status='success'>
-            <AlertIcon />
-            {data.message}
-          </Alert>
-        ),
-      });
-      setBoardName('');
-      setDescription('');
-      setType('');
-      mutate({ ...boards, boards: data.board });
-      toggleOpen();
+      try {
+        const board: Board = data.board;
+        console.log(data.message);
+        toast({
+          position: 'top-right',
+          duration: 2000,
+          variant: 'solid',
+          render: () => (
+            <Alert status='success'>
+              <AlertIcon />
+              {data.message}
+            </Alert>
+          ),
+        });
+        await mutate([...boards, board], {
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        });
+        setBoardName('');
+        setDescription('');
+        setType('');
+        toggleOpen();
+      } catch (e: any) {
+        console.log(e);
+        toast({
+          position: 'top-right',
+          duration: 5000,
+          variant: 'solid',
+          render: () => (
+            <Alert status='error'>
+              <AlertIcon />
+              {e}
+            </Alert>
+          ),
+        });
+      }
     }
   };
 
