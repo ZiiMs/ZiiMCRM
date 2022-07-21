@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 const fetchBoards = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log('Query', req.query);
-  const { id } = req.query;
+  const id = JSON.parse(req.query.id as string);
   if (!id || id === undefined) {
     console.log('undefined');
     res.status(401).json({
