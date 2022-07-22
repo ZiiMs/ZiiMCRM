@@ -1,6 +1,9 @@
 import settingsToggle from '@/context/settingsContext';
+import { MAX_BOARDS } from '@/utils/config';
 import { useBoards } from '@/utils/swrFuncs';
 import {
+  Alert,
+  AlertIcon,
   Avatar,
   Box,
   Button,
@@ -11,6 +14,7 @@ import {
   MenuItem,
   MenuList,
   Portal,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { signOut, useSession } from 'next-auth/react';
@@ -32,10 +36,31 @@ const Navbar = ({ openBoard }: any) => {
   const { data: session } = useSession();
   const user = session?.user;
   const userId = user?.id || '';
+  const toast = useToast();
 
   const { boards, isLoading, error } = useBoards(userId);
   // const boards = [];
   const router = useRouter();
+
+  const handlePlusBoards = (e: MouseEvent<HTMLButtonElement>) => {
+    if (boards.length > MAX_BOARDS) {
+      e.preventDefault();
+      toast({
+        position: 'bottom',
+        duration: 5000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='error'>
+            <AlertIcon />
+            Error: You can only have {MAX_BOARDS} boards.
+          </Alert>
+        ),
+      });
+      return;
+    }
+    e.preventDefault();
+    openBoard(e);
+  };
 
   return (
     <VStack
@@ -88,7 +113,7 @@ const Navbar = ({ openBoard }: any) => {
             ))
           : null}
         <BrandIconButton
-          onClick={openBoard}
+          onClick={handlePlusBoards}
           size={'lg'}
           disabled={!user}
           Color={'brand.400'}
