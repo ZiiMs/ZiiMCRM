@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { Board } from '@prisma/client';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
 interface ICreateBoard {
   open: boolean;
@@ -38,6 +39,8 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const userId = session?.user?.id || '';
 
   const { boards, mutate } = useBoards(userId);
+
+  const router = useRouter();
 
   const CheckErrors = () => {
     if (boardName.length < 3) {
@@ -100,6 +103,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
         setDescription('');
         setType('');
         toggleOpen();
+        router.push(`/dashboard/${board.id}`);
       } catch (e: any) {
         console.log(e);
         toast({
