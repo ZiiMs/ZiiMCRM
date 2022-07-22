@@ -34,6 +34,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const [boardName, setBoardName] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
+  const [image, setImage] = useState('');
   const { data: session } = useSession();
 
   const userId = session?.user?.id || '';
@@ -64,6 +65,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
     console.log(boardName, description, type);
     if (!CheckErrors()) return;
     if (!session) return;
+    const imageurl = image ? image : null;
     const res = await fetch('/api/board/createboard', {
       method: 'POST',
       headers: {
@@ -73,6 +75,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
         boardName,
         description,
         type,
+        image: imageurl,
         userId: session.user.id,
       }),
     });
@@ -164,6 +167,17 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
                   value={type}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setType(e.target.value);
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Image</FormLabel>
+                <Input
+                  backgroundColor={'brand.900'}
+                  placeholder={'Leave blank for no image. URL only'}
+                  value={image}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setImage(e.target.value);
                   }}
                 />
               </FormControl>

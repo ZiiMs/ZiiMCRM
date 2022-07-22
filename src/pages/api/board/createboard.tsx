@@ -3,7 +3,7 @@ import { Role } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const createboard = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { boardName, description, type, userId } = req.body;
+  const { boardName, description, image, type, userId } = req.body;
   try {
     const user = await prisma.user.findFirstOrThrow({
       where: {
@@ -16,6 +16,7 @@ const createboard = async (req: NextApiRequest, res: NextApiResponse) => {
         name: boardName,
         description: description,
         type: type,
+        image: image,
         users: {
           create: [
             {
