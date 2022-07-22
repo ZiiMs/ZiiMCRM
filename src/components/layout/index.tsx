@@ -49,8 +49,14 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
         justifyContent='center'
         alignItems='center'
       >
-        <Spinner size={'xl'} thickness={'4px'} />
-        <Text>Loading ...</Text>
+        <Spinner
+          size={'xl'}
+          thickness={'4px'}
+          speed={'0.65s'}
+          color={'gray.200'}
+          backgroundColor={'transparent'}
+        />
+        <Text fontSize={'xl'}>Loading ...</Text>
       </VStack>
     );
 
