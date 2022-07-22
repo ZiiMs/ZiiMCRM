@@ -1,12 +1,93 @@
-import { Heading, HStack, VStack } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Heading,
+  HStack,
+  Spinner,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 
 import Board from '@/components/board';
 import Card from '@/components/card';
 import Drawer from '@/components/drawer';
+import useBoards from '@/utils/swrFuncs';
+import { Board as BoardType } from '@prisma/client';
 import type { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const Home: NextPage = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const toast = useToast();
+  if (!session) {
+    toast({
+      position: 'top-right',
+      duration: 5000,
+      variant: 'solid',
+      render: () => (
+        <Alert status='error'>
+          <AlertIcon />
+          You must be logged in to view this page.
+        </Alert>
+      ),
+    });
+    router.push('/');
+  }
+
+  const [board, setBoard] = useState<BoardType>();
+
+  const userId = session?.user?.id || '';
+
+  const { boards, error, isLoading, mutate } = useBoards(userId);
+
+  const getBoard = async (id: string) => {
+    boards.forEach((b) => {});
+  };
+
   const drawer = true;
+  if (error) {
+    return (
+      <VStack
+        w='full'
+        minH={{
+          base: 'auto',
+          md: '100vh',
+        }}
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Text fontSize={'xl'}>{error}</Text>
+      </VStack>
+    );
+  }
+
+  if (isLoading) {
+    <VStack
+      w='full'
+      minH={{
+        base: 'auto',
+        md: '100vh',
+      }}
+      display='flex'
+      justifyContent='center'
+      alignItems='center'
+    >
+      <Spinner
+        size={'xl'}
+        thickness={'4px'}
+        speed={'0.65s'}
+        color={'gray.200'}
+        backgroundColor={'transparent'}
+      />
+      <Text fontSize={'xl'}>Loading ...</Text>
+    </VStack>;
+  }
+
   return (
     <HStack
       w={'full'}
@@ -23,7 +104,7 @@ const Home: NextPage = () => {
         px={4}
         pb={3}
       >
-        <Heading color={'gray.200'}>Dashboard</Heading>
+        <Heading color={'gray.200'}></Heading>
         <HStack w={'full'} spacing={4}>
           <Card graph></Card>
           <Card></Card>
