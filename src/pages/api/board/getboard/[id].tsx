@@ -7,22 +7,32 @@ const fetchBoards = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(403).json({
       error: true,
     });
-
     return;
   }
+  const { userId } = req.body;
+
   const { id } = req.query;
-  await prisma.board
-    .findFirst({
+  prisma.board
+    .findFirstOrThrow({
       where: {
         id: String(id),
+        users: {
+          some: {
+            userId: userId,
+          },
+        },
       },
     })
     .then((data) => {
-      res.json(data);
+      console.log('Success', data);
+      res.status(200).json(data);
     })
     .catch((err) => {
-      console.error(err);
-      res.status(403).json(err);
+      console.error('Error:', err);
+      res.status(403).json({
+        error: true,
+        errorMsg: err,
+      });
     });
   console.log('success');
 

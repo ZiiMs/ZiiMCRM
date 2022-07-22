@@ -21,7 +21,6 @@ const Dashboard: NextPage = () => {
   const router = useRouter();
   const toast = useToast();
   const { id } = router.query;
-  const { board, error, isLoading, mutate } = useFindBoard(String(id));
   const { data: session } = useSession();
 
   if (!session) {
@@ -38,6 +37,9 @@ const Dashboard: NextPage = () => {
     });
     router.push('/');
   }
+  const userId = session?.user?.id || '';
+
+  const { board, error, isLoading, mutate } = useFindBoard(String(id), userId);
 
   if (isLoading) return <Loading />;
 
@@ -49,11 +51,12 @@ const Dashboard: NextPage = () => {
       render: () => (
         <Alert status='error'>
           <AlertIcon />
-          Error:!
+          Error
         </Alert>
       ),
     });
     console.log(JSON.stringify(error));
+    mutate((v) => v, false);
     router.push('/');
   }
 

@@ -16,13 +16,32 @@ export const useBoards = (id: string) => {
   return { boards: boardData, error, isLoading: !data && !error, mutate };
 };
 
-export const useFindBoard = (id: string) => {
-  const fetcher: Fetcher<Board> = (url: string) =>
-    fetch(url).then((res) => res.json());
-  const { data, error, mutate } = useSWR<Board>(
-    `/api/board/getboard/${id}`,
-    fetcher
-  );
+export const useFindBoard = (id: string, userId: string) => {
+  const fetcher: Fetcher<Board> = async () => {
+    const res = await fetch(`/api/board/getboard/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      console.log('Res not ok', data.errorMsg);
+      if (data.errorMsg.name === 'NotFoundError') {
+        console.log('NotFoundError');
+        const error = new Error(
+          'Board not found with ID or player not authorized'
+        );
+
+        throw error;
+      }
+    }
+    console.log('Working', data);
+    return data;
+  };
+  const { data, error, mutate } = useSWR<Board>(`findBoard`, fetcher);
+  console.log('Error', JSON.stringify(error));
   const boardData = data;
   return { board: boardData, error, isLoading: !data && !error, mutate };
 };
