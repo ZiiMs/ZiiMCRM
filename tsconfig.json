@@ -21,8 +21,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+
+    "incremental": false,
     "noUncheckedIndexedAccess": true,
-    "noImplicitAny": true,
+    
     "baseUrl": ".",
     "paths": {
       "@/components/*": [
@@ -41,7 +43,6 @@
         "src/theme/*"
       ]
     },
-    "incremental": true
   },
   "include": [
     "next-env.d.ts",
