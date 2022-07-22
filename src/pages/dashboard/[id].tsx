@@ -51,7 +51,9 @@ const Dashboard: NextPage = () => {
       render: () => (
         <Alert status='error'>
           <AlertIcon />
-          Error
+          {error.name === 'NotFoundError'
+            ? 'Board not found with ID or player not authorized'
+            : 'Error!'}
         </Alert>
       ),
     });

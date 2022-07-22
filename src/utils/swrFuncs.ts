@@ -34,6 +34,8 @@ export const useFindBoard = (id: string, userId: string) => {
           'Board not found with ID or player not authorized'
         );
 
+        error.message = 'Board not found with ID or player not authorized';
+        error.name = 'NotFoundError';
         throw error;
       }
     }
