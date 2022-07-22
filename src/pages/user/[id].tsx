@@ -37,6 +37,8 @@ const Profile = ({
                 src={user.image ? user.image : 'nan'}
               />
               <Text>{user.name}</Text>
+              <Text textColor={'blue.500'}>{user.age}</Text>
+              <Text textColor={'green.500'}>{user.gender}</Text>
             </HStack>
           </VStack>
         ) : null}

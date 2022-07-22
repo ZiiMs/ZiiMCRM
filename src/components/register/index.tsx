@@ -65,6 +65,23 @@ const RegisterModal = () => {
       setError('You must be logged in to do that!');
       return;
     }
+    const res = await fetch('api/auth/register/createAccount', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: session.user.id,
+        gender: gender,
+        age: age,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.error) {
+      setError(error);
+      return;
+    }
     setError(null);
     toggleRegister();
   };

@@ -20,7 +20,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
   const [openBoard, setOpenBoard] = useState(false);
 
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     if (session === null && !showLogin) {
@@ -37,7 +37,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     setOpenBoard(true);
   };
 
-  if (!session)
+  if (status === 'loading')
     return (
       <VStack
         w='full'
