@@ -3,20 +3,20 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 const fetchBoards = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log('Query', req.query);
-  const id = JSON.parse(req.query.id as string);
-  if (!id || id === undefined) {
-    console.log('undefined');
-    res.status(401).json({
-      error: 'UserId is required',
+  if (!req.query.id) {
+    res.status(403).json({
+      error: true,
     });
+
     return;
   }
+  const { id } = req.query;
   await prisma.board
     .findMany({
       where: {
         users: {
           some: {
-            userId: id,
+            userId: String(id),
           },
         },
       },
