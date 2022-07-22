@@ -1,12 +1,62 @@
-import { Heading, HStack, VStack } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Heading,
+  HStack,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 
 import Board from '@/components/board';
 import Card from '@/components/card';
 import Drawer from '@/components/drawer';
+import Loading from '@/components/loading';
+import { useFindBoard } from '@/utils/swrFuncs';
 import type { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const Dashboard: NextPage = () => {
   const drawer = true;
+  const router = useRouter();
+  const toast = useToast();
+  const { id } = router.query;
+  const { board, error, isLoading, mutate } = useFindBoard(String(id));
+  const { data: session } = useSession();
+
+  if (!session) {
+    toast({
+      position: 'top-right',
+      duration: 5000,
+      variant: 'solid',
+      render: () => (
+        <Alert status='error'>
+          <AlertIcon />
+          You must be logged in to view this page.
+        </Alert>
+      ),
+    });
+    router.push('/');
+  }
+
+  if (isLoading) return <Loading />;
+
+  if (error) {
+    toast({
+      position: 'top-right',
+      duration: 5000,
+      variant: 'solid',
+      render: () => (
+        <Alert status='error'>
+          <AlertIcon />
+          Error:!
+        </Alert>
+      ),
+    });
+    console.log(JSON.stringify(error));
+    router.push('/');
+  }
+
   return (
     <HStack
       w={'full'}
@@ -23,7 +73,7 @@ const Dashboard: NextPage = () => {
         px={4}
         pb={3}
       >
-        <Heading color={'gray.200'}>Dashboard</Heading>
+        <Heading color={'gray.200'}>{board?.name}</Heading>
         <HStack w={'full'} spacing={4}>
           <Card graph></Card>
           <Card></Card>

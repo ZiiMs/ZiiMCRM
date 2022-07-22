@@ -1,4 +1,4 @@
-import useBoards from '@/utils/swrFuncs';
+import { useBoards } from '@/utils/swrFuncs';
 import {
   Alert,
   AlertDescription,
@@ -105,6 +105,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
         setBoardName('');
         setDescription('');
         setType('');
+        setImage('');
         toggleOpen();
         router.push(`/dashboard/${board.id}`);
       } catch (e: any) {

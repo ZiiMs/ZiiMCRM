@@ -1,5 +1,5 @@
 import loginToggle from '@/context/loginContext';
-import { Container, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
+import { Container, HStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import {
@@ -9,10 +9,12 @@ import {
   useEffect,
   useState,
 } from 'react';
-import CreateBoardModal from '../createboard';
-import LoginModal from '../login';
-import RegisterModal from '../register';
-import SettingsModal from '../settings';
+
+import CreateBoardModal from '@/components/createboard';
+import Loading from '@/components/loading';
+import LoginModal from '@/components/login';
+import RegisterModal from '@/components/register';
+import SettingsModal from '@/components/settings';
 import Navbar from './navbar';
 
 const Layout = ({ children }: PropsWithChildren<{}>) => {
@@ -37,28 +39,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     setOpenBoard(true);
   };
 
-  if (status === 'loading')
-    return (
-      <VStack
-        w='full'
-        minH={{
-          base: 'auto',
-          md: '100vh',
-        }}
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-      >
-        <Spinner
-          size={'xl'}
-          thickness={'4px'}
-          speed={'0.65s'}
-          color={'gray.200'}
-          backgroundColor={'transparent'}
-        />
-        <Text fontSize={'xl'}>Loading ...</Text>
-      </VStack>
-    );
+  if (status === 'loading') return <Loading />;
 
   return (
     <Container

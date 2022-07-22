@@ -8,6 +8,25 @@ interface IBoard {
   userId: string;
 }
 
+export const useBoards = (id: string) => {
+  const fetcher: Fetcher<Board[]> = (url: string) =>
+    fetch(url).then((res) => res.json());
+  const { data, error, mutate } = useSWR<Board[]>(`/api/board/${id}`, fetcher);
+  const boardData = data || [];
+  return { boards: boardData, error, isLoading: !data && !error, mutate };
+};
+
+export const useFindBoard = (id: string) => {
+  const fetcher: Fetcher<Board> = (url: string) =>
+    fetch(url).then((res) => res.json());
+  const { data, error, mutate } = useSWR<Board>(
+    `/api/board/getboard/${id}`,
+    fetcher
+  );
+  const boardData = data;
+  return { board: boardData, error, isLoading: !data && !error, mutate };
+};
+
 // export const useCreateBoard = ({ name, description, type, userId }: IBoard) => {
 //   const fetcher: Fetcher<Board> = async (query: string) => {
 //     const res = await fetch('/api/board/createboard', {
@@ -30,15 +49,4 @@ interface IBoard {
 
 //   return useSWR<Board, Error>(`/api/board/createboard`, fetcher);
 // };
-
-const useBoards = (id: string) => {
-  const fetcher: Fetcher<Board[]> = (url: string) =>
-    fetch(url).then((res) => res.json());
-  const { data, error, mutate } = useSWR<Board[]>(`/api/board/${id}`, fetcher);
-  console.log('data', data);
-  const boardData = data || [];
-  return { boards: boardData, error, isLoading: !data && !error, mutate };
-};
-
-export default useBoards;
 

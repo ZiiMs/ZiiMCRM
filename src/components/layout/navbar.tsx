@@ -1,5 +1,5 @@
 import settingsToggle from '@/context/settingsContext';
-import useBoards from '@/utils/swrFuncs';
+import { useBoards } from '@/utils/swrFuncs';
 import {
   Avatar,
   Box,
@@ -16,7 +16,7 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { MouseEvent, useContext, useEffect } from 'react';
+import { MouseEvent, useContext } from 'react';
 import { BiMenuAltLeft, BiPlus } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { RiSettings3Line } from 'react-icons/ri';
@@ -36,9 +36,6 @@ const Navbar = ({ openBoard }: any) => {
   const { boards, isLoading, error } = useBoards(userId);
   // const boards = [];
   const router = useRouter();
-  useEffect(() => {
-    console.log('data2', boards);
-  }, [boards]);
 
   return (
     <VStack

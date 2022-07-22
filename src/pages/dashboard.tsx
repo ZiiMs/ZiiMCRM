@@ -3,7 +3,6 @@ import {
   AlertIcon,
   Heading,
   HStack,
-  Spinner,
   Text,
   useToast,
   VStack,
@@ -12,7 +11,8 @@ import {
 import Board from '@/components/board';
 import Card from '@/components/card';
 import Drawer from '@/components/drawer';
-import useBoards from '@/utils/swrFuncs';
+import Loading from '@/components/loading';
+import { useBoards } from '@/utils/swrFuncs';
 import { Board as BoardType } from '@prisma/client';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
@@ -66,27 +66,7 @@ const Home: NextPage = () => {
     );
   }
 
-  if (isLoading) {
-    <VStack
-      w='full'
-      minH={{
-        base: 'auto',
-        md: '100vh',
-      }}
-      display='flex'
-      justifyContent='center'
-      alignItems='center'
-    >
-      <Spinner
-        size={'xl'}
-        thickness={'4px'}
-        speed={'0.65s'}
-        color={'gray.200'}
-        backgroundColor={'transparent'}
-      />
-      <Text fontSize={'xl'}>Loading ...</Text>
-    </VStack>;
-  }
+  if (isLoading) <Loading />;
 
   return (
     <HStack
