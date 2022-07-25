@@ -1,15 +1,14 @@
-import { prisma } from '@/utils/database';
+import { trpc } from '@/utils/trpc';
 import { Avatar, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import { User } from '@prisma/client';
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 interface IProps {
   user: User;
 }
 
-const Profile = ({
-  user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Profile = () => {
+  const { data: user } = trpc.useQuery(['users.get']);
+
   return (
     <HStack
       w={'full'}
@@ -45,38 +44,6 @@ const Profile = ({
       </VStack>
     </HStack>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<IProps> = async (
-  context
-) => {
-  const { id } = context.params ? context.params : { id: 'nan' };
-
-  if (id === 'nan' || typeof id != 'string') {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-  const user = await prisma.user.findFirst({
-    where: { id: id },
-  });
-  if (!user) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      user,
-    },
-  };
 };
 
 export default Profile;

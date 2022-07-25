@@ -11,7 +11,7 @@ import Board from '@/components/board';
 import Card from '@/components/card';
 import Drawer from '@/components/drawer';
 import Loading from '@/components/loading';
-import { useFindBoard } from '@/utils/swrFuncs';
+import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -23,7 +23,7 @@ const Dashboard: NextPage = () => {
   const { id } = router.query;
   const { data: session } = useSession();
 
-  if (!session) {
+  if (!session || id === undefined) {
     toast({
       position: 'top-right',
       duration: 5000,
@@ -37,29 +37,40 @@ const Dashboard: NextPage = () => {
     });
     router.push('/');
   }
-  const userId = session?.user?.id || '';
+  const {
+    data: board,
+    isLoading,
+    error,
+  } = trpc.useQuery(
+    [
+      'findUserBoard',
+      {
+        id: String(id),
+      },
+    ],
+    {
+      onError: (error) => {
+        console.log({ error });
 
-  const { board, error, isLoading, mutate } = useFindBoard(String(id), userId);
+        toast({
+          position: 'top-right',
+          duration: 5000,
+          variant: 'solid',
+          render: () => (
+            <Alert status='error'>
+              <AlertIcon />
+              {error.message}
+            </Alert>
+          ),
+        });
+        router.push('/');
+      },
+    }
+  );
 
   if (isLoading) return <Loading />;
 
   if (error) {
-    toast({
-      position: 'top-right',
-      duration: 5000,
-      variant: 'solid',
-      render: () => (
-        <Alert status='error'>
-          <AlertIcon />
-          {error.name === 'NotFoundError'
-            ? 'Board not found with ID or player not authorized'
-            : 'Error!'}
-        </Alert>
-      ),
-    });
-    console.log(JSON.stringify(error));
-    mutate((v) => v, false);
-    router.push('/');
   }
 
   return (

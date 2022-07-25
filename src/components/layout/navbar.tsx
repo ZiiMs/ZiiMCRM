@@ -1,6 +1,6 @@
 import settingsToggle from '@/context/settingsContext';
 import { MAX_BOARDS } from '@/utils/config';
-import { useBoards } from '@/utils/swrFuncs';
+import { trpc } from '@/utils/trpc';
 import {
   Alert,
   AlertIcon,
@@ -35,15 +35,16 @@ const Navbar = ({ openBoard }: any) => {
   // const { boards, setBoards } = useContext(boardContext);
   const { data: session } = useSession();
   const user = session?.user;
-  const userId = user?.id || '';
+  const userId = user?.id;
   const toast = useToast();
 
-  const { boards, isLoading, error } = useBoards(userId);
+  const { data: boards, isLoading, error } = trpc.useQuery(['boards.fetch']);
+  // utils.fetchQuery(['']);
   // const boards = [];
   const router = useRouter();
 
   const handlePlusBoards = (e: MouseEvent<HTMLButtonElement>) => {
-    if (boards.length > MAX_BOARDS) {
+    if (boards === undefined || boards?.length > MAX_BOARDS) {
       e.preventDefault();
       toast({
         position: 'bottom',

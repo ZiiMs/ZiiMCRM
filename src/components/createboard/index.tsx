@@ -1,4 +1,4 @@
-import { useBoards } from '@/utils/swrFuncs';
+import { trpc } from '@/utils/trpc';
 import {
   Alert,
   AlertDescription,
@@ -18,7 +18,6 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { Board } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
@@ -29,6 +28,44 @@ interface ICreateBoard {
 
 const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const toast = useToast();
+  const client = trpc.useContext();
+  const { mutate } = trpc.useMutation(['boards.create'], {
+    onSuccess: (data) => {
+      client.invalidateQueries(['boards.fetch']);
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='success'>
+            <AlertIcon />
+            {'Board created successfully'}
+          </Alert>
+        ),
+      });
+      setBoardName('');
+      setDescription('');
+      setType('');
+      setImage('');
+      toggleOpen();
+      router.push(`/dashboard/${data.board.id}`);
+    },
+    onError: (error) => {
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='error'>
+            <AlertIcon />
+            {error.message}
+          </Alert>
+        ),
+      });
+      console.log({ error });
+      setError(error.message);
+    },
+  });
 
   const [error, setError] = useState<String | null>(null);
   const [boardName, setBoardName] = useState('');
@@ -38,8 +75,6 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const { data: session } = useSession();
 
   const userId = session?.user?.id || '';
-
-  const { boards, mutate } = useBoards(userId);
 
   const router = useRouter();
 
@@ -66,63 +101,12 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
     if (!CheckErrors()) return;
     if (!session) return;
     const imageurl = image ? image : null;
-    const res = await fetch('/api/board/createboard', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        boardName,
-        description,
-        type,
-        image: imageurl,
-        userId: session.user.id,
-      }),
+    mutate({
+      boardName,
+      description,
+      type,
+      image: imageurl,
     });
-    const data = await res.json();
-    if (data.error) {
-      setError(data.error);
-    } else {
-      try {
-        const board: Board = data.board;
-        console.log(data.message);
-        toast({
-          position: 'top-right',
-          duration: 2000,
-          variant: 'solid',
-          render: () => (
-            <Alert status='success'>
-              <AlertIcon />
-              {data.message}
-            </Alert>
-          ),
-        });
-        await mutate([...boards, board], {
-          rollbackOnError: true,
-          populateCache: true,
-          revalidate: false,
-        });
-        setBoardName('');
-        setDescription('');
-        setType('');
-        setImage('');
-        toggleOpen();
-        router.push(`/dashboard/${board.id}`);
-      } catch (e: any) {
-        console.log(e);
-        toast({
-          position: 'top-right',
-          duration: 5000,
-          variant: 'solid',
-          render: () => (
-            <Alert status='error'>
-              <AlertIcon />
-              {e}
-            </Alert>
-          ),
-        });
-      }
-    }
   };
 
   return (
