@@ -7,7 +7,7 @@ export const userRouter = trpc
   .router<Context>()
   .mutation('create', {
     input: z.object({
-      age: z.number(),
+      age: z.number().min(16).max(100),
       gender: z.string(),
     }),
     async resolve({ ctx, input }) {

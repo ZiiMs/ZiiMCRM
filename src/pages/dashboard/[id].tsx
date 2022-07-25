@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertIcon,
+  Button,
   Heading,
   HStack,
   useToast,
@@ -89,7 +90,10 @@ const Dashboard: NextPage = () => {
         px={4}
         pb={3}
       >
-        <Heading color={'gray.200'}>{board?.name}</Heading>
+        <HStack>
+          <Heading color={'gray.200'}>{board?.name}</Heading>
+          <Button>Settings</Button>
+        </HStack>
         <HStack w={'full'} spacing={4}>
           <Card graph></Card>
           <Card></Card>

@@ -1,3 +1,4 @@
+import { trpc } from '@/utils/trpc';
 import {
   Avatar,
   Box,
@@ -17,31 +18,56 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { Comments as CommentType, User } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import Comment from '../comment';
 import Dropzone from '../dropzone';
 
+type ICommentUser = CommentType & { User: User };
+
 const Drawer = () => {
   const [favorite, setFavorite] = useState(false);
-  const [comments, setComments] = useState<any[]>();
+
   const [status, setStatus] = useState<string>('New Ticket');
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.useInfiniteQuery(['boards.get-comments', { limit: 20 }], {
+      getNextPageParam: (params) => params.nextCursor,
+      onError: (error) => {
+        console.log({ error });
+        throw new Error(error.message);
+      },
+    });
+  const [comments, setComments] = useState<ICommentUser[]>(() => {
+    if (!data) return [];
+    const cmts = data.pages.map((page) => page.comments).flat();
+    console.log({ cmts });
+    return cmts;
+  });
 
   useEffect(() => {
-    const getComments = async () => {
-      const res = await fetch('https://jsonplaceholder.typicode.com/comments');
-      if (!res.ok) {
-        throw new Error(res.statusText);
-      }
-      const data = await res.json();
-      if (data.length > 0) {
-        setComments(data);
-      }
-    };
+    if (!data) return;
+    const cmts = data.pages.map((page) => page.comments).flat();
+    console.log('effect', cmts[0]);
 
-    getComments().catch(console.error);
-  }, []);
+    setComments(cmts);
+  }, [data, data?.pages]);
+
+  // useEffect(() => {
+  //   const getComments = async () => {
+  //     const res = await fetch('https://jsonplaceholder.typicode.com/comments');
+  //     if (!res.ok) {
+  //       throw new Error(res.statusText);
+  //     }
+  //     const data = await res.json();
+  //     if (data.length > 0) {
+  //       setComments(data);
+  //     }
+  //   };
+
+  //   getComments().catch(console.error);
+  // }, []);
 
   return (
     <Flex h={'100vh'} maxH={'100vh'} backgroundColor={'brand.700'}>
@@ -56,7 +82,7 @@ const Drawer = () => {
             <HStack spacing={1} w='full'>
               <Button
                 variant={'unstyled'}
-                size={'2xs'}
+                size={'xs'}
                 m={0}
                 p={0}
                 w={'16px'}
@@ -209,19 +235,32 @@ const Drawer = () => {
               },
             }}
           >
-            <VStack>
+            <VStack pb={2}>
               {comments
-                ? comments.map((comment) => {
-                    const user = {
-                      email: comment.email,
-                      id: comment.id,
-                    };
-
+                ? comments.map((comment: ICommentUser) => {
+                    const user = comment.User;
+                    // console.log(comment);
                     return (
-                      <Comment key={user.id} user={user} body={comment.body} />
+                      <Comment
+                        key={comment.userId}
+                        user={{ email: user.email ?? '', id: user.id }}
+                        body={comment.text}
+                      />
                     );
                   })
                 : null}
+              <Button
+                size={'sm'}
+                variant={'ghost'}
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? 'Loading more...'
+                  : hasNextPage
+                  ? 'Load More'
+                  : 'Nothing more to load'}
+              </Button>
             </VStack>
           </Box>
         </VStack>

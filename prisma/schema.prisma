@@ -55,6 +55,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   UserRoles     UserRoles[]
+  Comments      Comments[]
 }
 
 model VerificationToken {
@@ -75,6 +76,7 @@ model Board {
   updatedAt   DateTime        @updatedAt
   users       BoardsOnUsers[]
   UserRoles   UserRoles[]
+  Comments    Comments[]
 }
 
 model BoardsOnUsers {
@@ -97,4 +99,17 @@ model UserRoles {
   User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([boardId, userId])
+}
+
+model Comments {
+  id BigInt @id @default(autoincrement())
+
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User    User   @relation(fields: [userId], references: [id])
+  userId  String
+  Board   Board  @relation(fields: [boardId], references: [id])
+  boardId String
 }
