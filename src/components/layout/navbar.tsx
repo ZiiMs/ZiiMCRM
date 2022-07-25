@@ -152,7 +152,14 @@ const Navbar = ({ openBoard }: any) => {
               <NextLink passHref href={`/user/${user?.id}`}>
                 <MenuItem>Profile</MenuItem>
               </NextLink>
-              <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  router.push('/');
+                  signOut({ redirect: false });
+                }}
+              >
+                Sign out
+              </MenuItem>
             </MenuList>
           </Portal>
         </Menu>
