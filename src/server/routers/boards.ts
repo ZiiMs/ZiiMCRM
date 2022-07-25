@@ -15,46 +15,38 @@ export const boardRouter = trpc
       type: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const board = await ctx.prisma.board
-        .create({
-          data: {
-            name: input.boardName,
-            description: input.description,
-            type: input.type,
-            image: input.image,
-            users: {
-              create: [
-                {
-                  user: {
-                    connect: {
-                      id: ctx.session?.user.id,
-                    },
+      const board = await ctx.prisma.board.create({
+        data: {
+          name: input.boardName,
+          description: input.description,
+          type: input.type,
+          image: input.image,
+          users: {
+            create: [
+              {
+                user: {
+                  connect: {
+                    id: ctx.session?.user.id,
                   },
                 },
-              ],
-            },
-            UserRoles: {
-              create: [
-                {
-                  User: {
-                    connect: {
-                      id: ctx.session?.user.id,
-                    },
-                  },
-                  role: Role.ADMIN,
-                },
-              ],
-            },
+              },
+            ],
           },
-        })
-        .catch((err) => {
-          console.log(err);
-          throw new trpc.TRPCError({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: 'Board name already exists!',
-            cause: err,
-          });
-        });
+          UserRoles: {
+            create: [
+              {
+                User: {
+                  connect: {
+                    id: ctx.session?.user.id,
+                  },
+                },
+                role: Role.ADMIN,
+              },
+            ],
+          },
+        },
+      });
+
       console.log('board', { board });
 
       return { message: 'Board created successfully', board };
