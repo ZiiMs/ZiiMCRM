@@ -1,4 +1,5 @@
 import registerToggle from '@/context/registerContext';
+import { trpc } from '@/utils/trpc';
 import {
   Alert,
   AlertDescription,
@@ -39,6 +40,16 @@ const RegisterModal = () => {
   const [age, setAge] = useState<number>();
   const [isAgeValid, setAgeValid] = useState(true);
   const [isGenderValid, setGenderValid] = useState(true);
+  const { mutate } = trpc.useMutation(['users.create'], {
+    onSuccess: (data) => {
+      setError(null);
+      toggleRegister();
+    },
+    onError: (error) => {
+      console.log({ error });
+      setError(error.message);
+    },
+  });
   const { showRegister, toggleRegister } = useContext(registerToggle);
   const { data: session } = useSession();
 
@@ -65,25 +76,11 @@ const RegisterModal = () => {
       setError('You must be logged in to do that!');
       return;
     }
-    const res = await fetch('api/auth/register/createAccount', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: session.user.id,
-        gender: gender,
-        age: age,
-      }),
-    });
 
-    const data = await res.json();
-    if (data.error) {
-      setError(error);
-      return;
-    }
-    setError(null);
-    toggleRegister();
+    mutate({
+      age: age ?? 18,
+      gender: gender,
+    });
   };
 
   // const isGenderValid = gender !== '';
