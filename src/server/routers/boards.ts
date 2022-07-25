@@ -6,7 +6,6 @@ import { Context } from '../context';
 
 export const boardRouter = trpc
   .router<Context>()
-
   .mutation('create', {
     input: z.object({
       boardName: z.string(),
@@ -15,6 +14,10 @@ export const boardRouter = trpc
       type: z.string(),
     }),
     async resolve({ ctx, input }) {
+      if (!ctx.session?.user) {
+        throw new Error('Not logged in');
+      }
+      const userId = ctx.session.user.id;
       const board = await ctx.prisma.board.create({
         data: {
           name: input.boardName,
@@ -26,7 +29,7 @@ export const boardRouter = trpc
               {
                 user: {
                   connect: {
-                    id: ctx.session?.user.id,
+                    id: userId,
                   },
                 },
               },
@@ -37,7 +40,7 @@ export const boardRouter = trpc
               {
                 User: {
                   connect: {
-                    id: ctx.session?.user.id,
+                    id: userId,
                   },
                 },
                 role: Role.ADMIN,

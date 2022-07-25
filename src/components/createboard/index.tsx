@@ -74,8 +74,6 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
   const [image, setImage] = useState('');
   const { data: session } = useSession();
 
-  const userId = session?.user?.id || '';
-
   const router = useRouter();
 
   const CheckErrors = () => {
