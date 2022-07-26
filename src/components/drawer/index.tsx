@@ -18,7 +18,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { Comments as CommentType, User } from '@prisma/client';
+import { Board, Comments as CommentType, User } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { RiArrowDownSFill } from 'react-icons/ri';
@@ -27,30 +27,45 @@ import Dropzone from '../dropzone';
 
 type ICommentUser = CommentType & { User: User };
 
-const Drawer = () => {
+interface IDrawer {
+  currentBoard: Board;
+}
+
+const Drawer = ({ currentBoard }: IDrawer) => {
   const [favorite, setFavorite] = useState(false);
 
   const [status, setStatus] = useState<string>('New Ticket');
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    trpc.useInfiniteQuery(['boards.get-comments', { limit: 20 }], {
-      getNextPageParam: (params) => params.nextCursor,
-      onError: (error) => {
-        console.log({ error });
-        throw new Error(error.message);
-      },
-    });
-  const [comments, setComments] = useState<ICommentUser[]>(() => {
+    trpc.useInfiniteQuery(
+      ['boards.get-comments', { limit: 20, boardId: currentBoard.id }],
+      {
+        getNextPageParam: (params) => params.nextCursor,
+        onError: (error) => {
+          console.log({ error });
+          throw new Error(error.message);
+        },
+      }
+    );
+  const [comments, setComments] = useState<ICommentUser[] | null>(() => {
     if (!data) return [];
     const cmts = data.pages.map((page) => page.comments).flat();
     console.log({ cmts });
+    if (cmts.length <= 0) {
+      return null;
+    }
     return cmts;
   });
 
   useEffect(() => {
     if (!data) return;
     const cmts = data.pages.map((page) => page.comments).flat();
-    console.log('effect', cmts[0]);
+    if (cmts.length <= 0) {
+      setComments(null);
+      console.log('No comments');
+      return;
+    }
 
+    console.log('effect', cmts);
     setComments(cmts);
   }, [data, data?.pages]);
 
@@ -92,7 +107,7 @@ const Drawer = () => {
                 onClick={() => setFavorite(!favorite)}
               />
 
-              <Text color={'whiteAlpha.600'}>#0123456</Text>
+              <Text color={'whiteAlpha.600'}>#{12323409}</Text>
             </HStack>
             <Heading size={'md'} textColor={'gray.200'}>
               Example Ticket Title
@@ -223,6 +238,15 @@ const Drawer = () => {
             maxH={'100%'}
             px={2}
             overflowY={'scroll'}
+            onScroll={(e: React.UIEvent<HTMLDivElement>) => {
+              const bottom =
+                e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
+                e.currentTarget.scrollHeight - 1000;
+
+              if (bottom && hasNextPage) {
+                fetchNextPage();
+              }
+            }}
             sx={{
               '&::-webkit-scrollbar': {
                 width: '12px',
@@ -236,31 +260,28 @@ const Drawer = () => {
             }}
           >
             <VStack pb={2}>
-              {comments
-                ? comments.map((comment: ICommentUser) => {
-                    const user = comment.User;
-                    // console.log(comment);
-                    return (
-                      <Comment
-                        key={comment.userId}
-                        user={{ email: user.email ?? '', id: user.id }}
-                        body={comment.text}
-                      />
-                    );
-                  })
-                : null}
-              <Button
-                size={'sm'}
-                variant={'ghost'}
-                onClick={() => fetchNextPage()}
-                disabled={!hasNextPage || isFetchingNextPage}
-              >
+              {comments ? (
+                comments.map((comment: ICommentUser) => {
+                  const user = comment.User;
+                  // console.log(comment);
+                  return (
+                    <Comment
+                      key={String(comment.id)}
+                      user={user}
+                      comment={comment}
+                    />
+                  );
+                })
+              ) : (
+                <Text>No comments</Text>
+              )}
+              <Text>
                 {isFetchingNextPage
                   ? 'Loading more...'
                   : hasNextPage
                   ? 'Load More'
-                  : 'Nothing more to load'}
-              </Button>
+                  : null}
+              </Text>
             </VStack>
           </Box>
         </VStack>

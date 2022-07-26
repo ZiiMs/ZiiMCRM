@@ -106,7 +106,7 @@ const Dashboard: NextPage = () => {
           <Board Title={'Title5'}></Board>
         </HStack>
       </VStack>
-      {drawer ? <Drawer /> : null}
+      {drawer && board ? <Drawer currentBoard={board} /> : null}
     </HStack>
   );
 };
