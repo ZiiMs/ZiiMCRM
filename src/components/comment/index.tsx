@@ -3,13 +3,13 @@ import { Comments, User } from '@prisma/client';
 import Link from 'next/link';
 
 interface IComment {
-  user: User;
-  comment: Comments;
+  user: { name: string | null; image: string | null; id: string };
+  comment: { text: string; id: bigint; createdAt: Date };
 }
 
 const Comment = ({ comment, user }: IComment) => {
   return (
-    <Box backgroundColor={'brand.800'} borderRadius={'8px'} p={2}>
+    <Box backgroundColor={'brand.800'} borderRadius={'8px'} w={'full'} p={2}>
       <HStack justifyContent={'flex-start'} alignItems={'flex-start'}>
         <Link href={`/user/${user.id}`}>
           <Avatar

@@ -14,7 +14,7 @@ import Drawer from '@/components/drawer';
 import Loading from '@/components/loading';
 import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 const Dashboard: NextPage = () => {
@@ -71,9 +71,6 @@ const Dashboard: NextPage = () => {
 
   if (isLoading) return <Loading />;
 
-  if (error) {
-  }
-
   return (
     <HStack
       w={'full'}
@@ -110,6 +107,25 @@ const Dashboard: NextPage = () => {
     </HStack>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
 
 export default Dashboard;
 

@@ -37,7 +37,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
         duration: 2000,
         variant: 'solid',
         render: () => (
-          <Alert status='success'>
+          <Alert status='success' variant='solid'>
             <AlertIcon />
             {'Board created successfully'}
           </Alert>
@@ -56,7 +56,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
         duration: 2000,
         variant: 'solid',
         render: () => (
-          <Alert status='error'>
+          <Alert status='error' variant='solid'>
             <AlertIcon />
             {error.message}
           </Alert>
@@ -166,7 +166,7 @@ const CreateBoardModal = ({ open, toggleOpen }: ICreateBoard) => {
               </FormControl>
             </HStack>
             {error ? (
-              <Alert status='error'>
+              <Alert status='error' variant='solid'>
                 <AlertIcon />
                 <AlertTitle>Error: </AlertTitle>
                 <AlertDescription>{error}</AlertDescription>

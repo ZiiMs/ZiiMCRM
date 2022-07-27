@@ -1,5 +1,7 @@
 import { trpc } from '@/utils/trpc';
 import {
+  Alert,
+  AlertIcon,
   Avatar,
   Box,
   Button,
@@ -8,6 +10,9 @@ import {
   Heading,
   HStack,
   Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
   List,
   ListItem,
   Menu,
@@ -16,28 +21,79 @@ import {
   MenuList,
   SimpleGrid,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
-import { Board, Comments as CommentType, User } from '@prisma/client';
-import { useEffect, useState } from 'react';
+import { Board } from '@prisma/client';
+import React, { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import { IoSend } from 'react-icons/io5';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import Comment from '../comment';
 import Dropzone from '../dropzone';
+import BrandIconButton from '../iconButton';
 
-type ICommentUser = CommentType & { User: User };
+type ICommentUser = {
+  User: {
+    name: string | null;
+    image: string | null;
+    id: string;
+  };
+  text: string;
+  id: bigint;
+  createdAt: Date;
+};
 
 interface IDrawer {
   currentBoard: Board;
 }
 
 const Drawer = ({ currentBoard }: IDrawer) => {
+  const toast = useToast();
+
   const [favorite, setFavorite] = useState(false);
+  const [message, setMessage] = useState('');
 
   const [status, setStatus] = useState<string>('New Ticket');
+  const client = trpc.useContext();
+  const { mutate } = trpc.useMutation(['comments.create'], {
+    onSuccess: (newData) => {
+      console.log('newData', newData.Comment);
+      if (comments === null) return;
+      setComments([...comments, newData.Comment]);
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='success' variant='solid'>
+            <AlertIcon />
+            {'Comment posted'}
+          </Alert>
+        ),
+      });
+
+      setMessage('');
+    },
+    onError: (error) => {
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='error' variant='solid'>
+            <AlertIcon />
+            {error.message}
+          </Alert>
+        ),
+      });
+      console.log({ error });
+    },
+  });
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     trpc.useInfiniteQuery(
-      ['boards.get-comments', { limit: 20, boardId: currentBoard.id }],
+      ['comments.get', { limit: 10, boardId: currentBoard.id }],
       {
         getNextPageParam: (params) => params.nextCursor,
         onError: (error) => {
@@ -46,6 +102,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
         },
       }
     );
+
   const [comments, setComments] = useState<ICommentUser[] | null>(() => {
     if (!data) return [];
     const cmts = data.pages.map((page) => page.comments).flat();
@@ -69,6 +126,28 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     setComments(cmts);
   }, [data, data?.pages]);
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('submit');
+    if (!message.length) {
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        render: () => (
+          <Alert status='error' variant='solid'>
+            <AlertIcon />
+            {'Message is required'}
+          </Alert>
+        ),
+      });
+      return;
+    }
+    mutate({
+      boardId: currentBoard.id,
+      text: message,
+    });
+  };
+
   // useEffect(() => {
   //   const getComments = async () => {
   //     const res = await fetch('https://jsonplaceholder.typicode.com/comments');
@@ -85,9 +164,9 @@ const Drawer = ({ currentBoard }: IDrawer) => {
   // }, []);
 
   return (
-    <Flex h={'100vh'} maxH={'100vh'} backgroundColor={'brand.700'}>
+    <Flex h={'100vh'} maxH={'100vh'} backgroundColor={'brand.700'} maxW={'17%'}>
       <VStack w='full' h={'100%'}>
-        <VStack w='full' h={'100%'}>
+        <VStack w='full' h={'100%'} position={'relative'}>
           <VStack
             justifyContent={'flex-start'}
             alignItems={'flex-start'}
@@ -233,35 +312,35 @@ const Drawer = ({ currentBoard }: IDrawer) => {
             <Dropzone />
           </VStack>
           <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
-          <Box
-            maxW={'fit-content'}
-            maxH={'100%'}
-            px={2}
-            overflowY={'scroll'}
-            onScroll={(e: React.UIEvent<HTMLDivElement>) => {
-              const bottom =
-                e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
-                e.currentTarget.scrollHeight - 1000;
+          {comments ? (
+            <Box
+              w={'full'}
+              h={'full'}
+              px={2}
+              overflowY={'scroll'}
+              onScroll={(e: React.UIEvent<HTMLDivElement>) => {
+                const bottom =
+                  e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
+                  e.currentTarget.scrollHeight - 1000;
 
-              if (bottom && hasNextPage) {
-                fetchNextPage();
-              }
-            }}
-            sx={{
-              '&::-webkit-scrollbar': {
-                width: '12px',
-                borderRadius: '8px',
-                backgroundColor: `rgba(0, 0, 0, 0.15)`,
-              },
-              '&::-webkit-scrollbar-thumb': {
-                borderRadius: '8px',
-                backgroundColor: `rgba(0, 0, 0, 0.4)`,
-              },
-            }}
-          >
-            <VStack pb={2}>
-              {comments ? (
-                comments.map((comment: ICommentUser) => {
+                if (bottom && hasNextPage && !isFetchingNextPage) {
+                  fetchNextPage();
+                }
+              }}
+              sx={{
+                '&::-webkit-scrollbar': {
+                  width: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: `rgba(0, 0, 0, 0.15)`,
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  borderRadius: '8px',
+                  backgroundColor: `rgba(0, 0, 0, 0.4)`,
+                },
+              }}
+            >
+              <VStack>
+                {comments.map((comment: ICommentUser) => {
                   const user = comment.User;
                   // console.log(comment);
                   return (
@@ -271,19 +350,90 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                       comment={comment}
                     />
                   );
-                })
-              ) : (
+                })}
+                <Text>
+                  {isFetchingNextPage
+                    ? 'Loading more...'
+                    : hasNextPage
+                    ? 'Load More'
+                    : null}
+                </Text>
+                <form onSubmit={handleSubmit}>
+                  <InputGroup
+                    position={'absolute'}
+                    right={0}
+                    bottom={0}
+                    w={'full'}
+                    px={4}
+                    pb={2}
+                    backgroundColor={'transparent'}
+                  >
+                    <Input
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setMessage(e.target.value)
+                      }
+                      value={message}
+                      size={'md'}
+                      backdropFilter={'blur(1px)'}
+                      backgroundColor={'blackAlpha.400'}
+                      borderWidth={'2px'}
+                    />
+                    <InputRightElement pr={8}>
+                      <BrandIconButton
+                        Color={'brand.400'}
+                        size={'sm'}
+                        variant={'ghost'}
+                        type={'submit'}
+                        aria-label={'submit-comment-button'}
+                        icon={<IoSend />}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </form>
+              </VStack>
+            </Box>
+          ) : (
+            <>
+              <Flex
+                justifyContent={'center'}
+                alignItems={'center'}
+                w={'full'}
+                h={'full'}
+              >
                 <Text>No comments</Text>
-              )}
-              <Text>
-                {isFetchingNextPage
-                  ? 'Loading more...'
-                  : hasNextPage
-                  ? 'Load More'
-                  : null}
-              </Text>
-            </VStack>
-          </Box>
+              </Flex>
+              <form onSubmit={handleSubmit}>
+                <InputGroup
+                  size={'md'}
+                  px={2}
+                  pb={2}
+                  backgroundColor={'transparent'}
+                >
+                  <Input
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setMessage(e.target.value)
+                    }
+                    value={message}
+                    size={'md'}
+                    backdropFilter={'blur(1px)'}
+                    backgroundColor={'blackAlpha.400'}
+                    borderWidth={'2px'}
+                  />
+                  <InputRightElement width={'fit-content'} pr={3}>
+                    {/* <BrandIconButton aria-label={'submit-icon'} icon={<IoSend />} /> */}
+                    <BrandIconButton
+                      Color={'brand.400'}
+                      size={'sm'}
+                      variant={'ghost'}
+                      type={'submit'}
+                      aria-label={'submit-comment-button'}
+                      icon={<IoSend />}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+              </form>
+            </>
+          )}
         </VStack>
       </VStack>
     </Flex>

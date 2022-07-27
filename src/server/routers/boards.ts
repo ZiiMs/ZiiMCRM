@@ -68,36 +68,5 @@ export const boardRouter = trpc
       });
       return boards;
     },
-  })
-  .query('get-comments', {
-    input: z.object({
-      boardId: z.string(),
-      limit: z.number().min(1).max(100).nullish(),
-      cursor: z.bigint().nullish(),
-    }),
-    async resolve({ ctx, input }) {
-      const limit = input.limit ?? 10;
-      const { cursor } = input;
-      const comments = await ctx.prisma.comments.findMany({
-        where: {
-          boardId: input.boardId,
-        },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          id: 'asc',
-        },
-        skip: 0,
-        include: {
-          User: true,
-        },
-      });
-      let nextCursor: typeof cursor | null = null;
-      if (comments.length > limit) {
-        const nextItem = comments.pop();
-        nextCursor = nextItem!.id;
-      }
-      return { comments, nextCursor };
-    },
   });
 
