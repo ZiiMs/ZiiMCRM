@@ -41,25 +41,33 @@ MyApp.getInitialProps = async ({ ctx }: any) => {
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
-    const url = '/api/trpc';
+    if (typeof window !== 'undefined') {
+      // during client requests
+      return {
+        transformer: superjson, // optional - adds superjson serialization
+        url: '/api/trpc',
+      };
+    }
+    const ONE_DAY_SECONDS = 60 * 60 * 24;
+    ctx?.res?.setHeader(
+      'Cache-Control',
+      `s-maxage=1, stale-while-revalidate=${ONE_DAY_SECONDS}`
+    );
+
+    const url = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/trpc`
+      : 'http://localhost:3000/api/trpc';
 
     return {
-      transformer: superjson,
-      url,
+      transformer: superjson, // optional - adds superjson serialization
 
-      /**
-       * @link https://react-query.tanstack.com/reference/QueryClient
-       */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      url,
+      headers: {
+        'X-Vercel-Secure': '1',
+        'x-ssr': '1',
+      },
     };
   },
-  /**
-   * @link https://trpc.io/docs/ssr
-   */
-  ssr: false,
+  ssr: true,
 })(MyApp);
 
