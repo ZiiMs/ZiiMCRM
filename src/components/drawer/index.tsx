@@ -124,7 +124,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
 
     console.log('effect', cmts);
     setComments(cmts);
-  }, [data, data?.pages]);
+  }, [data]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
