@@ -22,9 +22,11 @@ import {
   SimpleGrid,
   Text,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Board } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { IoSend } from 'react-icons/io5';
@@ -50,12 +52,13 @@ interface IDrawer {
 
 const Drawer = ({ currentBoard }: IDrawer) => {
   const toast = useToast();
+  const { data: session } = useSession()
+  const [parent] = useAutoAnimate<HTMLDivElement>()
 
   const [favorite, setFavorite] = useState(false);
   const [message, setMessage] = useState('');
 
   const [status, setStatus] = useState<string>('New Ticket');
-  const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
       if (comments === null || comments.length === 0) {
@@ -63,7 +66,6 @@ const Drawer = ({ currentBoard }: IDrawer) => {
       } else {
         setComments([...comments, newData.Comment]);
       }
-
       toast({
         position: 'top-right',
         duration: 2000,
@@ -76,6 +78,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
         ),
       });
       setMessage('');
+
     },
     onError: (error) => {
       toast({
@@ -93,6 +96,8 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     },
   });
 
+
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     trpc.useInfiniteQuery(
       ['comments.get', { limit: 10, boardId: currentBoard.id }],
@@ -101,7 +106,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
         onError: (error) => {
           console.log({ error });
           throw new Error(error.message);
-        },
+        }
       }
     );
 
@@ -126,7 +131,12 @@ const Drawer = ({ currentBoard }: IDrawer) => {
 
     console.log('effect', cmts);
     setComments(cmts);
+    return () => {
+      setComments(null);
+    }
   }, [data]);
+
+  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -341,7 +351,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                 },
               }}
             >
-              <VStack>
+              <VStack ref={parent}>
                 {comments.map((comment: ICommentUser) => {
                   const user = comment.User;
                   // console.log(comment);

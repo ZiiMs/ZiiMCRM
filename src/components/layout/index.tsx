@@ -7,12 +7,12 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useState,
+  useState
 } from 'react';
 
-import CreateBoardModal from '@/components/createboard';
 import Loading from '@/components/loading';
 import LoginModal from '@/components/login';
+import PlusBoard from '@/components/plusboard';
 import RegisterModal from '@/components/register';
 import SettingsModal from '@/components/settings';
 import Navbar from './navbar';
@@ -54,7 +54,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
       p={0}
     >
       <SettingsModal />
-      <CreateBoardModal
+      <PlusBoard
         open={openBoard}
         toggleOpen={() => {
           setOpenBoard(false);

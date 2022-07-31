@@ -17,6 +17,7 @@ import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 //@ts-ignore
+import * as shajs from 'sha.js'
 
 
 const Dashboard: NextPage = () => {
@@ -25,6 +26,8 @@ const Dashboard: NextPage = () => {
   const toast = useToast();
   const { id } = router.query;
   const { data: session } = useSession();
+
+
   
 
   if (!session || id === undefined) {
@@ -72,7 +75,7 @@ const Dashboard: NextPage = () => {
     }
   );
 
-  // const shareCode = shajs('sha256').update(board?.id).digest('hex').toString().substring(0, 6)
+  const shareCode = shajs('sha256').update(board?.id).digest('hex').toString().substring(0, 6)
 
   if (isLoading) return <Loading />;
 
@@ -95,7 +98,7 @@ const Dashboard: NextPage = () => {
         <HStack>
           <Heading color={'gray.200'}>{board?.name}</Heading>
           <Button onClick={() => {
-            // console.log(shareCode);
+            console.log(shareCode);
           }}>Settings</Button>
         </HStack>
         <HStack w={'full'} spacing={4}>
