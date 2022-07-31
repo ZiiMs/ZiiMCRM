@@ -58,9 +58,12 @@ const Drawer = ({ currentBoard }: IDrawer) => {
   const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
-      console.log('newData', newData.Comment);
-      if (comments === null) return;
-      setComments([...comments, newData.Comment]);
+      if (comments === null || comments.length === 0) {
+        setComments([newData.Comment]);
+      } else {
+        setComments([...comments, newData.Comment]);
+      }
+
       toast({
         position: 'top-right',
         duration: 2000,
@@ -72,7 +75,6 @@ const Drawer = ({ currentBoard }: IDrawer) => {
           </Alert>
         ),
       });
-
       setMessage('');
     },
     onError: (error) => {

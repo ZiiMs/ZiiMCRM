@@ -5,7 +5,7 @@ import { RegisterToggleProvider } from '@/context/registerContext';
 import { SettingsToggleProvider } from '@/context/settingsContext';
 import { ChakraProvider } from '@chakra-ui/react';
 import { withTRPC } from '@trpc/next';
-import { getSession, SessionProvider } from 'next-auth/react';
+import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import theme from 'src/theme';
 import superjson from 'superjson';
@@ -31,13 +31,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 }
 
-MyApp.getInitialProps = async ({ ctx }: any) => {
-  return {
-    pageProps: {
-      session: await getSession({ ctx }),
-    },
-  };
-};
+// MyApp.getInitialProps = async ({ ctx }: any) => {
+//   return {
+//     pageProps: {
+//       session: await getSession({ ctx }),
+//     },
+//   };
+// };
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {

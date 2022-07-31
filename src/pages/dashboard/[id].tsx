@@ -5,7 +5,7 @@ import {
   Heading,
   HStack,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 
 import Board from '@/components/board';
@@ -16,6 +16,8 @@ import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+//@ts-ignore
+
 
 const Dashboard: NextPage = () => {
   const drawer = true;
@@ -23,6 +25,7 @@ const Dashboard: NextPage = () => {
   const toast = useToast();
   const { id } = router.query;
   const { data: session } = useSession();
+  
 
   if (!session || id === undefined) {
     toast({
@@ -69,6 +72,8 @@ const Dashboard: NextPage = () => {
     }
   );
 
+  // const shareCode = shajs('sha256').update(board?.id).digest('hex').toString().substring(0, 6)
+
   if (isLoading) return <Loading />;
 
   return (
@@ -89,7 +94,9 @@ const Dashboard: NextPage = () => {
       >
         <HStack>
           <Heading color={'gray.200'}>{board?.name}</Heading>
-          <Button>Settings</Button>
+          <Button onClick={() => {
+            // console.log(shareCode);
+          }}>Settings</Button>
         </HStack>
         <HStack w={'full'} spacing={4}>
           <Card graph></Card>
