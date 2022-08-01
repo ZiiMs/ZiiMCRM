@@ -10,7 +10,7 @@ interface IProps {
 const Profile = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: user } = trpc.useQuery(['users.get', { id: id }]);
+  const { data: user } = trpc.useQuery(['users.get', { id: id as string }]);
 
   return (
     <HStack
