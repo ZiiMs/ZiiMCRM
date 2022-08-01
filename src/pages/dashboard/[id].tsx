@@ -19,7 +19,9 @@ import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import BrandIconButton from '@/components/iconButton';
+import ShareCodeModal from '@/components/shareModal';
 
 const Dashboard: NextPage = () => {
   const drawer = true;
@@ -27,18 +29,7 @@ const Dashboard: NextPage = () => {
   const toast = useToast();
   const { id } = router.query;
   const { data: session } = useSession();
-
-  const { mutate } = trpc.useMutation(['boards.genKey'], {
-    onSuccess: (data) => {
-      toast({
-        title: 'Success',
-        description: `Board key generated ${data.storedKey.code}`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-    },
-  });
+  const [open, setOpen] = useState(false);
 
   if (!session || id === undefined) {
     toast({
@@ -108,11 +99,11 @@ const Dashboard: NextPage = () => {
             <Heading color={'gray.200'}>{board?.name}</Heading>
             <BrandIconButton
               variant={'ghost'}
-              icon={<RiSettings3Line/>}
-    aria-label='board settings'
-    onClick={() => {
-      console.log("Open board settings")
-    }}
+              icon={<RiSettings3Line />}
+              aria-label='board settings'
+              onClick={() => {
+                console.log('Open board settings');
+              }}
             >
               Settings
             </BrandIconButton>
@@ -120,10 +111,7 @@ const Dashboard: NextPage = () => {
           <Button
             onClick={() => {
               if (!board?.id) return;
-
-              mutate({
-                boardId: board.id,
-              });
+              setOpen(true);
             }}
           >
             Share
@@ -142,6 +130,11 @@ const Dashboard: NextPage = () => {
         </HStack>
       </VStack>
       {drawer && board ? <Drawer currentBoard={board} /> : null}
+      <ShareCodeModal
+        boardId={board!.id}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
     </HStack>
   );
 };
