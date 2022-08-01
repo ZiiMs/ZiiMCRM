@@ -5,17 +5,21 @@ import {
   Heading,
   HStack,
   useToast,
+  IconButton,
   VStack,
+  Flex,
 } from '@chakra-ui/react';
 
 import Board from '@/components/board';
 import Card from '@/components/card';
 import Drawer from '@/components/drawer';
+import { RiSettings3Line } from 'react-icons/ri';
 import Loading from '@/components/loading';
 import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import BrandIconButton from '@/components/iconButton';
 
 const Dashboard: NextPage = () => {
   const drawer = true;
@@ -28,12 +32,12 @@ const Dashboard: NextPage = () => {
     onSuccess: (data) => {
       toast({
         title: 'Success',
-        description: 'Board key generated',
+        description: `Board key generated ${data.storedKey.code}`,
         status: 'success',
         duration: 5000,
         isClosable: true,
       });
-    }
+    },
   });
 
   if (!session || id === undefined) {
@@ -99,18 +103,30 @@ const Dashboard: NextPage = () => {
         px={4}
         pb={3}
       >
-        <HStack>
-          <Heading color={'gray.200'}>{board?.name}</Heading>
+        <HStack w={'full'} justifyContent={'space-between'}>
+          <HStack>
+            <Heading color={'gray.200'}>{board?.name}</Heading>
+            <BrandIconButton
+              variant={'ghost'}
+              icon={<RiSettings3Line/>}
+    aria-label='board settings'
+    onClick={() => {
+      console.log("Open board settings")
+    }}
+            >
+              Settings
+            </BrandIconButton>
+          </HStack>
           <Button
             onClick={() => {
-              if(!board?.id) return;
+              if (!board?.id) return;
 
               mutate({
                 boardId: board.id,
               });
             }}
           >
-            Settings
+            Share
           </Button>
         </HStack>
         <HStack w={'full'} spacing={4}>

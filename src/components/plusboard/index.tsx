@@ -60,6 +60,20 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
       setStep(1);
       // router.push(`/dashboard/${data}`);
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='error' variant='solid'>
+            <AlertIcon />
+            {'Error Joining Board'}
+          </Alert>
+        ),
+      });
+    }
   });
   const { mutate } = trpc.useMutation(['boards.create'], {
     onSuccess: (data) => {

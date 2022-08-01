@@ -58,11 +58,10 @@ const Drawer = ({ currentBoard }: IDrawer) => {
   const [message, setMessage] = useState('');
 
   const [status, setStatus] = useState<string>('New Ticket');
-  const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
       // client.invalidateQueries(['comments.get']);
-      refetch({refetchPage: (page, i) => i === 0})
+      refetch({ refetchPage: (page, i) => i === 0 });
       // if (comments === null || comments.length === 0) {
       //   setComments([newData.Comment]);
       // } else {
@@ -358,17 +357,18 @@ const Drawer = ({ currentBoard }: IDrawer) => {
               }}
             >
               <VStack>
-                <VStack w={'full'} ref={parent}>
                   {comments.pages.map((group, i) => (
-                    
                     <React.Fragment key={i} >
-                    {group.comments.map((comment) => (
-                                  <Comment
-                                  key={String(comment.id)}
-                                  user={comment.User}
-                                  comment={comment}
-                                />
-                    ))}</React.Fragment>
+                      <VStack w={'full'} ref={parent}>
+                      {group.comments.map((comment) => (
+                        <Comment
+                          key={String(comment.id)}
+                          user={comment.User}
+                          comment={comment}
+                        />
+                      ))}
+                      </VStack>
+                    </React.Fragment>
                   ))}
                   <Text>
                     {isFetchingNextPage
@@ -377,7 +377,6 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                       ? 'Load More'
                       : null}
                   </Text>
-                </VStack>
                 <form onSubmit={handleSubmit}>
                   <InputGroup
                     position={'absolute'}
