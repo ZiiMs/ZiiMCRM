@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 interface IComment {
   user: { name: string | null; image: string | null; id: string };
-  comment: { text: string; id: bigint; createdAt: Date };
+  comment: { text: string; id: number; createdAt: Date };
 }
 
 const Comment = ({ comment, user }: IComment) => {

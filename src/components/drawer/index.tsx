@@ -22,7 +22,7 @@ import {
   SimpleGrid,
   Text,
   useToast,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Board } from '@prisma/client';
@@ -42,7 +42,7 @@ type ICommentUser = {
     id: string;
   };
   text: string;
-  id: bigint;
+  id: number;
   createdAt: Date;
 };
 
@@ -52,8 +52,8 @@ interface IDrawer {
 
 const Drawer = ({ currentBoard }: IDrawer) => {
   const toast = useToast();
-  const { data: session } = useSession()
-  const [parent] = useAutoAnimate<HTMLDivElement>()
+  const { data: session } = useSession();
+  const [parent] = useAutoAnimate<HTMLDivElement>();
 
   const [favorite, setFavorite] = useState(false);
   const [message, setMessage] = useState('');
@@ -78,7 +78,6 @@ const Drawer = ({ currentBoard }: IDrawer) => {
         ),
       });
       setMessage('');
-
     },
     onError: (error) => {
       toast({
@@ -96,8 +95,6 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     },
   });
 
-
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     trpc.useInfiniteQuery(
       ['comments.get', { limit: 10, boardId: currentBoard.id }],
@@ -106,7 +103,11 @@ const Drawer = ({ currentBoard }: IDrawer) => {
         onError: (error) => {
           console.log({ error });
           throw new Error(error.message);
-        }
+        },
+        // select: data => ({
+        //   pages: [...data.pages].reverse(),
+        //   pageParams: [...data.pageParams].reverse(),
+        // })
       }
     );
 
@@ -133,10 +134,8 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     setComments(cmts);
     return () => {
       setComments(null);
-    }
+    };
   }, [data]);
-
-  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

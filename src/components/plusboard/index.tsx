@@ -40,6 +40,27 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
   const toast = useToast();
   const [parent] = useAutoAnimate<HTMLElement>();
   const client = trpc.useContext();
+  const { mutate: joinBoard } = trpc.useMutation(['boards.join'], {
+    onSuccess: (data) => {
+      client.invalidateQueries(['boards.fetch']);
+      console.log(data);
+      toast({
+        position: 'top-right',
+        duration: 2000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='success' variant='solid'>
+            <AlertIcon />
+            {'Board Joined'}
+          </Alert>
+        ),
+      });
+      toggleOpen();
+      setSelected('');
+      setStep(1);
+      // router.push(`/dashboard/${data}`);
+    },
+  });
   const { mutate } = trpc.useMutation(['boards.create'], {
     onSuccess: (data) => {
       client.invalidateQueries(['boards.fetch']);
@@ -86,6 +107,7 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
   const [type, setType] = useState('');
   const [image, setImage] = useState('');
   const { data: session } = useSession();
+  const [code, setCode] = useState('');
   const [step, setStep] = useState(1);
   const [selected, setSelected] = useState('create');
 
@@ -280,7 +302,13 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
             </VStack>
           ) : selected === 'join' ? (
             <VStack>
-              <Input placeholder='jrT89f' />
+              <Input
+                placeholder='jrT89f'
+                value={code}
+                onInput={(e: React.FormEvent<HTMLInputElement>) =>
+                  setCode(e.currentTarget.value)
+                }
+              />
               <Text>
                 Pleas enter a code above. You can find the code to a board
                 located in the top right of the board. Press the button and a
@@ -310,7 +338,9 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
                   mr={2}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     if (selected === 'join') {
-                      console.log('Join');
+                      joinBoard({
+                        code,
+                      });
                     } else {
                       saveBoard(e);
                     }

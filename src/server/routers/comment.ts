@@ -12,9 +12,11 @@ export const commentRouter = trpc
     }),
     async resolve({ ctx, input }) {
       if (!ctx.session?.user) {
+        console.log('Not logged in');
         throw new Error('Not logged in');
       }
-      const userId = ctx.session.user.id;
+      console.log(input);
+      const userId: string = ctx.session.user.id;
       const Comment = await ctx.prisma.comments.create({
         data: {
           text: input.text,
@@ -52,7 +54,7 @@ export const commentRouter = trpc
     input: z.object({
       boardId: z.string(),
       limit: z.number().min(1).max(100).nullish(),
-      cursor: z.bigint().nullish(),
+      cursor: z.number().nullish(),
     }),
     async resolve({ ctx, input }) {
       const limit = input.limit ?? 10;

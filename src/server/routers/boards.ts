@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client';
 import * as trpc from '@trpc/server';
-
+import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import { Context } from '../context';
 
@@ -17,7 +17,7 @@ export const boardRouter = trpc
       if (!ctx.session?.user) {
         throw new Error('Not logged in');
       }
-      const userId = ctx.session.user.id;
+      const userId: string = ctx.session.user.id;
       const board = await ctx.prisma.board.create({
         data: {
           name: input.boardName,
@@ -53,6 +53,63 @@ export const boardRouter = trpc
       console.log('board', { board });
 
       return { message: 'Board created successfully', board };
+    },
+  })
+  .mutation('genKey', {
+    input: z.object({
+      boardId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      // const hash = await hashid.encode(input.shareCode);
+      await ctx.prisma.shareKeys
+        .deleteMany({
+          where: {
+            expires: {
+              lt: new Date(),
+            },
+          },
+        })
+        .then((data) => {
+          console.log('deleted expired share keys', data);
+        });
+
+      const ONE_DAY = 24 * 60 * 60 * 1000;
+      // const tempSeconds = 10000;
+      const storedKey = await ctx.prisma.shareKeys.create({
+        data: {
+          boardId: input.boardId,
+          code: nanoid(8),
+          expires: new Date(Date.now() + ONE_DAY),
+        },
+      });
+
+      return { storedKey };
+    },
+  })
+  .mutation('join', {
+    input: z.object({
+      code: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const foundBoard = await ctx.prisma.shareKeys.findFirst({
+        where: {
+          code: input.code,
+        },
+        include: {
+          Board: true,
+        },
+      });
+
+      const boards = await ctx.prisma.board.update({
+        where: {
+          id: foundBoard?.Board.id,
+        },
+        data: {
+          users: {
+            create: [{ user: { connect: { id: ctx.session?.user.id } } }],
+          },
+        },
+      });
     },
   })
   .query('fetch', {
