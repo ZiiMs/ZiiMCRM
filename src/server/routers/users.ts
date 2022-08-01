@@ -27,10 +27,13 @@ export const userRouter = trpc
     },
   })
   .query('get', {
-    async resolve({ ctx }) {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
       const user = await ctx.prisma.user.findFirstOrThrow({
         where: {
-          id: ctx.session?.user.id,
+          id: input.id,
         },
       });
       return user;
