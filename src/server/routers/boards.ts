@@ -60,8 +60,9 @@ export const boardRouter = trpc
       boardId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      // const hash = await hashid.encode(input.shareCode);
-
+      if (!ctx.session?.user) {
+        throw new Error('Not logged in');
+      }
 
       const ONE_DAY = 24 * 60 * 60 * 1000;
       // const tempSeconds = 10000;
@@ -69,6 +70,7 @@ export const boardRouter = trpc
         data: {
           boardId: input.boardId,
           code: nanoid(8),
+          userId: ctx.session.user.id,
           expires: new Date(Date.now() + ONE_DAY),
         },
       });

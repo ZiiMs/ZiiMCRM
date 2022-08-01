@@ -58,6 +58,7 @@ model User {
   sessions      Session[]
   UserRoles     UserRoles[]
   Comments      Comments[]
+  ShareKeys     ShareKeys[]
 }
 
 model VerificationToken {
@@ -123,6 +124,8 @@ model ShareKeys {
   code      String   @unique
   Board     Board    @relation(fields: [boardId], references: [id])
   boardId   String
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
   createdAt DateTime @default(now())
   expires   DateTime
 }

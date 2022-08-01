@@ -351,7 +351,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
               }}
             >
               <VStack >
-                <VStack ref={parent}>
+                <VStack w={'full'} ref={parent}>
                 {comments.map((comment: ICommentUser) => {
                   const user = comment.User;
                   // console.log(comment);

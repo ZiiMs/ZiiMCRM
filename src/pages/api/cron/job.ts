@@ -16,4 +16,3 @@ export default async function cleanDB(
 
   res.status(200).json({ message: `Cleaned ${JSON.stringify(data)}` });
 }
-
