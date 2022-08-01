@@ -358,8 +358,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
             >
               <VStack>
                   {comments.pages.map((group, i) => (
-                    <React.Fragment key={i} >
-                      <VStack w={'full'} ref={parent}>
+                      <VStack ley={i} w={'full'} ref={parent}>
                       {group.comments.map((comment) => (
                         <Comment
                           key={String(comment.id)}
@@ -368,7 +367,6 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                         />
                       ))}
                       </VStack>
-                    </React.Fragment>
                   ))}
                   <Text>
                     {isFetchingNextPage
