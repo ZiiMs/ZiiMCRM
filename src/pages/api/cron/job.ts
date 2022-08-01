@@ -12,7 +12,7 @@ export default async function cleanDB(
       },
     },
   });
-  console.log('deleted expired share keys', data);
+  console.log('deleted expired share keys', data, new Date());
 
   res.status(200).json({ message: `Cleaned ${JSON.stringify(data)}` });
 }
