@@ -64,7 +64,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
       if (comments === null || comments.length === 0) {
         setComments([newData.Comment]);
       } else {
-        setComments([...comments, newData.Comment]);
+        setComments([ newData.Comment, ...comments]);
       }
       toast({
         position: 'top-right',

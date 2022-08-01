@@ -66,7 +66,7 @@ export const commentRouter = trpc
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          id: 'asc',
+          id: 'desc',
         },
         skip: 0,
         select: {
