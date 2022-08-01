@@ -52,20 +52,21 @@ interface IDrawer {
 
 const Drawer = ({ currentBoard }: IDrawer) => {
   const toast = useToast();
-  const { data: session } = useSession();
   const [parent] = useAutoAnimate<HTMLDivElement>();
 
   const [favorite, setFavorite] = useState(false);
   const [message, setMessage] = useState('');
 
   const [status, setStatus] = useState<string>('New Ticket');
+  const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
-      if (comments === null || comments.length === 0) {
-        setComments([newData.Comment]);
-      } else {
-        setComments([ newData.Comment, ...comments]);
-      }
+      client.invalidateQueries(['comments.get']);
+      // if (comments === null || comments.length === 0) {
+      //   setComments([newData.Comment]);
+      // } else {
+      //   setComments([ newData.Comment, ...comments]);
+      // }
       toast({
         position: 'top-right',
         duration: 2000,
@@ -95,47 +96,51 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     },
   });
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    trpc.useInfiniteQuery(
-      ['comments.get', { limit: 10, boardId: currentBoard.id }],
-      {
-        getNextPageParam: (params) => params.nextCursor,
-        onError: (error) => {
-          console.log({ error });
-          throw new Error(error.message);
-        },
-        // select: data => ({
-        //   pages: [...data.pages].reverse(),
-        //   pageParams: [...data.pageParams].reverse(),
-        // })
-      }
-    );
-
-  const [comments, setComments] = useState<ICommentUser[] | null>(() => {
-    if (!data) return [];
-    const cmts = data.pages.map((page) => page.comments).flat();
-    console.log({ cmts });
-    if (cmts.length <= 0) {
-      return null;
+  const {
+    data: comments,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = trpc.useInfiniteQuery(
+    ['comments.get', { limit: 10, boardId: currentBoard.id }],
+    {
+      getNextPageParam: (params) => params.nextCursor,
+      onError: (error) => {
+        console.log({ error });
+        throw new Error(error.message);
+      },
+      // select: data => ({
+      //   pages: [...data.pages].reverse(),
+      //   pageParams: [...data.pageParams].reverse(),
+      // })
     }
-    return cmts;
-  });
+  );
 
-  useEffect(() => {
-    if (!data) return;
-    const cmts = data.pages.map((page) => page.comments).flat();
-    if (cmts.length <= 0) {
-      setComments(null);
-      console.log('No comments');
-      return;
-    }
+  // const [comments, setComments] = useState<ICommentUser[] | null>(() => {
+  //   if (!data) return [];
+  //   const cmts = data.pages.map((page) => page.comments).flat();
+  //   console.log({ cmts });
+  //   if (cmts.length <= 0) {
+  //     return null;
+  //   }
+  //   return cmts;
+  // });
 
-    console.log('effect', cmts);
-    setComments(cmts);
-    return () => {
-      setComments(null);
-    };
-  }, [data]);
+  // useEffect(() => {
+  //   if (!data) return;
+  //   const cmts = data.pages.map((page) => page.comments).flat();
+  //   if (cmts.length <= 0) {
+  //     setComments(null);
+  //     console.log('No comments');
+  //     return;
+  //   }
+
+  //   console.log('effect', cmts);
+  //   setComments(cmts);
+  //   return () => {
+  //     setComments(null);
+  //   };
+  // }, [data]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -350,26 +355,26 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                 },
               }}
             >
-              <VStack >
+              <VStack>
                 <VStack w={'full'} ref={parent}>
-                {comments.map((comment: ICommentUser) => {
-                  const user = comment.User;
-                  // console.log(comment);
-                  return (
-                    <Comment
-                      key={String(comment.id)}
-                      user={user}
-                      comment={comment}
-                    />
-                  );
-                })}
-                <Text>
-                  {isFetchingNextPage
-                    ? 'Loading more...'
-                    : hasNextPage
-                    ? 'Load More'
-                    : null}
-                </Text>
+                  {comments.pages.map((group, i) => (
+                    
+                    <React.Fragment key={i} >
+                    {group.comments.map((comment) => (
+                                  <Comment
+                                  key={String(comment.id)}
+                                  user={comment.User}
+                                  comment={comment}
+                                />
+                    ))}</React.Fragment>
+                  ))}
+                  <Text>
+                    {isFetchingNextPage
+                      ? 'Loading more...'
+                      : hasNextPage
+                      ? 'Load More'
+                      : null}
+                  </Text>
                 </VStack>
                 <form onSubmit={handleSubmit}>
                   <InputGroup
