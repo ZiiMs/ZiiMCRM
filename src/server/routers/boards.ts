@@ -66,6 +66,8 @@ export const boardRouter = trpc
 
       const ONE_DAY = 24 * 60 * 60 * 1000;
       // const tempSeconds = 10000;
+      
+
       const storedKey = await ctx.prisma.shareKeys.create({
         data: {
           boardId: input.boardId,

@@ -1,13 +1,16 @@
 import { trpc } from '@/utils/trpc';
 import { Avatar, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import { User } from '@prisma/client';
+import { useRouter } from 'next/router';
 
 interface IProps {
   user: User;
 }
 
 const Profile = () => {
-  const { data: user } = trpc.useQuery(['users.get']);
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: user } = trpc.useQuery(['users.get', id: id]);
 
   return (
     <HStack
