@@ -61,7 +61,8 @@ const Drawer = ({ currentBoard }: IDrawer) => {
   const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
-      client.invalidateQueries(['comments.get']);
+      // client.invalidateQueries(['comments.get']);
+      refetch({refetchPage: (page, i) => i === 0})
       // if (comments === null || comments.length === 0) {
       //   setComments([newData.Comment]);
       // } else {
@@ -100,6 +101,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     data: comments,
     fetchNextPage,
     hasNextPage,
+    refetch,
     isFetchingNextPage,
   } = trpc.useInfiniteQuery(
     ['comments.get', { limit: 10, boardId: currentBoard.id }],
