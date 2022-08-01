@@ -358,7 +358,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
             >
               <VStack>
                   {comments.pages.map((group, i) => (
-                      <VStack ley={i} w={'full'} ref={parent}>
+                      <VStack key={i} w={'full'} ref={parent}>
                       {group.comments.map((comment) => (
                         <Comment
                           key={String(comment.id)}
