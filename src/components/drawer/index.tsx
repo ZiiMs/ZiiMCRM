@@ -350,7 +350,8 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                 },
               }}
             >
-              <VStack ref={parent}>
+              <VStack >
+                <VStack ref={parent}>
                 {comments.map((comment: ICommentUser) => {
                   const user = comment.User;
                   // console.log(comment);
@@ -369,6 +370,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
                     ? 'Load More'
                     : null}
                 </Text>
+                </VStack>
                 <form onSubmit={handleSubmit}>
                   <InputGroup
                     position={'absolute'}

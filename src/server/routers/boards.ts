@@ -61,17 +61,7 @@ export const boardRouter = trpc
     }),
     async resolve({ ctx, input }) {
       // const hash = await hashid.encode(input.shareCode);
-      await ctx.prisma.shareKeys
-        .deleteMany({
-          where: {
-            expires: {
-              lt: new Date(),
-            },
-          },
-        })
-        .then((data) => {
-          console.log('deleted expired share keys', data);
-        });
+
 
       const ONE_DAY = 24 * 60 * 60 * 1000;
       // const tempSeconds = 10000;
