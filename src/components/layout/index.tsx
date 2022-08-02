@@ -11,11 +11,18 @@ import {
 } from 'react';
 
 import Loading from '@/components/loading';
-import LoginModal from '@/components/login';
-import PlusBoard from '@/components/plusboard';
-import RegisterModal from '@/components/register';
-import SettingsModal from '@/components/settings';
-import Navbar from './navbar';
+// import LoginModal from '@/components/login';
+// import PlusBoard from '@/components/plusboard';
+// import RegisterModal from '@/components/register';
+// import SettingsModal from '@/components/settings';
+// import Navbar from './navbar';
+import dynamic from 'next/dynamic';
+
+const Navbar = dynamic(() => import('./navbar'));
+const SettingsModal = dynamic(() => import('@/components/settings'));
+const LoginModal = dynamic(() => import('@/components/login'));
+const RegisterModal = dynamic(() => import('@/components/register'));
+const PlusBoard = dynamic(() => import('@/components/plusboard'));
 
 const Layout = ({ children }: PropsWithChildren<{}>) => {
   const { showLogin, toggleLogin } = useContext(loginToggle);

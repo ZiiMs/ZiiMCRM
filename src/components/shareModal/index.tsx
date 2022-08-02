@@ -1,15 +1,11 @@
 import { trpc } from '@/utils/trpc';
 import {
   Button,
-  Input,
-  Modal,
+  Input, InputGroup, InputRightAddon, Modal,
   ModalBody,
-  ModalContent,
-  InputRightAddon,
-  InputGroup,
-  ModalFooter,
+  ModalContent, ModalFooter,
   ModalHeader,
-  ModalOverlay,
+  ModalOverlay
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 

@@ -1,27 +1,25 @@
 import {
   Alert,
   AlertIcon,
-  Button,
-  Heading,
-  HStack,
-  useToast,
-  IconButton,
-  VStack,
-  Flex,
+  Button, Flex, Heading,
+  HStack, IconButton, useToast, VStack
 } from '@chakra-ui/react';
 
 import Board from '@/components/board';
 import Card from '@/components/card';
-import Drawer from '@/components/drawer';
-import { RiSettings3Line } from 'react-icons/ri';
+// import Drawer from '@/components/drawer';
+import BrandIconButton from '@/components/iconButton';
 import Loading from '@/components/loading';
+import ShareCodeModal from '@/components/shareModal';
 import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import BrandIconButton from '@/components/iconButton';
-import ShareCodeModal from '@/components/shareModal';
+import { RiSettings3Line } from 'react-icons/ri';
+
+const Drawer = dynamic(() => import('@/components/drawer'));
 
 const Dashboard: NextPage = () => {
   const drawer = true;

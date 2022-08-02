@@ -22,19 +22,20 @@ import {
   SimpleGrid,
   Text,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Board } from '@prisma/client';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { IoSend } from 'react-icons/io5';
 import { RiArrowDownSFill } from 'react-icons/ri';
-import Comment from '../comment';
+// import Comment from '../comment';
 import Dropzone from '../dropzone';
 import BrandIconButton from '../iconButton';
-
+const Comment = dynamic(() => import('../comment'));
 type ICommentUser = {
   User: {
     name: string | null;
@@ -357,24 +358,24 @@ const Drawer = ({ currentBoard }: IDrawer) => {
               }}
             >
               <VStack>
-                  {comments.pages.map((group, i) => (
-                      <VStack key={i} w={'full'} ref={parent}>
-                      {group.comments.map((comment) => (
-                        <Comment
-                          key={String(comment.id)}
-                          user={comment.User}
-                          comment={comment}
-                        />
-                      ))}
-                      </VStack>
-                  ))}
-                  <Text>
-                    {isFetchingNextPage
-                      ? 'Loading more...'
-                      : hasNextPage
-                      ? 'Load More'
-                      : null}
-                  </Text>
+                {comments.pages.map((group, i) => (
+                  <VStack key={i} w={'full'} ref={parent}>
+                    {group.comments.map((comment) => (
+                      <Comment
+                        key={String(comment.id)}
+                        user={comment.User}
+                        comment={comment}
+                      />
+                    ))}
+                  </VStack>
+                ))}
+                <Text>
+                  {isFetchingNextPage
+                    ? 'Loading more...'
+                    : hasNextPage
+                    ? 'Load More'
+                    : null}
+                </Text>
                 <form onSubmit={handleSubmit}>
                   <InputGroup
                     position={'absolute'}

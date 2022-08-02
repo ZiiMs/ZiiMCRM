@@ -31,13 +31,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 }
 
-// MyApp.getInitialProps = async ({ ctx }: any) => {
-//   return {
-//     pageProps: {
-//       session: await getSession({ ctx }),
-//     },
-//   };
-// };
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {

@@ -22,7 +22,7 @@ import {
   ModalOverlay,
   Text,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useSession } from 'next-auth/react';
