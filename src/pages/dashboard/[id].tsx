@@ -179,12 +179,21 @@ const Dashboard: NextPage = () => {
                 />
                 <Group group={group} CreateTicket={() => setCreateTicket(true)}>
                   {tickets
-                    ? tickets.map((ticket) => (
-                        <HStack key={ticket.id} bgColor={'brand.600'} borderRadius={3} w={'full'} h={'fit-content'}>
-                          <Text>{ticket.title}</Text>
-                          <Text>{ticket.description}</Text>
-                        </HStack>
-                      ))
+                    ? tickets.map((ticket) => {
+                        if (ticket.groupId === group.id) {
+                          <HStack
+                            key={ticket.id}
+                            bgColor={'brand.600'}
+                            borderRadius={3}
+                            w={'full'}
+                            h={'fit-content'}
+                          >
+                            <Text>{ticket.title}</Text>
+                            <Text>{ticket.description}</Text>
+                          </HStack>;
+                        }
+                        return null;
+                      })
                     : null}
                 </Group>
               </React.Fragment>
