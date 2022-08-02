@@ -24,13 +24,13 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.LongText
-  access_token      String? @db.LongText
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.LongText
-  session_state     String? @db.LongText
+  id_token          String? @db.Text
+  session_state     String? @db.Text
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -59,6 +59,7 @@ model User {
   UserRoles     UserRoles[]
   Comments      Comments[]
   ShareKeys     ShareKeys[]
+  Ticket        Ticket[]
 }
 
 model VerificationToken {
@@ -79,8 +80,30 @@ model Board {
   updatedAt   DateTime        @updatedAt
   users       BoardsOnUsers[]
   UserRoles   UserRoles[]
-  Comments    Comments[]
   ShareKeys   ShareKeys[]
+  Groups      Group[]
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Board     Board    @relation(fields: [boardId], references: [id])
+  boardId   String
+  Ticket    Ticket[]
+}
+
+model Ticket {
+  id          Int        @id @default(autoincrement())
+  title       String     @unique
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Group       Group      @relation(fields: [groupId], references: [id])
+  groupId     String
+  Members     User[]
+  Comments    Comments[]
 }
 
 model BoardsOnUsers {
@@ -112,10 +135,10 @@ model Comments {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-  Board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  boardId String
+  User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  Ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId Int
 }
 
 model ShareKeys {

@@ -21,7 +21,7 @@ import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
 import { RiSettings3Line } from 'react-icons/ri';
 
 const Drawer = dynamic(() => import('@/components/drawer'));
@@ -62,7 +62,7 @@ const Dashboard: NextPage = () => {
       },
     ],
     {
-      onError: (error) => {
+      onError: (error: any) => {
         console.log({ error });
 
         toast({

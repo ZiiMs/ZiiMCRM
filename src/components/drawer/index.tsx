@@ -26,7 +26,6 @@ import {
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Board } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
@@ -117,6 +116,10 @@ const Drawer = ({ currentBoard }: IDrawer) => {
       // })
     }
   );
+
+  useEffect(() => {
+    console.log(comments);
+  }, [comments])
 
   // const [comments, setComments] = useState<ICommentUser[] | null>(() => {
   //   if (!data) return [];
@@ -330,7 +333,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
             <Dropzone />
           </VStack>
           <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
-          {comments ? (
+          {(comments?.pages[0] !== undefined && comments.pages[0].comments.length) > 0 ? (
             <Box
               w={'full'}
               h={'full'}
@@ -358,7 +361,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
               }}
             >
               <VStack>
-                {comments.pages.map((group, i) => (
+                {comments!.pages.map((group, i) => (
                   <VStack key={i} w={'full'} ref={parent}>
                     {group.comments.map((comment) => (
                       <Comment

@@ -3,11 +3,11 @@ import { Container, HStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import {
-    MouseEvent,
-    PropsWithChildren,
-    useContext,
-    useEffect,
-    useState
+  MouseEvent,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState
 } from 'react';
 
 import Loading from '@/components/loading';
