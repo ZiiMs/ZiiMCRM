@@ -180,6 +180,8 @@ const Dashboard: NextPage = () => {
                 <Group group={group} CreateTicket={() => setCreateTicket(true)}>
                   {tickets
                     ? tickets.map((ticket) => {
+                        console.log(ticket.groupId);
+                        console.log(group.id);
                         if (ticket.groupId === group.id) {
                           <HStack
                             key={ticket.id}
