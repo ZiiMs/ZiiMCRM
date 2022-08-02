@@ -25,7 +25,7 @@ import {
   VStack
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { Board, Ticket } from '@prisma/client';
+import { Ticket } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
@@ -119,7 +119,7 @@ const Drawer = ({ ticket }: IDrawer) => {
 
   useEffect(() => {
     console.log(comments);
-  }, [comments])
+  }, [comments]);
 
   // const [comments, setComments] = useState<ICommentUser[] | null>(() => {
   //   if (!data) return [];
@@ -333,7 +333,8 @@ const Drawer = ({ ticket }: IDrawer) => {
             <Dropzone />
           </VStack>
           <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
-          {(comments?.pages[0] !== undefined && comments.pages[0].comments.length) > 0 ? (
+          {(comments?.pages[0] !== undefined &&
+            comments.pages[0].comments.length) > 0 ? (
             <Box
               w={'full'}
               h={'full'}
