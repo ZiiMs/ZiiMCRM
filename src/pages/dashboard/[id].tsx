@@ -174,8 +174,8 @@ const Dashboard: NextPage = () => {
                 <CreateTicketModal
                   boardId={board!.id}
                   groupId={group.id}
-                  open={createGroupOpen}
-                  onClose={() => setCreateGroup(false)}
+                  open={createTicket}
+                  onClose={() => setCreateTicket(false)}
                 />
                 <Group group={group} CreateTicket={() => setCreateTicket(true)}>
                   {<Text>Woiwjer</Text>}
