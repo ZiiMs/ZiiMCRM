@@ -18,11 +18,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <LoginToggleProvider>
           <RegisterToggleProvider>
             <SettingsToggleProvider>
-              <BoardProvider>
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>
-              </BoardProvider>
             </SettingsToggleProvider>
           </RegisterToggleProvider>
         </LoginToggleProvider>

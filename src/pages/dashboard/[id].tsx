@@ -1,12 +1,17 @@
 import {
   Alert,
   AlertIcon,
-  Button, Flex, Heading,
-  HStack, IconButton, useToast, VStack
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  IconButton,
+  useToast,
+  VStack
 } from '@chakra-ui/react';
 
-import Board from '@/components/board';
-import Card from '@/components/card';
+// import Board from '@/components/board';
+// import Card from '@/components/card';
 // import Drawer from '@/components/drawer';
 import BrandIconButton from '@/components/iconButton';
 import Loading from '@/components/loading';
@@ -20,6 +25,8 @@ import { useState } from 'react';
 import { RiSettings3Line } from 'react-icons/ri';
 
 const Drawer = dynamic(() => import('@/components/drawer'));
+const Board = dynamic(() => import('@/components/board'));
+const Card = dynamic(() => import('@/components/card'));
 
 const Dashboard: NextPage = () => {
   const drawer = true;
