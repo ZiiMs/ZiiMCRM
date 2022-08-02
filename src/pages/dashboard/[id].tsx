@@ -178,7 +178,14 @@ const Dashboard: NextPage = () => {
                   onClose={() => setCreateTicket(false)}
                 />
                 <Group group={group} CreateTicket={() => setCreateTicket(true)}>
-                  {<Text>Woiwjer</Text>}
+                  {tickets
+                    ? tickets.map((ticket) => (
+                        <HStack key={ticket.id} bgColor={'brand.600'} borderRadius={3} w={'full'} h={'fit-content'}>
+                          <Text>{ticket.title}</Text>
+                          <Text>{ticket.description}</Text>
+                        </HStack>
+                      ))
+                    : null}
                 </Group>
               </React.Fragment>
             ))
