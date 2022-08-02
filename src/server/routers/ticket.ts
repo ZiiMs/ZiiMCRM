@@ -3,7 +3,7 @@ import * as trpc from '@trpc/server';
 import { z } from 'zod';
 import { Context } from '../context';
 
-export const commentRouter = trpc
+export const ticketRouter = trpc
   .router<Context>()
   .mutation('create', {
     input: z.object({

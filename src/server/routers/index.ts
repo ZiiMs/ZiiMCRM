@@ -6,6 +6,8 @@ import { userRouter } from './users';
 import superjson from 'superjson';
 import { Context } from '../context';
 import { commentRouter } from './comment';
+import { groupRouter } from './group';
+import { ticketRouter } from './ticket';
 
 export const appRouter = trpc
   .router<Context>()
@@ -31,7 +33,9 @@ export const appRouter = trpc
   })
   .merge('boards.', boardRouter)
   .merge('comments.', commentRouter)
-  .merge('users.', userRouter);
+  .merge('users.', userRouter)
+  .merge('group.', groupRouter)
+  .merge('ticket.', ticketRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

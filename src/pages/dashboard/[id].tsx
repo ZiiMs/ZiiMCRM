@@ -5,7 +5,8 @@ import {
   Flex,
   Heading,
   HStack,
-  IconButton,
+  Icon,
+  Text,
   useToast,
   VStack
 } from '@chakra-ui/react';
@@ -13,6 +14,7 @@ import {
 // import Board from '@/components/board';
 // import Card from '@/components/card';
 // import Drawer from '@/components/drawer';
+import CreateGroupModal from '@/components/createGroup';
 import BrandIconButton from '@/components/iconButton';
 import Loading from '@/components/loading';
 import ShareCodeModal from '@/components/shareModal';
@@ -21,20 +23,22 @@ import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { RiSettings3Line } from 'react-icons/ri';
 
 const Drawer = dynamic(() => import('@/components/drawer'));
-const Board = dynamic(() => import('@/components/board'));
+const Group = dynamic(() => import('@/components/group'));
 const Card = dynamic(() => import('@/components/card'));
 
 const Dashboard: NextPage = () => {
-  const drawer = true;
+  const drawer = false;
   const router = useRouter();
   const toast = useToast();
   const { id } = router.query;
   const { data: session } = useSession();
-  const [open, setOpen] = useState(false);
+  const [createGroupOpen, setCreateGroup] = useState(false);
+  const [shareCodeOpen, setShareCode] = useState(false);
 
   if (!session || id === undefined) {
     toast({
@@ -49,7 +53,16 @@ const Dashboard: NextPage = () => {
       ),
     });
     router.push('/');
+    return null;
   }
+
+  const { data: groups } = trpc.useQuery([
+    'group.get',
+    {
+      boardId: String(id),
+    },
+  ]);
+
   const {
     data: board,
     isLoading,
@@ -116,7 +129,7 @@ const Dashboard: NextPage = () => {
           <Button
             onClick={() => {
               if (!board?.id) return;
-              setOpen(true);
+              setShareCode(true);
             }}
           >
             Share
@@ -127,18 +140,73 @@ const Dashboard: NextPage = () => {
           <Card></Card>
         </HStack>
         <HStack w={'full'} h={'full'} spacing={2.5}>
-          <Board Title={'Title1'}></Board>
+          {groups && groups.length > 0 && groups.length < 5 ? (
+            <Button
+              w={'full'}
+              display={'flex'}
+              fontSize={'xl'}
+              textColor={'brand.300'}
+              flexDir={'column'}
+              variant={'ghost'}
+              fontWeight={'bold'}
+              h={'full'}
+              onClick={() => {
+                setCreateGroup(true);
+              }}
+            >
+              <Icon fontSize={'8xl'} as={AiOutlinePlus} />
+              Create Groups
+            </Button>
+          ) : null}
+          {groups && groups.length > 0 ? (
+            groups.map((group) => (
+              <React.Fragment key={group.id}>
+                <Group group={group}>{<Text>Woiwjer</Text>}</Group>
+              </React.Fragment>
+            ))
+          ) : (
+            <Flex
+              w={'full'}
+              justifyContent={'center'}
+              mb={4}
+              alignItems={'center'}
+              h={'full'}
+            >
+              <Button
+                w={'40%'}
+                display={'flex'}
+                fontSize={'xl'}
+                textColor={'brand.300'}
+                flexDir={'column'}
+                variant={'ghost'}
+                fontWeight={'bold'}
+                h={'full'}
+                onClick={() => {
+                  setCreateGroup(true);
+                }}
+              >
+                <Icon fontSize={'8xl'} as={AiOutlinePlus} />
+                Create Groups
+              </Button>
+            </Flex>
+          )}
+          {/* <Board Title={'Title1'}></Board>
           <Board Title={'Title2'}></Board>
           <Board Title={'Title3'}></Board>
           <Board Title={'Title4'}></Board>
-          <Board Title={'Title5'}></Board>
+          <Board Title={'Title5'}></Board> */}
         </HStack>
       </VStack>
       {drawer && board ? <Drawer currentBoard={board} /> : null}
       <ShareCodeModal
         boardId={board!.id}
-        open={open}
-        onClose={() => setOpen(false)}
+        open={shareCodeOpen}
+        onClose={() => setShareCode(false)}
+      />
+      <CreateGroupModal
+        boardId={board!.id}
+        open={createGroupOpen}
+        onClose={() => setCreateGroup(false)}
       />
     </HStack>
   );

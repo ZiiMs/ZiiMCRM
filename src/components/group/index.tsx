@@ -6,19 +6,21 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
+import { Group } from '@prisma/client';
 import { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { RiMoreFill } from 'react-icons/ri';
 
 interface IBoard {
-  Title: string;
+  group: Group
   children?: ReactNode;
 }
 
-const Board = ({ Title, children }: IBoard) => {
+const Group = ({ group, children }: IBoard) => {
   return (
     <Box
       w={'full'}
+      maxW={'20%'}
       h={'full'}
       py={2.5}
       px={1}
@@ -34,7 +36,7 @@ const Board = ({ Title, children }: IBoard) => {
           justifyContent={'space-between'}
         >
           <Text fontSize={'lg'} fontWeight={'semibold'}>
-            {Title}
+            {group.name}
           </Text>
           <IconButton color={'gray.200'} aria-label={'options'} variant={'ghost'} icon={<RiMoreFill/>} />
         </HStack>
@@ -64,5 +66,5 @@ const Board = ({ Title, children }: IBoard) => {
   );
 };
 
-export default Board;
+export default Group;
 
