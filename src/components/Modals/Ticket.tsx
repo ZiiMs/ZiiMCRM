@@ -19,11 +19,23 @@ type Props = {
   onClose: () => void;
 };
 
-const CreateTicketModal: React.FC<Props> = ({ open, onClose, groupId, boardId }) => {
+const CreateTicketModal: React.FC<Props> = ({
+  open,
+  onClose,
+  groupId,
+  boardId,
+}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const client = trpc.useContext();
-  const { mutate: mutateTickets } = trpc.useMutation(['ticket.create']);
+  const { mutate: mutateTickets } = trpc.useMutation(['ticket.create'], {
+    onSuccess: () => {
+      client.invalidateQueries(['ticket.get']);
+      onClose();
+      setTitle('');
+      setDescription('');
+    },
+  });
   const CreateTicket = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('Create Ticket');
@@ -31,7 +43,7 @@ const CreateTicketModal: React.FC<Props> = ({ open, onClose, groupId, boardId })
       description: description,
       groupId: groupId,
       title: title,
-      boardId: boardId
+      boardId: boardId,
     });
   };
 
