@@ -19,10 +19,10 @@ import Loading from '@/components/loading';
 import dynamic from 'next/dynamic';
 
 const Navbar = dynamic(() => import('./navbar'));
-const SettingsModal = dynamic(() => import('@/components/settings'));
-const LoginModal = dynamic(() => import('@/components/login'));
-const RegisterModal = dynamic(() => import('@/components/register'));
-const PlusBoard = dynamic(() => import('@/components/plusboard'));
+const SettingsModal = dynamic(() => import('@/components/Modals/Settings'));
+const LoginModal = dynamic(() => import('@/components/Modals/Login'));
+const RegisterModal = dynamic(() => import('@/components/Modals/Register'));
+const PlusBoard = dynamic(() => import('@/components/Modals/PlusBoard'));
 
 const Layout = ({ children }: PropsWithChildren<{}>) => {
   const { showLogin, toggleLogin } = useContext(loginToggle);

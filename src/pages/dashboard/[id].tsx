@@ -14,11 +14,13 @@ import {
 // import Board from '@/components/board';
 // import Card from '@/components/card';
 // import Drawer from '@/components/drawer';
-import CreateGroupModal from '@/components/createGroup';
 import BrandIconButton from '@/components/iconButton';
 import Loading from '@/components/loading';
-import ShareCodeModal from '@/components/shareModal';
+import CreateGroupModal from '@/components/Modals/Group';
+import ShareCodeModal from '@/components/Modals/Share';
+import CreateTicketModal from '@/components/Modals/Ticket';
 import { trpc } from '@/utils/trpc';
+import { Ticket } from '@prisma/client';
 import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
@@ -32,13 +34,14 @@ const Group = dynamic(() => import('@/components/group'));
 const Card = dynamic(() => import('@/components/card'));
 
 const Dashboard: NextPage = () => {
-  const drawer = false;
+  const [ticket, setTicket] = useState<Ticket | null>(null);
   const router = useRouter();
   const toast = useToast();
   const { id } = router.query;
   const { data: session } = useSession();
   const [createGroupOpen, setCreateGroup] = useState(false);
   const [shareCodeOpen, setShareCode] = useState(false);
+  const [createTicket, setCreateTicket] = useState(false);
 
   if (!session || id === undefined) {
     toast({
@@ -58,6 +61,13 @@ const Dashboard: NextPage = () => {
 
   const { data: groups } = trpc.useQuery([
     'group.get',
+    {
+      boardId: String(id),
+    },
+  ]);
+
+  const { data: tickets } = trpc.useQuery([
+    'ticket.get',
     {
       boardId: String(id),
     },
@@ -161,7 +171,15 @@ const Dashboard: NextPage = () => {
           {groups && groups.length > 0 ? (
             groups.map((group) => (
               <React.Fragment key={group.id}>
-                <Group group={group}>{<Text>Woiwjer</Text>}</Group>
+                <CreateTicketModal
+                  boardId={board!.id}
+                  groupId={group.id}
+                  open={createGroupOpen}
+                  onClose={() => setCreateGroup(false)}
+                />
+                <Group group={group} CreateTicket={() => setCreateTicket(true)}>
+                  {<Text>Woiwjer</Text>}
+                </Group>
               </React.Fragment>
             ))
           ) : (
@@ -197,7 +215,7 @@ const Dashboard: NextPage = () => {
           <Board Title={'Title5'}></Board> */}
         </HStack>
       </VStack>
-      {drawer && board ? <Drawer currentBoard={board} /> : null}
+      {ticket ? <Drawer ticket={ticket} /> : null}
       <ShareCodeModal
         boardId={board!.id}
         open={shareCodeOpen}

@@ -25,7 +25,7 @@ import {
   VStack
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { Board } from '@prisma/client';
+import { Board, Ticket } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
@@ -47,10 +47,10 @@ type ICommentUser = {
 };
 
 interface IDrawer {
-  currentBoard: Board;
+  ticket: Ticket;
 }
 
-const Drawer = ({ currentBoard }: IDrawer) => {
+const Drawer = ({ ticket }: IDrawer) => {
   const toast = useToast();
   const [parent] = useAutoAnimate<HTMLDivElement>();
 
@@ -103,7 +103,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
     refetch,
     isFetchingNextPage,
   } = trpc.useInfiniteQuery(
-    ['comments.get', { limit: 10, boardId: currentBoard.id }],
+    ['comments.get', { limit: 10, ticketId: ticket.id }],
     {
       getNextPageParam: (params) => params.nextCursor,
       onError: (error) => {
@@ -164,7 +164,7 @@ const Drawer = ({ currentBoard }: IDrawer) => {
       return;
     }
     mutate({
-      boardId: currentBoard.id,
+      ticketId: ticket.id,
       text: message,
     });
   };

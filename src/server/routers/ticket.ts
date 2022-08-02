@@ -7,8 +7,10 @@ export const ticketRouter = trpc
   .router<Context>()
   .mutation('create', {
     input: z.object({
-      text: z.string(),
-      ticketId: z.number(),
+      title: z.string(),
+      description: z.string(),
+      groupId: z.string(),
+      boardId: z.string(),
     }),
     async resolve({ ctx, input }) {
       if (!ctx.session?.user) {
@@ -17,77 +19,37 @@ export const ticketRouter = trpc
       }
       console.log(input);
       const userId: string = ctx.session.user.id;
-      const Comment = await ctx.prisma.comments.create({
+      const Ticket = await ctx.prisma.ticket.create({
         data: {
-          text: input.text,
-          User: {
+          title: input.title,
+          description: input.description,
+          groupId: input.groupId,
+          boardId: input.boardId,
+          Members: {
             connect: {
               id: userId,
             },
           },
-          Ticket: {
-            connect: {
-              id: input.ticketId,
-            }
-          }
-        },
-        select: {
-          id: true,
-          text: true,
-          createdAt: true,
-          User: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
         },
       });
 
-      console.log('board', { Comment });
+      console.log('board', { Ticket });
 
-      return { message: 'Board created successfully', Comment };
+      return { message: 'Ticket created successfully', Ticket };
     },
   })
   .query('get', {
     input: z.object({
-      ticketId: z.number(),
-      limit: z.number().min(1).max(100).nullish(),
-      cursor: z.number().nullish(),
+      boardId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const limit = input.limit ?? 10;
-      const { cursor } = input;
-      const comments = await ctx.prisma.comments.findMany({
+      const tickets = await ctx.prisma.ticket.findMany({
         where: {
-          ticketId: input.ticketId,
-        },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          id: 'desc',
-        },
-        skip: 0,
-        select: {
-          id: true,
-          text: true,
-          createdAt: true,
-          User: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
+          boardId: input.boardId,
         },
       });
-      let nextCursor: typeof cursor | null = null;
-      if (comments.length > limit) {
-        const nextItem = comments.pop();
-        nextCursor = nextItem!.id;
-      }
-      return { comments, nextCursor };
+
+      return tickets;
     },
   });
 

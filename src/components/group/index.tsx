@@ -1,22 +1,26 @@
+import { trpc } from '@/utils/trpc';
 import {
   Box,
   Button,
   Flex,
-  HStack, IconButton,
+  HStack,
+  IconButton,
   Text,
   VStack
 } from '@chakra-ui/react';
 import { Group } from '@prisma/client';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { RiMoreFill } from 'react-icons/ri';
 
 interface IBoard {
-  group: Group
+  group: Group;
   children?: ReactNode;
+  CreateTicket: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Group = ({ group, children }: IBoard) => {
+const Group = ({ group, children, CreateTicket }: IBoard) => {
+
   return (
     <Box
       w={'full'}
@@ -38,7 +42,12 @@ const Group = ({ group, children }: IBoard) => {
           <Text fontSize={'lg'} fontWeight={'semibold'}>
             {group.name}
           </Text>
-          <IconButton color={'gray.200'} aria-label={'options'} variant={'ghost'} icon={<RiMoreFill/>} />
+          <IconButton
+            color={'gray.200'}
+            aria-label={'options'}
+            variant={'ghost'}
+            icon={<RiMoreFill />}
+          />
         </HStack>
         {children}
         <Flex
@@ -54,9 +63,10 @@ const Group = ({ group, children }: IBoard) => {
               variant={'ghost'}
               color={'blue.600'}
               leftIcon={<BsPlusCircleFill />}
+              onClick={CreateTicket}
             >
               <Text fontSize={'lg'} fontWeight={'semibold'}>
-                Footer
+                Create Ticket
               </Text>
             </Button>
           </HStack>

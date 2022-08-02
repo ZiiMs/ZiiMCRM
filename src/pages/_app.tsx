@@ -1,5 +1,4 @@
 import Layout from '@/components/layout';
-import { BoardProvider } from '@/context/boardsContext';
 import { LoginToggleProvider } from '@/context/loginContext';
 import { RegisterToggleProvider } from '@/context/registerContext';
 import { SettingsToggleProvider } from '@/context/settingsContext';

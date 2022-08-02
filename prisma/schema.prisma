@@ -82,6 +82,7 @@ model Board {
   UserRoles   UserRoles[]
   ShareKeys   ShareKeys[]
   Groups      Group[]
+  Ticket      Ticket[]
 }
 
 model Group {
@@ -102,6 +103,8 @@ model Ticket {
   updatedAt   DateTime   @updatedAt
   Group       Group      @relation(fields: [groupId], references: [id])
   groupId     String
+  Board       Board      @relation(fields: [boardId], references: [id])
+  boardId     String
   Members     User[]
   Comments    Comments[]
 }
