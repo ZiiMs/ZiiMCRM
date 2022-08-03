@@ -19,6 +19,7 @@ import Loading from '@/components/loading';
 import CreateGroupModal from '@/components/Modals/Group';
 import ShareCodeModal from '@/components/Modals/Share';
 import CreateTicketModal from '@/components/Modals/Ticket';
+import TicketCard from '@/components/ticket';
 import { trpc } from '@/utils/trpc';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Ticket } from '@prisma/client';
@@ -185,25 +186,12 @@ const Dashboard: NextPage = () => {
                 >
                   {tickets
                     ? tickets.map((ticket) => {
-                        console.log(ticket.groupId);
-                        console.log(group.id);
                         if (ticket.groupId === group.id) {
-                          return (
-                            <HStack
-                              key={ticket.id}
-                              bgColor={'brand.600'}
-                              borderRadius={3}
-                              w={'full'}
-                              h={'fit-content'}
-                            >
-                              <Text>{ticket.title}</Text>
-                              <Text>{ticket.description}</Text>
-                            </HStack>
-                          );
+                          return <TicketCard ticket={ticket} />;
                         }
-                        return null;
+                        return;
                       })
-                    : null}
+                    : undefined}
                 </Group>
               </React.Fragment>
             ))

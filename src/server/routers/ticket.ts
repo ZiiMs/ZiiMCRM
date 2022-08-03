@@ -47,6 +47,9 @@ export const ticketRouter = trpc
         where: {
           boardId: input.boardId,
         },
+        include: {
+          Members: true,
+        }
       });
 
       return tickets;

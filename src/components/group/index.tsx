@@ -1,8 +1,6 @@
-import { trpc } from '@/utils/trpc';
 import {
   Box,
   Button,
-  Flex,
   HStack,
   IconButton,
   Text,
@@ -20,6 +18,7 @@ interface IBoard {
 }
 
 const Group = ({ group, children, CreateTicket }: IBoard) => {
+  console.log('chil', children);
   return (
     <Box
       w={'full'}
@@ -48,30 +47,46 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
             icon={<RiMoreFill />}
           />
         </HStack>
-        {children}
-        <Flex
-          w={'full'}
-          h={'full'}
-          alignItems={'flex-end'}
-          justifyContent={'center'}
-          px={2.5}
-          pt={2.5}
-        >
-          <HStack alignItems={'center'} spacing={2.5} justifyContent={'center'}>
-            <Button
-              variant={'ghost'}
-              color={'blue.600'}
-              leftIcon={<BsPlusCircleFill />}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                CreateTicket(e, group.id);
-              }}
-            >
-              <Text fontSize={'lg'} fontWeight={'semibold'}>
-                Create Ticket
-              </Text>
-            </Button>
-          </HStack>
-        </Flex>
+        {children ? (
+          <VStack
+            w={'full'}
+            flex={1}
+            flexGrow={1}
+            flexBasis={0}
+            overflowY={'auto'}
+            overflowX={'hidden'}
+            h={'full'}
+            sx={{
+              '&::-webkit-scrollbar': {
+                width: '12px',
+                borderRadius: '8px',
+                backgroundColor: `rgba(0, 0, 0, 0.15)`,
+              },
+              '&::-webkit-scrollbar-thumb': {
+                borderRadius: '8px',
+                backgroundColor: `rgba(0, 0, 0, 0.25)`,
+              },
+            }}
+            px={2}
+          >
+            {children}
+          </VStack>
+        ) : null}
+
+        <HStack alignItems={'center'} spacing={2.5} justifyContent={'center'}>
+          <Button
+            variant={'ghost'}
+            color={'blue.600'}
+            leftIcon={<BsPlusCircleFill />}
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              CreateTicket(e, group.id);
+            }}
+          >
+            <Text fontSize={'lg'} fontWeight={'semibold'}>
+              Create Ticket
+            </Text>
+          </Button>
+        </HStack>
       </VStack>
     </Box>
   );
