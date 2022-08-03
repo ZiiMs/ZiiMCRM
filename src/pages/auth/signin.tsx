@@ -1,9 +1,8 @@
-import registerToggle from '@/stores/registerStore';
 import { trpc } from '@/utils/trpc';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next/types';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const SignIn: NextPage = () => {
   const { data: session } = useSession();

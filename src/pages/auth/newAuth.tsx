@@ -5,6 +5,7 @@ import {
 import { useRouter } from 'next/router';
 import { NextPage } from 'next/types';
 import { useContext, useEffect } from 'react';
+import shallow from 'zustand/shallow';
 
 const RegisterFilter: NextPage = () => {
   const { showRegister, toggleRegister } = useRegisterStore((state) => ({
