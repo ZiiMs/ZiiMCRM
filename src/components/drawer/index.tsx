@@ -354,27 +354,22 @@ const Drawer = () => {
                     backgroundColor: `rgba(0, 0, 0, 0.4)`,
                   },
                 }}
+                onScroll={(e: React.UIEvent<HTMLDivElement>) => {
+                  const bottom =
+                    e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
+                    e.currentTarget.scrollHeight - 1000;
+
+                  if (bottom && hasNextPage && !isFetchingNextPage) {
+                    fetchNextPage();
+                  }
+                }}
               >
                 {(comments?.pages[0] !== undefined &&
                   comments.pages[0].comments.length) > 0 ? (
-                  <Box
-                    w={'full'}
-                    h={'full'}
-                    px={2}
-                    onScroll={(e: React.UIEvent<HTMLDivElement>) => {
-                      const bottom =
-                        e.currentTarget.scrollTop +
-                          e.currentTarget.clientHeight >=
-                        e.currentTarget.scrollHeight - 1000;
-
-                      if (bottom && hasNextPage && !isFetchingNextPage) {
-                        fetchNextPage();
-                      }
-                    }}
-                  >
+                  <Box w={'full'} h={'full'} px={2}>
                     <VStack>
                       {comments!.pages.map((group, i) => (
-                        <VStack key={i} w={'full'} >
+                        <VStack key={i} w={'full'}>
                           {group.comments.map((comment) => (
                             <Comment
                               key={String(comment.id)}
