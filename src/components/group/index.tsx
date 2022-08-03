@@ -16,11 +16,10 @@ import { RiMoreFill } from 'react-icons/ri';
 interface IBoard {
   group: Group;
   children?: ReactNode;
-  CreateTicket: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  CreateTicket: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
 const Group = ({ group, children, CreateTicket }: IBoard) => {
-
   return (
     <Box
       w={'full'}
@@ -63,7 +62,9 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
               variant={'ghost'}
               color={'blue.600'}
               leftIcon={<BsPlusCircleFill />}
-              onClick={CreateTicket}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                CreateTicket(e, group.id);
+              }}
             >
               <Text fontSize={'lg'} fontWeight={'semibold'}>
                 Create Ticket

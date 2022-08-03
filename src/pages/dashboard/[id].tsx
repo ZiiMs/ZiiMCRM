@@ -20,6 +20,7 @@ import CreateGroupModal from '@/components/Modals/Group';
 import ShareCodeModal from '@/components/Modals/Share';
 import CreateTicketModal from '@/components/Modals/Ticket';
 import { trpc } from '@/utils/trpc';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Ticket } from '@prisma/client';
 import type { NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
@@ -35,6 +36,8 @@ const Card = dynamic(() => import('@/components/card'));
 
 const Dashboard: NextPage = () => {
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [clickedGroup, setClickedGroup] = useState<string>('');
+  const [parent] = useAutoAnimate<HTMLDivElement>();
   const router = useRouter();
   const toast = useToast();
   const { id } = router.query;
@@ -149,7 +152,7 @@ const Dashboard: NextPage = () => {
           <Card graph></Card>
           <Card></Card>
         </HStack>
-        <HStack w={'full'} h={'full'} spacing={2.5}>
+        <HStack ref={parent} w={'full'} h={'full'} spacing={2.5}>
           {groups && groups.length > 0 && groups.length < 5 ? (
             <Button
               w={'full'}
@@ -168,16 +171,18 @@ const Dashboard: NextPage = () => {
               Create Groups
             </Button>
           ) : null}
+
           {groups && groups.length > 0 ? (
             groups.map((group) => (
               <React.Fragment key={group.id}>
-                <CreateTicketModal
-                  boardId={board!.id}
-                  groupId={group.id}
-                  open={createTicket}
-                  onClose={() => setCreateTicket(false)}
-                />
-                <Group group={group} CreateTicket={() => setCreateTicket(true)}>
+                <Group
+                  group={group}
+                  CreateTicket={(e, id) => {
+                    e.preventDefault();
+                    setClickedGroup(id);
+                    setCreateTicket(true);
+                  }}
+                >
                   {tickets
                     ? tickets.map((ticket) => {
                         console.log(ticket.groupId);
@@ -245,6 +250,12 @@ const Dashboard: NextPage = () => {
         boardId={board!.id}
         open={createGroupOpen}
         onClose={() => setCreateGroup(false)}
+      />
+      <CreateTicketModal
+        boardId={board!.id}
+        groupId={clickedGroup}
+        open={createTicket}
+        onClose={() => setCreateTicket(false)}
       />
     </HStack>
   );

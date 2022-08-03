@@ -97,7 +97,7 @@ model Group {
 
 model Ticket {
   id          Int        @id @default(autoincrement())
-  title       String     @unique
+  title       String
   description String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
