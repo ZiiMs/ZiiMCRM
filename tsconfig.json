@@ -31,8 +31,8 @@
       "@/components/*": [
         "src/components/*"
       ],
-      "@/context/*": [
-        "src/context/*"
+      "@/stores/*": [
+        "src/stores/*"
       ],
       "@/utils/*": [
         "src/utils/*"

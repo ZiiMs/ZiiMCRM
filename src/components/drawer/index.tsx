@@ -48,9 +48,10 @@ type ICommentUser = {
 
 interface IDrawer {
   ticket: Ticket;
+  open: boolean;
 }
 
-const Drawer = ({ ticket }: IDrawer) => {
+const Drawer = ({ ticket, open }: IDrawer) => {
   const toast = useToast();
   const [parent] = useAutoAnimate<HTMLDivElement>();
 
@@ -116,8 +117,6 @@ const Drawer = ({ ticket }: IDrawer) => {
       // })
     }
   );
-
-
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

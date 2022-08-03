@@ -1,4 +1,3 @@
-import loginToggle from '@/context/loginContext';
 import {
   Alert,
   AlertDescription,
@@ -18,6 +17,7 @@ import { signIn, useSession } from 'next-auth/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { FaDiscord, FaFacebookSquare, FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
+import loginToggle from 'src/stores/loginContext';
 
 const LoginModal = () => {
   const [error, setError] = useState<String | null>(null);

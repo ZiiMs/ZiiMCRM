@@ -20,6 +20,7 @@ import CreateGroupModal from '@/components/Modals/Group';
 import ShareCodeModal from '@/components/Modals/Share';
 import CreateTicketModal from '@/components/Modals/Ticket';
 import TicketCard from '@/components/ticket';
+import { useDrawerStore } from '@/stores/drawerStore';
 import { trpc } from '@/utils/trpc';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Ticket } from '@prisma/client';
@@ -30,14 +31,18 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { RiSettings3Line } from 'react-icons/ri';
+import shallow from 'zustand/shallow';
 
 const Drawer = dynamic(() => import('@/components/drawer'));
 const Group = dynamic(() => import('@/components/group'));
 const Card = dynamic(() => import('@/components/card'));
 
 const Dashboard: NextPage = () => {
-  const [ticket, setTicket] = useState<Ticket | null>(null);
   const [clickedGroup, setClickedGroup] = useState<string>('');
+  const { showDrawer, ticket } = useDrawerStore(
+    (state) => ({ showDrawer: state.showDrawer, ticket: state.ticket }),
+    shallow
+  );
   const [parent] = useAutoAnimate<HTMLDivElement>();
   const router = useRouter();
   const toast = useToast();
@@ -228,7 +233,7 @@ const Dashboard: NextPage = () => {
           <Board Title={'Title5'}></Board> */}
         </HStack>
       </VStack>
-      {ticket ? <Drawer ticket={ticket} /> : null}
+      {showDrawer && ticket ? <Drawer open={showDrawer} ticket={ticket} /> : null}
       <ShareCodeModal
         boardId={board!.id}
         open={shareCodeOpen}

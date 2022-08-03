@@ -1,4 +1,3 @@
-import settingsToggle from '@/context/settingsContext';
 import { MAX_BOARDS } from '@/utils/config';
 import { trpc } from '@/utils/trpc';
 import {
@@ -23,6 +22,7 @@ import { MouseEvent, useContext } from 'react';
 import { BiMenuAltLeft, BiPlus } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { RiSettings3Line } from 'react-icons/ri';
+import settingsToggle from 'src/stores/settingsContext';
 import BrandIconButton from '../iconButton';
 
 interface INavbarProps {

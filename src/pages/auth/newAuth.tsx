@@ -1,7 +1,7 @@
-import registerToggle from '@/context/registerContext';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next/types';
 import { useContext, useEffect } from 'react';
+import registerToggle from 'src/stores/registerContext';
 
 const RegisterFilter: NextPage = () => {
   const { showRegister, toggleRegister } = useContext(registerToggle);

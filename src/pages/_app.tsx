@@ -1,11 +1,11 @@
 import Layout from '@/components/layout';
-import { LoginToggleProvider } from '@/context/loginContext';
-import { RegisterToggleProvider } from '@/context/registerContext';
-import { SettingsToggleProvider } from '@/context/settingsContext';
 import { ChakraProvider } from '@chakra-ui/react';
 import { withTRPC } from '@trpc/next';
 import { getSession, SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
+import { LoginToggleProvider } from 'src/stores/loginContext';
+import { RegisterToggleProvider } from 'src/stores/registerContext';
+import { SettingsToggleProvider } from 'src/stores/settingsContext';
 import theme from 'src/theme';
 import superjson from 'superjson';
 import { AppRouter } from '../server/routers';

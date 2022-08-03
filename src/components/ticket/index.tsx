@@ -1,3 +1,4 @@
+import { useDrawerStore } from '@/stores/drawerStore';
 import {
   Avatar,
   AvatarGroup,
@@ -15,6 +16,8 @@ const TicketCard: React.FC<{
     Members: User[];
   };
 }> = ({ ticket }) => {
+  const openDrawer = useDrawerStore((state) => state.openDrawer)
+
   return (
     <Box
       h={'fit-content'}
@@ -22,7 +25,7 @@ const TicketCard: React.FC<{
       boxShadow={'lg'}
       py={4}
       px={2}
-      onClick={() => console.log('clicked')}
+      onClick={() => openDrawer(ticket)}
       bgColor={'brand.800'}
       borderRadius={9}
       w={'full'}

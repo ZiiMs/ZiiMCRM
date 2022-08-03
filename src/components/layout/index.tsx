@@ -1,4 +1,3 @@
-import loginToggle from '@/context/loginContext';
 import { Container, HStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -9,6 +8,7 @@ import {
   useEffect,
   useState
 } from 'react';
+import loginToggle from 'src/stores/loginContext';
 
 import Loading from '@/components/loading';
 // import LoginModal from '@/components/login';

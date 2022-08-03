@@ -1,4 +1,3 @@
-import registerToggle from '@/context/registerContext';
 import { trpc } from '@/utils/trpc';
 import {
   Alert,
@@ -33,6 +32,7 @@ import {
   useEffect,
   useState
 } from 'react';
+import registerToggle from 'src/stores/registerContext';
 
 const RegisterModal = () => {
   const [error, setError] = useState<String | null>(null);
