@@ -1,3 +1,4 @@
+import useDrawerStore from '@/stores/drawerStore';
 import { MAX_BOARDS } from '@/utils/config';
 import { trpc } from '@/utils/trpc';
 import {
@@ -5,11 +6,13 @@ import {
   AlertIcon,
   Avatar,
   Box,
-  Button, Icon,
+  Button,
+  Icon,
   Link,
   Menu,
   MenuButton,
-  MenuItem, MenuList,
+  MenuItem,
+  MenuList,
   Portal,
   useToast,
   VStack
@@ -32,15 +35,14 @@ interface INavbarProps {
 const Navbar = ({ openBoard }: any) => {
   const { showSettings, toggleSettings } = useContext(settingsToggle);
   // const { boards, setBoards } = useContext(boardContext);
-  const [parent] = useAutoAnimate<HTMLDivElement>()
+  const [parent] = useAutoAnimate<HTMLDivElement>();
+  const closeDrawer = useDrawerStore((state) => state.closeDrawer);
   const { data: session } = useSession();
   const user = session?.user;
   const userId = user?.id;
   const toast = useToast();
 
   const { data: boards, isLoading, error } = trpc.useQuery(['boards.fetch']);
-
-
 
   // utils.fetchQuery(['']);
   // const boards = [];
@@ -76,7 +78,7 @@ const Navbar = ({ openBoard }: any) => {
       p={0}
       h='100vh'
     >
-      <VStack  spacing={2.5} pt={2.5} px={2} m={0}>
+      <VStack spacing={2.5} pt={2.5} px={2} m={0}>
         <NextLink passHref href={'/'}>
           <BrandIconButton
             as={Link}
@@ -88,36 +90,41 @@ const Navbar = ({ openBoard }: any) => {
           />
         </NextLink>
         <VStack ref={parent}>
-        {!isLoading && !error && boards
-          ? boards.map((board) => (
-              <NextLink key={board.id}  passHref href={`/dashboard/${board.id}`}>
-                <Button
-                  p={0}
-                  size={'lg'}
-                  color={
-                    router.asPath === `/dashboard/${board.id}`
-                      ? 'brand.100'
-                      : 'brand.400'
-                  }
-                  variant={
-                    router.asPath === `/dashboard/${board.id}`
-                      ? 'solid'
-                      : 'ghost'
-                  }
+          {!isLoading && !error && boards
+            ? boards.map((board) => (
+                <NextLink
+                  key={board.id}
+                  passHref
+                  href={`/dashboard/${board.id}`}
                 >
-                  <Avatar
-                    name={board.name}
-                    size={'md'}
-                    m={0}
-                    backgroundColor={board.image ? 'transparent' : undefined}
+                  <Button
                     p={0}
-                    src={board.image ? board.image : undefined}
-                  />
-                </Button>
-              </NextLink>
-            ))
-          : null}
-          </VStack>
+                    size={'lg'}
+                    onClick={() => closeDrawer()}
+                    color={
+                      router.asPath === `/dashboard/${board.id}`
+                        ? 'brand.100'
+                        : 'brand.400'
+                    }
+                    variant={
+                      router.asPath === `/dashboard/${board.id}`
+                        ? 'solid'
+                        : 'ghost'
+                    }
+                  >
+                    <Avatar
+                      name={board.name}
+                      size={'md'}
+                      m={0}
+                      backgroundColor={board.image ? 'transparent' : undefined}
+                      p={0}
+                      src={board.image ? board.image : undefined}
+                    />
+                  </Button>
+                </NextLink>
+              ))
+            : null}
+        </VStack>
         <BrandIconButton
           onClick={handlePlusBoards}
           size={'lg'}
