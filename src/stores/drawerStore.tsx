@@ -1,18 +1,24 @@
-import { Ticket } from '@prisma/client';
+import { Ticket, User } from '@prisma/client';
 import create from 'zustand';
+
+type ticket = Ticket & {
+  Members: User[];
+};
 
 interface DrawerState {
   showDrawer: boolean;
-  ticket: Ticket | null;
-  openDrawer: (ticket: Ticket) => void;
+  ticket: ticket | null;
+  openDrawer: (ticket: ticket) => void;
   closeDrawer: () => void;
 }
 
-export const useDrawerStore = create<DrawerState>()((set) => ({
+const useDrawerStore = create<DrawerState>()((set) => ({
   showDrawer: false,
   ticket: null,
-  closeDrawer: () => set((state) => ({ ticketId: null, showDrawer: false })),
-  openDrawer: (ticket: Ticket) =>
+  closeDrawer: () => set((state) => ({ ticket: null, showDrawer: false })),
+  openDrawer: (ticket: ticket) =>
     set((state) => ({ ticket, showDrawer: true })),
 }));
+
+export default useDrawerStore;
 

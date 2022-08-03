@@ -1,4 +1,4 @@
-import { useDrawerStore } from '@/stores/drawerStore';
+import useDrawerStore from '@/stores/drawerStore';
 import {
   Avatar,
   AvatarGroup,
@@ -16,7 +16,7 @@ const TicketCard: React.FC<{
     Members: User[];
   };
 }> = ({ ticket }) => {
-  const openDrawer = useDrawerStore((state) => state.openDrawer)
+  const openDrawer = useDrawerStore((state) => state.openDrawer);
 
   return (
     <Box

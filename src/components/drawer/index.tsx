@@ -1,3 +1,4 @@
+import useDrawerStore from '@/stores/drawerStore';
 import { trpc } from '@/utils/trpc';
 import {
   Alert,
@@ -10,6 +11,7 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -28,9 +30,14 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Ticket } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
-import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import {
+  AiFillStar,
+  AiOutlineDoubleRight,
+  AiOutlineStar
+} from 'react-icons/ai';
 import { IoSend } from 'react-icons/io5';
 import { RiArrowDownSFill } from 'react-icons/ri';
+import shallow from 'zustand/shallow';
 // import Comment from '../comment';
 import Dropzone from '../dropzone';
 import BrandIconButton from '../iconButton';
@@ -51,7 +58,16 @@ interface IDrawer {
   open: boolean;
 }
 
-const Drawer = ({ ticket, open }: IDrawer) => {
+const Drawer = () => {
+  const { showDrawer, ticket, closeDrawer } = useDrawerStore(
+    (state) => ({
+      showDrawer: state.showDrawer,
+      ticket: state.ticket,
+      closeDrawer: state.closeDrawer,
+    }),
+    shallow
+  );
+
   const toast = useToast();
   const [parent] = useAutoAnimate<HTMLDivElement>();
 
@@ -104,7 +120,7 @@ const Drawer = ({ ticket, open }: IDrawer) => {
     refetch,
     isFetchingNextPage,
   } = trpc.useInfiniteQuery(
-    ['comments.get', { limit: 10, ticketId: ticket.id }],
+    ['comments.get', { limit: 10, ticketId: ticket?.id ?? -1 }],
     {
       getNextPageParam: (params) => params.nextCursor,
       onError: (error) => {
@@ -135,7 +151,7 @@ const Drawer = ({ ticket, open }: IDrawer) => {
       return;
     }
     mutate({
-      ticketId: ticket.id,
+      ticketId: ticket!.id,
       text: message,
     });
   };
@@ -156,280 +172,298 @@ const Drawer = ({ ticket, open }: IDrawer) => {
   // }, []);
 
   return (
-    <Flex h={'100vh'} maxH={'100vh'} backgroundColor={'brand.700'} maxW={'17%'}>
-      <VStack w='full' h={'100%'}>
-        <VStack w='full' h={'100%'} position={'relative'}>
-          <VStack
-            justifyContent={'flex-start'}
-            alignItems={'flex-start'}
-            p={2}
-            w='full'
-          >
-            <HStack spacing={1} w='full'>
-              <Button
-                variant={'unstyled'}
-                size={'xs'}
-                m={0}
-                p={0}
-                w={'16px'}
-                h={'16px'}
-                as={favorite ? AiFillStar : AiOutlineStar}
-                color={favorite ? 'yellow.500' : 'whiteAlpha.600'}
-                onClick={() => setFavorite(!favorite)}
-              />
-
-              <Text color={'whiteAlpha.600'}>#{12323409}</Text>
-            </HStack>
-            <Heading size={'md'} textColor={'gray.200'}>
-              Example Ticket Title
-            </Heading>
-          </VStack>
-          <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
-          <VStack
-            w={'full'}
-            px={'10px'}
-            pt={'10px'}
-            spacing={3}
-            justify={'flex-start'}
-            align={'flex-start'}
-          >
-            <SimpleGrid columns={2} w={'100%'}>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Created:
-              </Text>
-              <Text fontSize={'md'} color={'gray.200'}>
-                Today
-              </Text>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Due Date:
-              </Text>
-              <Text fontSize={'md'} color={'gray.200'}>
-                April 4
-              </Text>
-              <Flex my={2}></Flex>
-              <Flex></Flex>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Status:
-              </Text>
-              <Menu>
-                <MenuButton
-                  p={0}
-                  fontSize={'md'}
-                  justifyContent={'center'}
-                  fontWeight={'normal'}
-                  alignItems={'center'}
-                >
-                  <Flex>
-                    {status}
-                    <Icon
-                      as={RiArrowDownSFill}
-                      display={'inline'}
-                      color={'blue.600'}
-                      w={'24px'}
-                      h={'24px'}
-                    />
-                  </Flex>
-                </MenuButton>
-                <MenuList>
-                  {['New Ticket', 'In Progress', 'Resolved', 'Closed'].map(
-                    (item) => (
-                      <MenuItem key={item} onClick={() => setStatus(item)}>
-                        <Text fontSize={'md'} color={'gray.200'}>
-                          {item}
-                        </Text>
-                      </MenuItem>
-                    )
-                  )}
-                </MenuList>
-              </Menu>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Progress:
-              </Text>
-              <Text fontSize={'md'} color={'gray.200'}>
-                0%
-              </Text>
-              <Flex my={2}></Flex>
-              <Flex></Flex>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Members:
-              </Text>
-              <List>
-                <ListItem>
-                  <Flex alignItems={'center'}>
-                    <Avatar
-                      size='sm'
-                      name='Segun Adebayo'
-                      src='https://bit.ly/sage-adebayo'
-                      mr={2}
-                    />
-                    <Text color={'gray.200'}>Segun Adebayo</Text>
-                  </Flex>
-                </ListItem>
-                <ListItem>
-                  <Flex alignItems={'center'}>
-                    <Avatar
-                      size='sm'
-                      name='Kent Dodds'
-                      src='https://bit.ly/kent-c-dodds'
-                      mr={2}
-                    />
-                    <Text color={'gray.200'}>Kent Dodds</Text>
-                  </Flex>
-                </ListItem>
-                <ListItem>
-                  <Flex alignItems={'center'}>
-                    <Avatar
-                      size='sm'
-                      name='Kola Tioluwani'
-                      src='https://bit.ly/tioluwani-kolawole'
-                      mr={2}
-                    />
-                    <Text color={'gray.200'}>Kola Tioluwani</Text>
-                  </Flex>
-                </ListItem>
-              </List>
-            </SimpleGrid>
-            <Box w={'100%'}>
-              <Text fontSize={'md'} color={'whiteAlpha.600'}>
-                Description:
-              </Text>
-              <Text color={'gray.200'} noOfLines={4} maxWidth={'fit-content'}>
-                Reprehenderit eu commodo est non. Culpa aliquip ex veniam do.
-                Labore nostrud adipisicing id sit do aliquip occaecat sint et
-                magna velit eiusmod. Cupidatat cillum cupidatat eiusmod
-                pariatur. Eu non dolor aliqua cupidatat excepteur pariatur.
-                Lorem ut elit proident laboris labore ad.
-              </Text>
-            </Box>
-            <Dropzone />
-          </VStack>
-          <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
-          {(comments?.pages[0] !== undefined &&
-            comments.pages[0].comments.length) > 0 ? (
-            <Box
-              w={'full'}
-              h={'full'}
-              px={2}
-              overflowY={'scroll'}
-              onScroll={(e: React.UIEvent<HTMLDivElement>) => {
-                const bottom =
-                  e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
-                  e.currentTarget.scrollHeight - 1000;
-
-                if (bottom && hasNextPage && !isFetchingNextPage) {
-                  fetchNextPage();
-                }
-              }}
-              sx={{
-                '&::-webkit-scrollbar': {
-                  width: '12px',
-                  borderRadius: '8px',
-                  backgroundColor: `rgba(0, 0, 0, 0.15)`,
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  borderRadius: '8px',
-                  backgroundColor: `rgba(0, 0, 0, 0.4)`,
-                },
-              }}
-            >
-              <VStack>
-                {comments!.pages.map((group, i) => (
-                  <VStack key={i} w={'full'} ref={parent}>
-                    {group.comments.map((comment) => (
-                      <Comment
-                        key={String(comment.id)}
-                        user={comment.User}
-                        comment={comment}
-                      />
-                    ))}
-                  </VStack>
-                ))}
-                <Text>
-                  {isFetchingNextPage
-                    ? 'Loading more...'
-                    : hasNextPage
-                    ? 'Load More'
-                    : null}
-                </Text>
-                <form onSubmit={handleSubmit}>
-                  <InputGroup
-                    position={'absolute'}
-                    right={0}
-                    bottom={0}
-                    w={'full'}
-                    px={4}
-                    pb={2}
-                    backgroundColor={'transparent'}
-                  >
-                    <Input
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setMessage(e.target.value)
-                      }
-                      value={message}
-                      size={'md'}
-                      backdropFilter={'blur(1px)'}
-                      backgroundColor={'blackAlpha.400'}
-                      borderWidth={'2px'}
-                    />
-                    <InputRightElement pr={8}>
-                      <BrandIconButton
-                        Color={'brand.400'}
-                        size={'sm'}
-                        variant={'ghost'}
-                        type={'submit'}
-                        aria-label={'submit-comment-button'}
-                        icon={<IoSend />}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                </form>
-              </VStack>
-            </Box>
-          ) : (
-            <>
-              <Flex
-                justifyContent={'center'}
-                alignItems={'center'}
-                w={'full'}
-                h={'full'}
+    <>
+      {showDrawer && ticket ? (
+        <Flex
+          h={'100vh'}
+          maxH={'100vh'}
+          w={'full'}
+          backgroundColor={'brand.700'}
+          position={'relative'}
+          maxW={'17%'}
+        >
+          <IconButton
+            position={'absolute'}
+            variant={'ghost'}
+            size={'xs'}
+            left={-4}
+            top={'6'}
+            rounded={'full'}
+            onClick={() => closeDrawer()}
+            color={'whiteAlpha.600'}
+            bgColor={'brand.600'}
+            icon={<AiOutlineDoubleRight />}
+            aria-label={'closeDrawer'}
+          />
+          <VStack w='full' h={'100%'}>
+            <VStack w='full' h={'100%'} position={'relative'}>
+              <VStack
+                justifyContent={'flex-start'}
+                alignItems={'flex-start'}
+                p={2}
+                w='full'
               >
-                <Text>No comments</Text>
-              </Flex>
-              <form onSubmit={handleSubmit}>
-                <InputGroup
-                  size={'md'}
-                  px={2}
-                  pb={2}
-                  backgroundColor={'transparent'}
-                >
-                  <Input
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setMessage(e.target.value)
-                    }
-                    value={message}
+                <HStack spacing={1} w='full'>
+                  <IconButton
+                    variant={'unstyled'}
                     size={'md'}
-                    backdropFilter={'blur(1px)'}
-                    backgroundColor={'blackAlpha.400'}
-                    borderWidth={'2px'}
+                    style={{
+                      margin: '0',
+                      padding: '0',
+                      minWidth: 'unset',
+                    }}
+                    m={0}
+                    p={0}
+                    w={'16px'}
+                    h={'16px'}
+                    icon={favorite ? <AiFillStar /> : <AiOutlineStar />}
+                    color={favorite ? 'yellow.500' : 'whiteAlpha.600'}
+                    onClick={() => setFavorite(!favorite)}
+                    aria-label={'icon-button-favorite'}
                   />
-                  <InputRightElement width={'fit-content'} pr={3}>
-                    {/* <BrandIconButton aria-label={'submit-icon'} icon={<IoSend />} /> */}
-                    <BrandIconButton
-                      Color={'brand.400'}
-                      size={'sm'}
-                      variant={'ghost'}
-                      type={'submit'}
-                      aria-label={'submit-comment-button'}
-                      icon={<IoSend />}
-                    />
-                  </InputRightElement>
-                </InputGroup>
-              </form>
-            </>
-          )}
-        </VStack>
-      </VStack>
-    </Flex>
+
+                  <Text color={'whiteAlpha.600'}>#{ticket?.id}</Text>
+                </HStack>
+                <Heading size={'md'} textColor={'gray.200'}>
+                  {ticket?.title}
+                </Heading>
+              </VStack>
+              <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
+              <VStack
+                w={'full'}
+                px={'10px'}
+                pt={'10px'}
+                spacing={3}
+                justify={'flex-start'}
+                align={'flex-start'}
+              >
+                <SimpleGrid columns={2} w={'100%'}>
+                  <Text fontSize={'md'} color={'whiteAlpha.600'}>
+                    Created:
+                  </Text>
+                  <Text fontSize={'md'} color={'gray.200'}>
+                    {ticket?.createdAt.toLocaleDateString()}
+                  </Text>
+                  <Text fontSize={'md'} color={'whiteAlpha.600'}>
+                    Due Date:
+                  </Text>
+                  <Text fontSize={'md'} color={'gray.200'}>
+                    April 4
+                  </Text>
+                  <Flex my={2}></Flex>
+                  <Flex></Flex>
+                  <Text fontSize={'md'} color={'whiteAlpha.600'}>
+                    Status:
+                  </Text>
+                  <Menu>
+                    <MenuButton
+                      p={0}
+                      fontSize={'md'}
+                      justifyContent={'center'}
+                      fontWeight={'normal'}
+                      alignItems={'center'}
+                    >
+                      <Flex>
+                        {status}
+                        <Icon
+                          as={RiArrowDownSFill}
+                          display={'inline'}
+                          color={'blue.600'}
+                          w={'24px'}
+                          h={'24px'}
+                        />
+                      </Flex>
+                    </MenuButton>
+                    <MenuList>
+                      {['New Ticket', 'In Progress', 'Resolved', 'Closed'].map(
+                        (item) => (
+                          <MenuItem key={item} onClick={() => setStatus(item)}>
+                            <Text fontSize={'md'} color={'gray.200'}>
+                              {item}
+                            </Text>
+                          </MenuItem>
+                        )
+                      )}
+                    </MenuList>
+                  </Menu>
+                  <Text fontSize={'md'} color={'whiteAlpha.600'}>
+                    Progress:
+                  </Text>
+                  <Text fontSize={'md'} color={'gray.200'}>
+                    0%
+                  </Text>
+                  <Flex my={2}></Flex>
+                  <Flex></Flex>
+                  <Text fontSize={'md'} color={'whiteAlpha.600'}>
+                    Members:
+                  </Text>
+                  <List>
+                    {ticket?.Members.map((member) => (
+                      <ListItem key={member.id}>
+                        <Flex alignItems={'center'}>
+                          <Avatar
+                            size='sm'
+                            name={member.name ? member.name : 'Unknown'}
+                            bgColor={member.image ? 'transparent' : undefined}
+                            src={member.image ?? undefined}
+                            mr={2}
+                          />
+                          <Text color={'gray.200'}>
+                            {member.name ? member.name : 'Unknown'}
+                          </Text>
+                        </Flex>
+                      </ListItem>
+                    ))}
+                  </List>
+                </SimpleGrid>
+                <Box w={'100%'}>
+                  {ticket?.description ? (
+                    <>
+                      <Text fontSize={'md'} color={'whiteAlpha.600'}>
+                        Description:
+                      </Text>
+                      <Text
+                        color={'gray.200'}
+                        noOfLines={4}
+                        maxWidth={'fit-content'}
+                      >
+                        {ticket?.description}
+                      </Text>
+                    </>
+                  ) : null}
+                </Box>
+                <Dropzone />
+              </VStack>
+              <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
+              {(comments?.pages[0] !== undefined &&
+                comments.pages[0].comments.length) > 0 ? (
+                <Box
+                  w={'full'}
+                  h={'full'}
+                  px={2}
+                  overflowY={'scroll'}
+                  onScroll={(e: React.UIEvent<HTMLDivElement>) => {
+                    const bottom =
+                      e.currentTarget.scrollTop +
+                        e.currentTarget.clientHeight >=
+                      e.currentTarget.scrollHeight - 1000;
+
+                    if (bottom && hasNextPage && !isFetchingNextPage) {
+                      fetchNextPage();
+                    }
+                  }}
+                  sx={{
+                    '&::-webkit-scrollbar': {
+                      width: '12px',
+                      borderRadius: '8px',
+                      backgroundColor: `rgba(0, 0, 0, 0.15)`,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      borderRadius: '8px',
+                      backgroundColor: `rgba(0, 0, 0, 0.4)`,
+                    },
+                  }}
+                >
+                  <VStack>
+                    {comments!.pages.map((group, i) => (
+                      <VStack key={i} w={'full'} ref={parent}>
+                        {group.comments.map((comment) => (
+                          <Comment
+                            key={String(comment.id)}
+                            user={comment.User}
+                            comment={comment}
+                          />
+                        ))}
+                      </VStack>
+                    ))}
+                    <Text>
+                      {isFetchingNextPage
+                        ? 'Loading more...'
+                        : hasNextPage
+                        ? 'Load More'
+                        : null}
+                    </Text>
+                    <form onSubmit={handleSubmit}>
+                      <InputGroup
+                        position={'absolute'}
+                        right={0}
+                        bottom={0}
+                        w={'full'}
+                        px={4}
+                        pb={2}
+                        backgroundColor={'transparent'}
+                      >
+                        <Input
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setMessage(e.target.value)
+                          }
+                          value={message}
+                          size={'md'}
+                          backdropFilter={'blur(1px)'}
+                          backgroundColor={'blackAlpha.400'}
+                          borderWidth={'2px'}
+                        />
+                        <InputRightElement pr={8}>
+                          <BrandIconButton
+                            Color={'brand.400'}
+                            size={'sm'}
+                            variant={'ghost'}
+                            type={'submit'}
+                            aria-label={'submit-comment-button'}
+                            icon={<IoSend />}
+                          />
+                        </InputRightElement>
+                      </InputGroup>
+                    </form>
+                  </VStack>
+                </Box>
+              ) : (
+                <>
+                  <Flex
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    w={'full'}
+                    h={'full'}
+                  >
+                    <Text>No comments</Text>
+                  </Flex>
+                  <form onSubmit={handleSubmit}>
+                    <InputGroup
+                      size={'md'}
+                      px={2}
+                      pb={2}
+                      backgroundColor={'transparent'}
+                    >
+                      <Input
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setMessage(e.target.value)
+                        }
+                        value={message}
+                        size={'md'}
+                        backdropFilter={'blur(1px)'}
+                        backgroundColor={'blackAlpha.400'}
+                        borderWidth={'2px'}
+                      />
+                      <InputRightElement width={'fit-content'} pr={3}>
+                        {/* <BrandIconButton aria-label={'submit-icon'} icon={<IoSend />} /> */}
+                        <BrandIconButton
+                          Color={'brand.400'}
+                          size={'sm'}
+                          variant={'ghost'}
+                          type={'submit'}
+                          aria-label={'submit-comment-button'}
+                          icon={<IoSend />}
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                  </form>
+                </>
+              )}
+            </VStack>
+          </VStack>
+        </Flex>
+      ) : null}
+    </>
   );
 };
 
