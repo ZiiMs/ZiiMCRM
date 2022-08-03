@@ -6,6 +6,7 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Group } from '@prisma/client';
 import React, { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
@@ -18,6 +19,7 @@ interface IBoard {
 }
 
 const Group = ({ group, children, CreateTicket }: IBoard) => {
+  const [parent] = useAutoAnimate<HTMLDivElement>();
   return (
     <Box
       w={'full'}
@@ -54,6 +56,7 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
             flexBasis={0}
             overflowY={'auto'}
             overflowX={'hidden'}
+            ref={parent}
             h={'full'}
             sx={{
               '&::-webkit-scrollbar': {
