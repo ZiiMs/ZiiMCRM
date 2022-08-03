@@ -18,7 +18,6 @@ interface IBoard {
 }
 
 const Group = ({ group, children, CreateTicket }: IBoard) => {
-  console.log('chil', children);
   return (
     <Box
       w={'full'}

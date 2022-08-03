@@ -49,7 +49,6 @@ export const userRouter = trpc
         },
       });
       const exists = (user.age !== null && user.gender !== null)
-      console.log(exists);
       return exists
     }
   })

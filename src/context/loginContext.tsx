@@ -14,7 +14,6 @@ const loginToggle = createContext<ILoginContext>(defaultState);
 export const LoginToggleProvider = (props: any) => {
   const [showLogin, setShow] = useState(defaultState.showLogin);
   const togLogin = () => {
-    console.log('ToggleLogin', !showLogin);
     setShow(!showLogin);
   };
   return (

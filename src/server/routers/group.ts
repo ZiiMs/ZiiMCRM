@@ -15,7 +15,6 @@ export const groupRouter = trpc
         console.log('Not logged in');
         throw new Error('Not logged in');
       }
-      console.log(input);
       const group = await ctx.prisma.group.create({
         data: {
           name: input.title,
@@ -23,7 +22,6 @@ export const groupRouter = trpc
         },
       });
 
-      console.log('group', { Comment: group });
 
       return { message: 'group created successfully', Comment: group };
     },
@@ -38,7 +36,6 @@ export const groupRouter = trpc
           boardId: input.boardId,
         },
       });
-      console.log(groups)
       return groups;
     },
   });

@@ -117,35 +117,7 @@ const Drawer = ({ ticket }: IDrawer) => {
     }
   );
 
-  useEffect(() => {
-    console.log(comments);
-  }, [comments]);
 
-  // const [comments, setComments] = useState<ICommentUser[] | null>(() => {
-  //   if (!data) return [];
-  //   const cmts = data.pages.map((page) => page.comments).flat();
-  //   console.log({ cmts });
-  //   if (cmts.length <= 0) {
-  //     return null;
-  //   }
-  //   return cmts;
-  // });
-
-  // useEffect(() => {
-  //   if (!data) return;
-  //   const cmts = data.pages.map((page) => page.comments).flat();
-  //   if (cmts.length <= 0) {
-  //     setComments(null);
-  //     console.log('No comments');
-  //     return;
-  //   }
-
-  //   console.log('effect', cmts);
-  //   setComments(cmts);
-  //   return () => {
-  //     setComments(null);
-  //   };
-  // }, [data]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

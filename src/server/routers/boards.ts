@@ -50,7 +50,6 @@ export const boardRouter = trpc
         },
       });
 
-      console.log('board', { board });
 
       return { message: 'Board created successfully', board };
     },

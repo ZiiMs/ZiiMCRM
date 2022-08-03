@@ -17,7 +17,6 @@ export const ticketRouter = trpc
         console.log('Not logged in');
         throw new Error('Not logged in');
       }
-      console.log(input);
       const userId: string = ctx.session.user.id;
       const Ticket = await ctx.prisma.ticket.create({
         data: {
@@ -33,7 +32,6 @@ export const ticketRouter = trpc
         },
       });
 
-      console.log('board', { Ticket });
 
       return { message: 'Ticket created successfully', Ticket };
     },

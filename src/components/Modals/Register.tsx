@@ -23,7 +23,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import {
@@ -31,7 +31,7 @@ import {
   MouseEvent,
   useContext,
   useEffect,
-  useState,
+  useState
 } from 'react';
 
 const RegisterModal = () => {
@@ -54,7 +54,6 @@ const RegisterModal = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    console.log('Login?', session, showRegister);
 
     return () => {};
   }, [session, showRegister]);
@@ -118,7 +117,6 @@ const RegisterModal = () => {
                 <Select
                   value={gender}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                    console.log(e.target.value);
                     e.target.value == ''
                       ? setGenderValid(false)
                       : setGenderValid(true);
@@ -174,7 +172,6 @@ const RegisterModal = () => {
                     vn != null && vn >= 16 && vn <= 100
                       ? setAgeValid(true)
                       : setAgeValid(false);
-                    console.log(vn);
                     setAge(vn);
                   }}
                 >

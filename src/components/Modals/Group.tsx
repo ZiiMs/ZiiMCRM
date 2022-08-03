@@ -23,7 +23,6 @@ const CreateGroupModal: React.FC<Props> = ({ open, onClose, boardId }) => {
   const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['group.create'], {
     onSuccess: (data) => {
-      console.log('suc', data);
       client.invalidateQueries(['group.get', { boardId }]);
     },
   });

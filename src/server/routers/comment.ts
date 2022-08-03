@@ -15,7 +15,6 @@ export const commentRouter = trpc
         console.log('Not logged in');
         throw new Error('Not logged in');
       }
-      console.log(input);
       const userId: string = ctx.session.user.id;
       const Comment = await ctx.prisma.comments.create({
         data: {
@@ -45,7 +44,6 @@ export const commentRouter = trpc
         },
       });
 
-      console.log('board', { Comment });
 
       return { message: 'Board created successfully', Comment };
     },

@@ -43,7 +43,6 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
   const { mutate: joinBoard } = trpc.useMutation(['boards.join'], {
     onSuccess: (data) => {
       client.invalidateQueries(['boards.fetch']);
-      console.log(data);
       toast({
         position: 'top-right',
         duration: 2000,
@@ -146,7 +145,6 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
 
   const saveBoard = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(boardName, description, type);
     if (!CheckErrors()) return;
     if (!session) return;
     const imageurl = image ? image : null;

@@ -18,7 +18,6 @@ const SignIn: NextPage = () => {
 
   useEffect(() => {
     router.push('/auth/newAuth');
-    console.log('newData', data);
   }, [data, router]);
 
   return <></>;
