@@ -69,7 +69,8 @@ const Drawer = () => {
   );
 
   const toast = useToast();
-  const [parent] = useAutoAnimate<HTMLDivElement>();
+  const [commentLoad] = useAutoAnimate<HTMLDivElement>();
+  const [commentPost] = useAutoAnimate<HTMLDivElement>();
 
   const [favorite, setFavorite] = useState(false);
   const [message, setMessage] = useState('');
@@ -335,68 +336,76 @@ const Drawer = () => {
                 <Dropzone />
               </VStack>
               <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
-              {(comments?.pages[0] !== undefined &&
-                comments.pages[0].comments.length) > 0 ? (
-                <Box
-                  w={'full'}
-                  h={'full'}
-                  px={2}
-                  overflowY={'scroll'}
-                  onScroll={(e: React.UIEvent<HTMLDivElement>) => {
-                    const bottom =
-                      e.currentTarget.scrollTop +
-                        e.currentTarget.clientHeight >=
-                      e.currentTarget.scrollHeight - 1000;
-
-                    if (bottom && hasNextPage && !isFetchingNextPage) {
-                      fetchNextPage();
-                    }
-                  }}
-                  sx={{
-                    '&::-webkit-scrollbar': {
-                      width: '12px',
-                      borderRadius: '8px',
-                      backgroundColor: `rgba(0, 0, 0, 0.15)`,
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                      borderRadius: '8px',
-                      backgroundColor: `rgba(0, 0, 0, 0.4)`,
-                    },
-                  }}
-                >
-                  <VStack ref={parent}>
-                    {comments!.pages.map((group, i) => (
-                      <VStack key={i} w={'full'} >
-                        {group.comments.map((comment) => (
-                          <Comment
-                            key={String(comment.id)}
-                            user={comment.User}
-                            comment={comment}
-                          />
-                        ))}
-                      </VStack>
-                    ))}
-                    <Text>
-                      {isFetchingNextPage
-                        ? 'Loading more...'
-                        : hasNextPage
-                        ? 'Load More'
-                        : null}
-                    </Text>
-                  </VStack>
-                </Box>
-              ) : (
-                <>
-                  <Flex
-                    justifyContent={'center'}
-                    alignItems={'center'}
+              <VStack
+                ref={commentLoad}
+                w={'full'}
+                flex={1}
+                flexGrow={1}
+                flexBasis={0}
+                overflowY={'auto'}
+                sx={{
+                  '&::-webkit-scrollbar': {
+                    width: '12px',
+                    borderRadius: '8px',
+                    backgroundColor: `rgba(0, 0, 0, 0.15)`,
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    borderRadius: '8px',
+                    backgroundColor: `rgba(0, 0, 0, 0.4)`,
+                  },
+                }}
+              >
+                {(comments?.pages[0] !== undefined &&
+                  comments.pages[0].comments.length) > 0 ? (
+                  <Box
                     w={'full'}
                     h={'full'}
+                    px={2}
+                    onScroll={(e: React.UIEvent<HTMLDivElement>) => {
+                      const bottom =
+                        e.currentTarget.scrollTop +
+                          e.currentTarget.clientHeight >=
+                        e.currentTarget.scrollHeight - 1000;
+
+                      if (bottom && hasNextPage && !isFetchingNextPage) {
+                        fetchNextPage();
+                      }
+                    }}
                   >
-                    <Text>No comments</Text>
-                  </Flex>
-                </>
-              )}
+                    <VStack>
+                      {comments!.pages.map((group, i) => (
+                        <VStack key={i} w={'full'} >
+                          {group.comments.map((comment) => (
+                            <Comment
+                              key={String(comment.id)}
+                              user={comment.User}
+                              comment={comment}
+                            />
+                          ))}
+                        </VStack>
+                      ))}
+                      <Text>
+                        {isFetchingNextPage
+                          ? 'Loading more...'
+                          : hasNextPage
+                          ? 'Load More'
+                          : null}
+                      </Text>
+                    </VStack>
+                  </Box>
+                ) : (
+                  <>
+                    <Flex
+                      justifyContent={'center'}
+                      alignItems={'center'}
+                      w={'full'}
+                      h={'full'}
+                    >
+                      <Text>No comments</Text>
+                    </Flex>
+                  </>
+                )}
+              </VStack>
             </VStack>
             <form onSubmit={handleSubmit}>
               <InputGroup
