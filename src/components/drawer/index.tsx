@@ -364,9 +364,9 @@ const Drawer = () => {
                     },
                   }}
                 >
-                  <VStack>
+                  <VStack ref={parent}>
                     {comments!.pages.map((group, i) => (
-                      <VStack key={i} w={'full'} ref={parent}>
+                      <VStack key={i} w={'full'} >
                         {group.comments.map((comment) => (
                           <Comment
                             key={String(comment.id)}
@@ -383,38 +383,6 @@ const Drawer = () => {
                         ? 'Load More'
                         : null}
                     </Text>
-                    <form onSubmit={handleSubmit}>
-                      <InputGroup
-                        position={'absolute'}
-                        right={0}
-                        bottom={0}
-                        w={'full'}
-                        px={4}
-                        pb={2}
-                        backgroundColor={'transparent'}
-                      >
-                        <Input
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setMessage(e.target.value)
-                          }
-                          value={message}
-                          size={'md'}
-                          backdropFilter={'blur(1px)'}
-                          backgroundColor={'blackAlpha.400'}
-                          borderWidth={'2px'}
-                        />
-                        <InputRightElement pr={8}>
-                          <BrandIconButton
-                            Color={'brand.400'}
-                            size={'sm'}
-                            variant={'ghost'}
-                            type={'submit'}
-                            aria-label={'submit-comment-button'}
-                            icon={<IoSend />}
-                          />
-                        </InputRightElement>
-                      </InputGroup>
-                    </form>
                   </VStack>
                 </Box>
               ) : (
@@ -427,39 +395,41 @@ const Drawer = () => {
                   >
                     <Text>No comments</Text>
                   </Flex>
-                  <form onSubmit={handleSubmit}>
-                    <InputGroup
-                      size={'md'}
-                      px={2}
-                      pb={2}
-                      backgroundColor={'transparent'}
-                    >
-                      <Input
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setMessage(e.target.value)
-                        }
-                        value={message}
-                        size={'md'}
-                        backdropFilter={'blur(1px)'}
-                        backgroundColor={'blackAlpha.400'}
-                        borderWidth={'2px'}
-                      />
-                      <InputRightElement width={'fit-content'} pr={3}>
-                        {/* <BrandIconButton aria-label={'submit-icon'} icon={<IoSend />} /> */}
-                        <BrandIconButton
-                          Color={'brand.400'}
-                          size={'sm'}
-                          variant={'ghost'}
-                          type={'submit'}
-                          aria-label={'submit-comment-button'}
-                          icon={<IoSend />}
-                        />
-                      </InputRightElement>
-                    </InputGroup>
-                  </form>
                 </>
               )}
             </VStack>
+            <form onSubmit={handleSubmit}>
+              <InputGroup
+                position={'absolute'}
+                right={0}
+                bottom={0}
+                w={'full'}
+                px={4}
+                pb={2}
+                backgroundColor={'transparent'}
+              >
+                <Input
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setMessage(e.target.value)
+                  }
+                  value={message}
+                  size={'md'}
+                  backdropFilter={'blur(1px)'}
+                  backgroundColor={'blackAlpha.400'}
+                  borderWidth={'2px'}
+                />
+                <InputRightElement pr={8}>
+                  <BrandIconButton
+                    Color={'brand.400'}
+                    size={'sm'}
+                    variant={'ghost'}
+                    type={'submit'}
+                    aria-label={'submit-comment-button'}
+                    icon={<IoSend />}
+                  />
+                </InputRightElement>
+              </InputGroup>
+            </form>
           </VStack>
         </Flex>
       ) : null}

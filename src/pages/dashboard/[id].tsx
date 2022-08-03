@@ -115,6 +115,7 @@ const Dashboard: NextPage = () => {
       h={'full'}
       alignItems={'flex-start'}
       justifyContent={'flex-start'}
+      ref={parent}
     >
       <VStack
         w={'full'}
