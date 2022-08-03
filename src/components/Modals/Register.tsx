@@ -1,3 +1,7 @@
+import {
+  default as registerToggle,
+  default as useRegisterStore
+} from '@/stores/registerStore';
 import { trpc } from '@/utils/trpc';
 import {
   Alert,
@@ -32,12 +36,9 @@ import {
   useEffect,
   useState
 } from 'react';
-import registerToggle from 'src/stores/registerContext';
+import shallow from 'zustand/shallow';
 
 const RegisterModal = () => {
-  const [error, setError] = useState<String | null>(null);
-  const [gender, setGender] = useState<string>('');
-  const [age, setAge] = useState<number>();
   const [isAgeValid, setAgeValid] = useState(true);
   const [isGenderValid, setGenderValid] = useState(true);
   const { mutate } = trpc.useMutation(['users.create'], {
@@ -50,11 +51,32 @@ const RegisterModal = () => {
       setError(error.message);
     },
   });
-  const { showRegister, toggleRegister } = useContext(registerToggle);
+
+  const {
+    showRegister,
+    toggleRegister,
+    age,
+    gender,
+    error,
+    setAge,
+    setGender,
+    setError,
+  } = useRegisterStore(
+    (state) => ({
+      showRegister: state.showRegister,
+      toggleRegister: state.toggleRegister,
+      age: state.age,
+      setAge: state.setAge,
+      gender: state.gender,
+      setGender: state.setGender,
+      error: state.error,
+      setError: state.setError,
+    }),
+    shallow
+  );
   const { data: session } = useSession();
 
   useEffect(() => {
-
     return () => {};
   }, [session, showRegister]);
 

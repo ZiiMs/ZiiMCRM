@@ -1,19 +1,22 @@
+import { default as settingsToggle, default as useSettingsStore } from '@/stores/settingsStore';
 import {
-    Button,
-    FormControl,
-    FormLabel,
-    Input,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader
 } from '@chakra-ui/react';
-import { useContext } from 'react';
-import settingsToggle from 'src/stores/settingsContext';
+import shallow from 'zustand/shallow';
 
 const SettingsModal = () => {
-  const { showSettings, toggleSettings } = useContext(settingsToggle);
+const { showSettings, toggleSettings } = useSettingsStore((state) => ({
+    showSettings: state.showSettings,
+    toggleSettings: state.toggleSettings,
+  }), shallow);
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

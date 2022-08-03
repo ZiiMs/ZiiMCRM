@@ -1,4 +1,8 @@
 import {
+  default as loginToggle,
+  default as useLoginStore
+} from '@/stores/loginStore';
+import {
   Alert,
   AlertDescription,
   AlertIcon,
@@ -14,21 +18,21 @@ import {
   VStack
 } from '@chakra-ui/react';
 import { signIn, useSession } from 'next-auth/react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaDiscord, FaFacebookSquare, FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
-import loginToggle from 'src/stores/loginContext';
+import shallow from 'zustand/shallow';
 
 const LoginModal = () => {
   const [error, setError] = useState<String | null>(null);
-  const { showLogin, toggleLogin } = useContext(loginToggle);
+  const { showLogin, toggleLogin } = useLoginStore(
+    (state) => ({
+      showLogin: state.showLogin,
+      toggleLogin: state.toggleLogin,
+    }),
+    shallow
+  );
   const { data: session } = useSession();
-
-  useEffect(() => {
-    console.log('Login?', session, showLogin);
-
-    return () => {};
-  }, [session, showLogin]);
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

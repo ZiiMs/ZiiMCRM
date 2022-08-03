@@ -1,4 +1,8 @@
 import useDrawerStore from '@/stores/drawerStore';
+import {
+  default as settingsToggle,
+  default as useSettingsStore
+} from '@/stores/settingsStore';
 import { MAX_BOARDS } from '@/utils/config';
 import { trpc } from '@/utils/trpc';
 import {
@@ -25,7 +29,7 @@ import { MouseEvent, useContext } from 'react';
 import { BiMenuAltLeft, BiPlus } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { RiSettings3Line } from 'react-icons/ri';
-import settingsToggle from 'src/stores/settingsContext';
+import shallow from 'zustand/shallow';
 import BrandIconButton from '../iconButton';
 
 interface INavbarProps {
@@ -33,7 +37,13 @@ interface INavbarProps {
 }
 
 const Navbar = ({ openBoard }: any) => {
-  const { showSettings, toggleSettings } = useContext(settingsToggle);
+  const { showSettings, toggleSettings } = useSettingsStore(
+    (state) => ({
+      showSettings: state.showSettings,
+      toggleSettings: state.toggleSettings,
+    }),
+    shallow
+  );
   // const { boards, setBoards } = useContext(boardContext);
   const [parent] = useAutoAnimate<HTMLDivElement>();
   const closeDrawer = useDrawerStore((state) => state.closeDrawer);
@@ -44,8 +54,6 @@ const Navbar = ({ openBoard }: any) => {
 
   const { data: boards, isLoading, error } = trpc.useQuery(['boards.fetch']);
 
-  // utils.fetchQuery(['']);
-  // const boards = [];
   const router = useRouter();
 
   const handlePlusBoards = (e: MouseEvent<HTMLButtonElement>) => {

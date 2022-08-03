@@ -3,9 +3,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { withTRPC } from '@trpc/next';
 import { getSession, SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
-import { LoginToggleProvider } from 'src/stores/loginContext';
-import { RegisterToggleProvider } from 'src/stores/registerContext';
-import { SettingsToggleProvider } from 'src/stores/settingsContext';
 import theme from 'src/theme';
 import superjson from 'superjson';
 import { AppRouter } from '../server/routers';
@@ -14,20 +11,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <ChakraProvider theme={theme}>
-        <LoginToggleProvider>
-          <RegisterToggleProvider>
-            <SettingsToggleProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-            </SettingsToggleProvider>
-          </RegisterToggleProvider>
-        </LoginToggleProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </ChakraProvider>
     </SessionProvider>
   );
 }
-
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {
