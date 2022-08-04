@@ -25,7 +25,7 @@ const CreateTicketModal: React.FC<Props> = ({
   groupId,
   boardId,
 }) => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState('');
   const client = trpc.useContext();
   const { mutate: mutateTickets } = trpc.useMutation(['ticket.create'], {
@@ -39,12 +39,16 @@ const CreateTicketModal: React.FC<Props> = ({
   const CreateTicket = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('Create Ticket');
-    mutateTickets({
-      description: description,
-      groupId: groupId,
-      title: title,
-      boardId: boardId,
-    });
+    if (title.length > 0) {
+      mutateTickets({
+        description: description,
+        groupId: groupId,
+        title: title,
+        boardId: boardId,
+      });
+    } else {
+      console.log('Title or description is empty');
+    }
   };
 
   return (

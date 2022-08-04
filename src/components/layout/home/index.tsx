@@ -1,5 +1,5 @@
 import loginToggle from '@/stores/loginStore';
-import { Container, HStack } from '@chakra-ui/react';
+import { Container, HStack, VStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import {
@@ -26,7 +26,7 @@ const LoginModal = dynamic(() => import('@/components/Modals/Login'));
 const RegisterModal = dynamic(() => import('@/components/Modals/Register'));
 const PlusBoard = dynamic(() => import('@/components/Modals/PlusBoard'));
 
-const Layout = ({ children }: PropsWithChildren<{}>) => {
+const HomeLayout = ({ children }: PropsWithChildren<{}>) => {
   const { showLogin, toggleLogin } = useLoginStore(
     (state) => ({
       showLogin: state.showLogin,
@@ -34,24 +34,8 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     }),
     shallow
   );
-  const [openBoard, setOpenBoard] = useState(false);
 
-  const router = useRouter();
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    if (session === null && !showLogin) {
-      router.push('/');
-    }
-    return () => {};
-  }, [router, session, showLogin, toggleLogin]);
-
-  const onClickOpen = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setOpenBoard(true);
-  };
-
-  if (status === 'loading') return <Loading />;
+  const { data: session } = useSession();
 
   return (
     <Container
@@ -65,22 +49,16 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
       m={0}
       p={0}
     >
-      <SettingsModal />
-      <PlusBoard
-        open={openBoard}
-        toggleOpen={() => {
-          setOpenBoard(false);
-        }}
-      />
       <LoginModal />
       <RegisterModal />
-      <HStack key={'layoutstack'} m={0} p={0} flex={1}>
-        <Navbar openBoard={onClickOpen} />
+
+      <VStack key={'layoutstack'} m={0} p={0} flex={1}>
+        <Navbar />
         {children}
-      </HStack>
+      </VStack>
     </Container>
   );
 };
 
-export default Layout;
+export default HomeLayout;
 

@@ -160,6 +160,7 @@ const Navbar = ({ openBoard }: any) => {
                 size={'sm'}
                 m={0}
                 backgroundColor={'transparent'}
+                name={user.name ?? undefined}
                 p={0}
                 src={user?.image ? user.image : undefined}
               />
@@ -186,7 +187,6 @@ const Navbar = ({ openBoard }: any) => {
 
         <Box pb={2.5} px={2} m={0}>
           <BrandIconButton
-            as={Link}
             onClick={() => {
               toggleSettings();
             }}

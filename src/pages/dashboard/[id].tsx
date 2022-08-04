@@ -14,6 +14,7 @@ import {
 // import Card from '@/components/card';
 // import Drawer from '@/components/drawer';
 import BrandIconButton from '@/components/iconButton';
+import Layout from '@/components/layout';
 import Loading from '@/components/loading';
 import CreateGroupModal from '@/components/Modals/Group';
 import ShareCodeModal from '@/components/Modals/Share';
@@ -58,7 +59,7 @@ const Dashboard: NextPage = () => {
         </Alert>
       ),
     });
-    router.push('/');
+    // router.push('/');
     return null;
   }
 
@@ -110,101 +111,54 @@ const Dashboard: NextPage = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <HStack
-      w={'full'}
-      h={'full'}
-      alignItems={'flex-start'}
-      justifyContent={'flex-start'}
-      ref={parent}
-    >
-      <VStack
+    <Layout>
+      <HStack
         w={'full'}
         h={'full'}
-        spacing={8}
-        alignItems='flex-start'
-        pt={6}
-        px={4}
-        pb={3}
+        alignItems={'flex-start'}
+        justifyContent={'flex-start'}
+        ref={parent}
       >
-        <HStack w={'full'} justifyContent={'space-between'}>
-          <HStack>
-            <Heading color={'gray.200'}>{board?.name}</Heading>
-            <BrandIconButton
-              variant={'ghost'}
-              icon={<RiSettings3Line />}
-              aria-label='board settings'
-              onClick={() => {
-                console.log('Open board settings');
-              }}
-            >
-              Settings
-            </BrandIconButton>
-          </HStack>
-          <Button
-            onClick={() => {
-              if (!board?.id) return;
-              setShareCode(true);
-            }}
-          >
-            Share
-          </Button>
-        </HStack>
-        <HStack w={'full'} spacing={4}>
-          <Card graph></Card>
-          <Card></Card>
-        </HStack>
-        <HStack ref={parent} w={'full'} h={'full'} spacing={2.5}>
-          {groups && groups.length > 0 && groups.length < 5 ? (
+        <VStack
+          w={'full'}
+          h={'full'}
+          spacing={8}
+          alignItems='flex-start'
+          pt={6}
+          px={4}
+          pb={3}
+        >
+          <HStack w={'full'} justifyContent={'space-between'}>
+            <HStack>
+              <Heading color={'gray.200'}>{board?.name}</Heading>
+              <BrandIconButton
+                variant={'ghost'}
+                icon={<RiSettings3Line />}
+                aria-label='board settings'
+                onClick={() => {
+                  console.log('Open board settings');
+                }}
+              >
+                Settings
+              </BrandIconButton>
+            </HStack>
             <Button
-              w={'full'}
-              display={'flex'}
-              fontSize={'xl'}
-              textColor={'brand.300'}
-              flexDir={'column'}
-              variant={'ghost'}
-              fontWeight={'bold'}
-              h={'full'}
               onClick={() => {
-                setCreateGroup(true);
+                if (!board?.id) return;
+                setShareCode(true);
               }}
             >
-              <Icon fontSize={'8xl'} as={AiOutlinePlus} />
-              Create Groups
+              Share
             </Button>
-          ) : null}
-
-          {groups && groups.length > 0 ? (
-            groups.map((group) => (
-              <React.Fragment key={group.id}>
-                <Group
-                  group={group}
-                  CreateTicket={(e, id) => {
-                    e.preventDefault();
-                    setClickedGroup(id);
-                    setCreateTicket(true);
-                  }}
-                >
-                  {tickets
-                    ? tickets.map((ticket) => {
-                        if (ticket.groupId === group.id) {
-                          return <TicketCard ticket={ticket} />;
-                        }
-                        return;
-                      })
-                    : undefined}
-                </Group>
-              </React.Fragment>
-            ))
-          ) : (
-            <Flex
-              w={'full'}
-              justifyContent={'center'}
-              mb={4}
-              alignItems={'center'}
-              h={'full'}
-            >
+          </HStack>
+          <HStack w={'full'} spacing={4}>
+            <Card graph></Card>
+            <Card></Card>
+          </HStack>
+          <HStack ref={parent} w={'full'} h={'full'} spacing={2.5}>
+            {groups && groups.length > 0 && groups.length < 5 ? (
               <Button
-                w={'40%'}
+                w={'full'}
                 display={'flex'}
                 fontSize={'xl'}
                 textColor={'brand.300'}
@@ -219,33 +173,82 @@ const Dashboard: NextPage = () => {
                 <Icon fontSize={'8xl'} as={AiOutlinePlus} />
                 Create Groups
               </Button>
-            </Flex>
-          )}
-          {/* <Board Title={'Title1'}></Board>
+            ) : null}
+
+            {groups && groups.length > 0 ? (
+              groups.map((group) => (
+                <React.Fragment key={group.id}>
+                  <Group
+                    group={group}
+                    CreateTicket={(e, id) => {
+                      e.preventDefault();
+                      setClickedGroup(id);
+                      setCreateTicket(true);
+                    }}
+                  >
+                    {tickets
+                      ? tickets.map((ticket) => {
+                          if (ticket.groupId === group.id) {
+                            return <TicketCard ticket={ticket} />;
+                          }
+                          return;
+                        })
+                      : undefined}
+                  </Group>
+                </React.Fragment>
+              ))
+            ) : (
+              <Flex
+                w={'full'}
+                justifyContent={'center'}
+                mb={4}
+                alignItems={'center'}
+                h={'full'}
+              >
+                <Button
+                  w={'40%'}
+                  display={'flex'}
+                  fontSize={'xl'}
+                  textColor={'brand.300'}
+                  flexDir={'column'}
+                  variant={'ghost'}
+                  fontWeight={'bold'}
+                  h={'full'}
+                  onClick={() => {
+                    setCreateGroup(true);
+                  }}
+                >
+                  <Icon fontSize={'8xl'} as={AiOutlinePlus} />
+                  Create Groups
+                </Button>
+              </Flex>
+            )}
+            {/* <Board Title={'Title1'}></Board>
           <Board Title={'Title2'}></Board>
           <Board Title={'Title3'}></Board>
           <Board Title={'Title4'}></Board>
           <Board Title={'Title5'}></Board> */}
-        </HStack>
-      </VStack>
-      <Drawer />
-      <ShareCodeModal
-        boardId={board!.id}
-        open={shareCodeOpen}
-        onClose={() => setShareCode(false)}
-      />
-      <CreateGroupModal
-        boardId={board!.id}
-        open={createGroupOpen}
-        onClose={() => setCreateGroup(false)}
-      />
-      <CreateTicketModal
-        boardId={board!.id}
-        groupId={clickedGroup}
-        open={createTicket}
-        onClose={() => setCreateTicket(false)}
-      />
-    </HStack>
+          </HStack>
+        </VStack>
+        <Drawer />
+        <ShareCodeModal
+          boardId={board!.id}
+          open={shareCodeOpen}
+          onClose={() => setShareCode(false)}
+        />
+        <CreateGroupModal
+          boardId={board!.id}
+          open={createGroupOpen}
+          onClose={() => setCreateGroup(false)}
+        />
+        <CreateTicketModal
+          boardId={board!.id}
+          groupId={clickedGroup}
+          open={createTicket}
+          onClose={() => setCreateTicket(false)}
+        />
+      </HStack>
+    </Layout>
   );
 };
 
