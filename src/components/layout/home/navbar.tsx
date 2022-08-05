@@ -17,9 +17,12 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Link,
   Menu,
   MenuButton,
+  MenuDivider,
+  MenuGroup,
   MenuItem,
   MenuList,
   Portal,
@@ -32,6 +35,7 @@ import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEvent, useContext, useState } from 'react';
+import { BiChevronDown } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { MdOutlineDeviceHub } from 'react-icons/md';
 import { RiSettings3Line } from 'react-icons/ri';
@@ -83,68 +87,123 @@ const HomeNavBar = () => {
           fontWeight={'medium'}
           textColor={'whiteAlpha.800'}
         >
-          <Text
+          <HStack
             as={'button'}
-            px={3}
             _hover={{
               cursor: 'pointer',
-              color: 'brand.200',
+              textColor: 'brand.200',
             }}
             onClick={(e) => {
               e.preventDefault();
               setShowDrawer(true);
             }}
-          >
-            Features
-          </Text>
-          <Text
-            as={'button'}
+            spacing={0}
             px={3}
+          >
+            <Text textColor={'inherit'} mr={2}>
+              Features
+            </Text>
+            <Icon as={BiChevronDown} />
+          </HStack>
+          <HStack
+            as={'button'}
             _hover={{
               cursor: 'pointer',
-              color: 'brand.200',
+              textColor: 'brand.200',
             }}
-          >
-            Solutions
-          </Text>
-          <Text
-            as={'button'}
+            spacing={0}
             px={3}
+          >
+            <Text textColor={'inherit'} mr={2}>
+              Solutions
+            </Text>
+            <Icon as={BiChevronDown} />
+          </HStack>
+          <HStack
+            as={'button'}
             _hover={{
               cursor: 'pointer',
-              color: 'brand.200',
+              textColor: 'brand.200',
             }}
-          >
-            Resources
-          </Text>
-          <Text
-            as={'button'}
+            spacing={0}
             px={3}
+          >
+            <Text textColor={'inherit'} mr={2}>
+              Resources
+            </Text>
+            <Icon as={BiChevronDown} />
+          </HStack>
+          <HStack
+            as={'button'}
             _hover={{
               cursor: 'pointer',
-              color: 'brand.200',
+              textColor: 'brand.200',
             }}
+            spacing={0}
+            px={3}
           >
-            Support
-          </Text>
+            <Text textColor={'inherit'} mr={2}>
+              Support
+            </Text>
+            <Icon as={BiChevronDown} />
+          </HStack>
         </HStack>
       </HStack>
       <HStack px={2}>
         {session && user ? (
-          <>
-            {user.image ? (
-              <Avatar
-                size={'sm'}
-                m={0}
-                backgroundColor={'transparent'}
-                p={0}
-                name={user.name ?? undefined}
-                src={user?.image ? user.image : undefined}
-              />
-            ) : (
-              <Icon as={CgProfile} />
-            )}
-          </>
+          <Menu placement='bottom'>
+            <MenuButton
+              as={Button}
+              p={0}
+              size={'lg'}
+              disabled={!user}
+              color={
+                router.asPath === `/user/${user?.id}`
+                  ? 'brand.100'
+                  : 'brand.400'
+              }
+              leftIcon={<BiChevronDown />}
+              alignItems={'center'}
+              justifyContent={'center'}
+              variant={
+                router.asPath === `/user/${user?.id}` ? 'solid' : 'ghost'
+              }
+            >
+              {user?.image ? (
+                <Avatar
+                  size={'sm'}
+                  m={0}
+                  backgroundColor={'transparent'}
+                  name={user.name ?? undefined}
+                  p={0}
+                  src={user?.image ? user.image : undefined}
+                />
+              ) : (
+                <Icon as={CgProfile} />
+              )}
+            </MenuButton>
+            <Portal>
+              <MenuList>
+                <MenuGroup>
+                  <NextLink passHref href={`/dashboard/`}>
+                    <MenuItem>Dashboard</MenuItem>
+                  </NextLink>
+                  <NextLink passHref href={`/user/${user?.id}`}>
+                    <MenuItem>Profile</MenuItem>
+                  </NextLink>
+                </MenuGroup>
+                <MenuDivider />
+                <MenuItem
+                  onClick={() => {
+                    router.push('/');
+                    signOut({ redirect: false });
+                  }}
+                >
+                  Sign out
+                </MenuItem>
+              </MenuList>
+            </Portal>
+          </Menu>
         ) : (
           <>
             <Button
