@@ -30,6 +30,7 @@ import { BiMenuAltLeft, BiPlus } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { RiSettings3Line } from 'react-icons/ri';
 import shallow from 'zustand/shallow';
+import { AutoAnimate } from '../autoanimate';
 import BrandIconButton from '../iconButton';
 
 interface INavbarProps {
@@ -45,7 +46,6 @@ const Navbar = ({ openBoard }: any) => {
     shallow
   );
   // const { boards, setBoards } = useContext(boardContext);
-  const [parent] = useAutoAnimate<HTMLDivElement>();
   const closeDrawer = useDrawerStore((state) => state.closeDrawer);
   const { data: session } = useSession();
   const user = session?.user;
@@ -97,7 +97,7 @@ const Navbar = ({ openBoard }: any) => {
             icon={<BiMenuAltLeft />}
           />
         </NextLink>
-        <VStack ref={parent}>
+        <AutoAnimate as={VStack}>
           {!isLoading && !error && boards
             ? boards.map((board) => (
                 <NextLink
@@ -132,7 +132,7 @@ const Navbar = ({ openBoard }: any) => {
                 </NextLink>
               ))
             : null}
-        </VStack>
+        </AutoAnimate>
         <BrandIconButton
           onClick={handlePlusBoards}
           size={'lg'}

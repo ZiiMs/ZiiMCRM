@@ -11,6 +11,7 @@ import { Group } from '@prisma/client';
 import React, { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { RiMoreFill } from 'react-icons/ri';
+import { AutoAnimate } from '../autoanimate';
 
 interface IBoard {
   group: Group;
@@ -19,7 +20,6 @@ interface IBoard {
 }
 
 const Group = ({ group, children, CreateTicket }: IBoard) => {
-  const [parent] = useAutoAnimate<HTMLDivElement>();
   return (
     <Box
       w={'full'}
@@ -49,7 +49,8 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
           />
         </HStack>
         {children ? (
-          <VStack
+          <AutoAnimate
+            as={VStack}
             w={'full'}
             flex={1}
             flexGrow={1}
@@ -72,7 +73,7 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
             px={2}
           >
             {children}
-          </VStack>
+          </AutoAnimate>
         ) : null}
 
         <HStack alignItems={'center'} spacing={2.5} justifyContent={'center'}>

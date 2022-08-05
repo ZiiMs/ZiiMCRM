@@ -44,7 +44,6 @@ interface INavbarProps {
 
 const HomeNavBar = () => {
   // const { boards, setBoards } = useContext(boardContext);
-  const [parent] = useAutoAnimate<HTMLDivElement>();
   const { data: session, status } = useSession();
   const [showDrawer, setShowDrawer] = useState(false);
   const user = session?.user;

@@ -31,6 +31,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { GiCheckMark } from 'react-icons/gi';
 import { MdSpaceDashboard } from 'react-icons/md';
 import { RiArrowRightSLine } from 'react-icons/ri';
+import { AutoAnimate } from '../autoanimate';
 interface Iplusboard {
   open: boolean;
   toggleOpen: () => void;
@@ -38,7 +39,6 @@ interface Iplusboard {
 
 const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
   const toast = useToast();
-  const [parent] = useAutoAnimate<HTMLElement>();
   const client = trpc.useContext();
   const { mutate: joinBoard } = trpc.useMutation(['boards.join'], {
     onSuccess: (data) => {
@@ -72,7 +72,7 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
           </Alert>
         ),
       });
-    }
+    },
   });
   const { mutate } = trpc.useMutation(['boards.create'], {
     onSuccess: (data) => {
@@ -229,163 +229,165 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
       onClose={toggleOpen}
     >
       <ModalOverlay bg={'blackAlpha.700'} />
-      <ModalContent ref={parent}>
-        <ModalHeader>
-          <HStack>
-            <Box
-              bgColor={step >= 1 ? 'zred.400' : 'brand.200'}
-              boxSize={6}
-              fontSize={'md'}
-              textColor={'brand.900'}
-              display={'flex'}
-              alignItems={'center'}
-              justifyContent={'center'}
-              borderRadius={'full'}
-              p={3}
-            >
-              {step > 1 ? <Icon size={'sm'} as={GiCheckMark} /> : 1}
-            </Box>
-            <Text fontSize={'sm'}>Join/Create</Text>
-            <Divider
-              borderColor={step === 2 ? 'zred.400' : 'brand.200'}
-              borderTopWidth={'1px'}
-              marginInlineEnd={3}
-            />
-            <Box
-              bgColor={step === 2 ? 'zred.400' : 'brand.200'}
-              boxSize={6}
-              fontSize={'md'}
-              textColor={'brand.900'}
-              display={'flex'}
-              alignItems={'center'}
-              justifyContent={'center'}
-              borderRadius={'full'}
-              p={3}
-            >
-              2
-            </Box>
-            {selected !== '' ? (
-              selected === 'join' ? (
-                <Text fontSize={'sm'}>Join</Text>
-              ) : (
-                <Text fontSize={'sm'}>Create</Text>
-              )
-            ) : (
+      <ModalContent>
+        <AutoAnimate>
+          <ModalHeader>
+            <HStack>
+              <Box
+                bgColor={step >= 1 ? 'zred.400' : 'brand.200'}
+                boxSize={6}
+                fontSize={'md'}
+                textColor={'brand.900'}
+                display={'flex'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRadius={'full'}
+                p={3}
+              >
+                {step > 1 ? <Icon size={'sm'} as={GiCheckMark} /> : 1}
+              </Box>
               <Text fontSize={'sm'}>Join/Create</Text>
-            )}
-          </HStack>
-        </ModalHeader>
-
-        <ModalBody w={'fit-content'}>
-          {step === 1 ? (
-            <VStack alignItems={'center'} justifyContent={'center'}>
-              <Heading size={'lg'}>Create a board.</Heading>
-              <Text>
-                A board is where you are able to keep track of tasks and
-                coordinate the workflow of you office/job.
-              </Text>
-              <Button
-                variant={'outline'}
-                w={'full'}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.preventDefault();
-                  setSelected('create');
-                  setStep(2);
-                }}
-              >
-                <Flex w={'full'} justifyContent={'space-between'}>
-                  <Flex alignItems={'center'}>
-                    <Icon
-                      as={MdSpaceDashboard}
-                      mr={3}
-                      fontSize={'lg'}
-                      textColor={'gray.300'}
-                    />
-                    <Text>{'Create my own board'}</Text>
-                  </Flex>
-                  <Icon
-                    as={RiArrowRightSLine}
-                    fontSize={'lg'}
-                    textColor={'gray.300'}
-                    fontWeight={'bold'}
-                  />
-                </Flex>
-              </Button>
-            </VStack>
-          ) : selected === 'join' ? (
-            <VStack>
-              <Input
-                placeholder='jrT89f'
-                value={code}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setCode(e.currentTarget.value)
-                }
+              <Divider
+                borderColor={step === 2 ? 'zred.400' : 'brand.200'}
+                borderTopWidth={'1px'}
+                marginInlineEnd={3}
               />
-              <Text>
-                Pleas enter a code above. You can find the code to a board
-                located in the top right of the board. Press the button and a
-                code will be generated.{' '}
-              </Text>
-            </VStack>
-          ) : (
-            plusboard
-          )}
-        </ModalBody>
-
-        <ModalFooter>
-          {step === 2 ? (
-            <Flex w={'full'} justifyContent={'space-between'}>
-              <Button
-                variant={'ghost'}
-                textColor={'whiteAlpha.300'}
-                onClick={() => {
-                  setStep(1);
-                  setSelected('');
-                }}
+              <Box
+                bgColor={step === 2 ? 'zred.400' : 'brand.200'}
+                boxSize={6}
+                fontSize={'md'}
+                textColor={'brand.900'}
+                display={'flex'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRadius={'full'}
+                p={3}
               >
-                Back
-              </Button>
-              <div>
+                2
+              </Box>
+              {selected !== '' ? (
+                selected === 'join' ? (
+                  <Text fontSize={'sm'}>Join</Text>
+                ) : (
+                  <Text fontSize={'sm'}>Create</Text>
+                )
+              ) : (
+                <Text fontSize={'sm'}>Join/Create</Text>
+              )}
+            </HStack>
+          </ModalHeader>
+
+          <ModalBody w={'fit-content'}>
+            {step === 1 ? (
+              <VStack alignItems={'center'} justifyContent={'center'}>
+                <Heading size={'lg'}>Create a board.</Heading>
+                <Text>
+                  A board is where you are able to keep track of tasks and
+                  coordinate the workflow of you office/job.
+                </Text>
                 <Button
-                  mr={2}
+                  variant={'outline'}
+                  w={'full'}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    if (selected === 'join') {
-                      joinBoard({
-                        code,
-                      });
-                    } else {
-                      saveBoard(e);
-                    }
+                    e.preventDefault();
+                    setSelected('create');
+                    setStep(2);
                   }}
                 >
-                  {selected === 'join' ? 'Join' : 'Create'}
+                  <Flex w={'full'} justifyContent={'space-between'}>
+                    <Flex alignItems={'center'}>
+                      <Icon
+                        as={MdSpaceDashboard}
+                        mr={3}
+                        fontSize={'lg'}
+                        textColor={'gray.300'}
+                      />
+                      <Text>{'Create my own board'}</Text>
+                    </Flex>
+                    <Icon
+                      as={RiArrowRightSLine}
+                      fontSize={'lg'}
+                      textColor={'gray.300'}
+                      fontWeight={'bold'}
+                    />
+                  </Flex>
                 </Button>
-              </div>
-            </Flex>
-          ) : (
-            <VStack
-              alignItems={'center'}
-              w={'full'}
-              borderTop={'1px'}
-              borderTopColor={'brand.600'}
-              justifyContent={'center'}
-              pt={3}
-            >
-              <Heading size={'sm'}>Already have a code?</Heading>
-              <Button
-                variant={'solid'}
+              </VStack>
+            ) : selected === 'join' ? (
+              <VStack>
+                <Input
+                  placeholder='jrT89f'
+                  value={code}
+                  onInput={(e: React.FormEvent<HTMLInputElement>) =>
+                    setCode(e.currentTarget.value)
+                  }
+                />
+                <Text>
+                  Pleas enter a code above. You can find the code to a board
+                  located in the top right of the board. Press the button and a
+                  code will be generated.{' '}
+                </Text>
+              </VStack>
+            ) : (
+              plusboard
+            )}
+          </ModalBody>
+
+          <ModalFooter>
+            {step === 2 ? (
+              <Flex w={'full'} justifyContent={'space-between'}>
+                <Button
+                  variant={'ghost'}
+                  textColor={'whiteAlpha.300'}
+                  onClick={() => {
+                    setStep(1);
+                    setSelected('');
+                  }}
+                >
+                  Back
+                </Button>
+                <div>
+                  <Button
+                    mr={2}
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      if (selected === 'join') {
+                        joinBoard({
+                          code,
+                        });
+                      } else {
+                        saveBoard(e);
+                      }
+                    }}
+                  >
+                    {selected === 'join' ? 'Join' : 'Create'}
+                  </Button>
+                </div>
+              </Flex>
+            ) : (
+              <VStack
+                alignItems={'center'}
                 w={'full'}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.preventDefault();
-                  setSelected('join');
-                  setStep(2);
-                }}
+                borderTop={'1px'}
+                borderTopColor={'brand.600'}
+                justifyContent={'center'}
+                pt={3}
               >
-                Join a board
-              </Button>
-            </VStack>
-          )}
-        </ModalFooter>
+                <Heading size={'sm'}>Already have a code?</Heading>
+                <Button
+                  variant={'solid'}
+                  w={'full'}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.preventDefault();
+                    setSelected('join');
+                    setStep(2);
+                  }}
+                >
+                  Join a board
+                </Button>
+              </VStack>
+            )}
+          </ModalFooter>
+        </AutoAnimate>
       </ModalContent>
     </Modal>
   );

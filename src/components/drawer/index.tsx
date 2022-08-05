@@ -4,9 +4,7 @@ import {
   Alert,
   AlertIcon,
   Avatar,
-  Box,
-  Button,
-  Divider,
+  Box, Divider,
   Flex,
   Heading,
   HStack,
@@ -26,10 +24,9 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Ticket } from '@prisma/client';
 import dynamic from 'next/dynamic';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   AiFillStar,
   AiOutlineDoubleRight,
@@ -38,6 +35,7 @@ import {
 import { IoSend } from 'react-icons/io5';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import shallow from 'zustand/shallow';
+import { AutoAnimate } from '../autoanimate';
 // import Comment from '../comment';
 import Dropzone from '../dropzone';
 import BrandIconButton from '../iconButton';
@@ -69,13 +67,12 @@ const Drawer = () => {
   );
 
   const toast = useToast();
-  const [commentLoad] = useAutoAnimate<HTMLDivElement>();
-  const [commentPost] = useAutoAnimate<HTMLDivElement>();
 
   const [favorite, setFavorite] = useState(false);
   const [message, setMessage] = useState('');
 
   const [status, setStatus] = useState<string>('New Ticket');
+  const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
       // client.invalidateQueries(['comments.get']);
@@ -337,7 +334,6 @@ const Drawer = () => {
               </VStack>
               <Divider borderColor={'brand.900'} p={0} m={0} w={'full'} />
               <VStack
-                ref={commentLoad}
                 w={'full'}
                 flex={1}
                 flexGrow={1}
@@ -369,7 +365,14 @@ const Drawer = () => {
                   <Box w={'full'} h={'full'} px={2}>
                     <VStack>
                       {comments!.pages.map((group, i) => (
-                        <VStack key={i} w={'full'}>
+                        <AutoAnimate
+                          as='ul'
+                          key={i}
+                          style={{
+                            listStyle: 'none',
+                            width: '100%',
+                          }}
+                        >
                           {group.comments.map((comment) => (
                             <Comment
                               key={String(comment.id)}
@@ -377,7 +380,7 @@ const Drawer = () => {
                               comment={comment}
                             />
                           ))}
-                        </VStack>
+                        </AutoAnimate>
                       ))}
                       <Text>
                         {isFetchingNextPage

@@ -8,7 +8,7 @@ interface IComment {
 
 const Comment = ({ comment, user }: IComment) => {
   return (
-    <Box backgroundColor={'brand.800'} borderRadius={'8px'} w={'full'} p={2}>
+    <Box as='li' backgroundColor={'brand.800'} borderRadius={'8px'} my={2} w={'full'} p={2}>
       <HStack justifyContent={'flex-start'} alignItems={'flex-start'}>
         <Link href={`/user/${user.id}`}>
           <Avatar
