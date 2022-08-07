@@ -1,5 +1,7 @@
 import { AutoAnimate } from '@/components/autoanimate';
+import FeaturesDropDown from '@/components/dropdowns/features';
 import Dropzone from '@/components/dropzone';
+import useLoginStore from '@/stores/loginStore';
 import useNavbarDrawer from '@/stores/navbarDrawerStore';
 import {
   Avatar,
@@ -39,11 +41,20 @@ const HomeNavBar = () => {
   // const { boards, setBoards } = useContext(boardContext);
   const { data: session, status } = useSession();
 
-  const { toggleDrawer, type, isNavbarOpen } = useNavbarDrawer(
+  const { toggleDrawer, setType, type, isNavbarOpen } = useNavbarDrawer(
     (state) => ({
       toggleDrawer: state.toggleDrawer,
+      setType: state.setType,
       type: state.type,
       isNavbarOpen: state.isNavbarOpen,
+    }),
+    shallow
+  );
+
+  const { showLogin, toggleLogin } = useLoginStore(
+    (state) => ({
+      showLogin: state.showLogin,
+      toggleLogin: state.toggleLogin,
     }),
     shallow
   );
@@ -95,7 +106,7 @@ const HomeNavBar = () => {
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  toggleDrawer(<Dropzone />);
+                  toggleDrawer(<FeaturesDropDown />);
                 }}
                 spacing={0}
                 px={3}
@@ -110,6 +121,26 @@ const HomeNavBar = () => {
                 _hover={{
                   cursor: 'pointer',
                   textColor: 'brand.200',
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isNavbarOpen) {
+                    setType(
+                      <VStack>
+                        <Text>Workgin</Text>
+                        <Text>wer</Text>
+                        <Text>erte</Text>
+                      </VStack>
+                    );
+                  } else {
+                    toggleDrawer(
+                      <VStack>
+                        <Text>Workgin</Text>
+                        <Text>wer</Text>
+                        <Text>erte</Text>
+                      </VStack>
+                    );
+                  }
                 }}
                 spacing={0}
                 px={3}
@@ -152,6 +183,7 @@ const HomeNavBar = () => {
           <HStack px={2}>
             {session && user ? (
               <Menu
+                
                 placement='bottom'
                 isOpen={MenuOpen}
                 onClose={() => setMenuOpen(false)}
@@ -188,7 +220,7 @@ const HomeNavBar = () => {
                   )}
                 </MenuButton>
                 <Portal>
-                  <MenuList>
+                  <MenuList zIndex={'3'}>
                     <MenuGroup>
                       <NextLink passHref href={`/dashboard/`}>
                         <MenuItem>Dashboard</MenuItem>
@@ -214,6 +246,9 @@ const HomeNavBar = () => {
                 <Button
                   isLoading={status === 'loading'}
                   variant={status === 'loading' ? 'ghost' : 'solid'}
+                  onClick={() => {
+                    toggleLogin();
+                  }}
                 >
                   SignIn
                 </Button>
@@ -232,9 +267,9 @@ const HomeNavBar = () => {
             margin: '0',
           }}
         >
-          <Container maxW={'none'} width={'100vw'} bgColor={'red.500'}>
+          <Container maxW={'none'} width={'100vw'} bgColor={'brand.600'}>
             <VStack w='full' spacing={4}>
-              <HStack>{type}</HStack>
+              <Box p={4}>{type}</Box>
             </VStack>
           </Container>
         </Collapse>

@@ -1,7 +1,4 @@
-import {
-  default as loginToggle,
-  default as useLoginStore
-} from '@/stores/loginStore';
+import useLoginStore from '@/stores/loginStore';
 import {
   Alert,
   AlertDescription,

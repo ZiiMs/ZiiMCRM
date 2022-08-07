@@ -29,7 +29,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, useState } from 'react';
 import { GiCheckMark } from 'react-icons/gi';
-import { MdSpaceDashboard } from 'react-icons/md';
+import { MdDashboardCustomize } from 'react-icons/md';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import { AutoAnimate } from '../autoanimate';
 interface Iplusboard {
@@ -297,7 +297,7 @@ const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
                   <Flex w={'full'} justifyContent={'space-between'}>
                     <Flex alignItems={'center'}>
                       <Icon
-                        as={MdSpaceDashboard}
+                        as={MdDashboardCustomize}
                         mr={3}
                         fontSize={'lg'}
                         textColor={'gray.300'}
