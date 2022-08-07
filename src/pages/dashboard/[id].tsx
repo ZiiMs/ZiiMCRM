@@ -61,25 +61,19 @@ const Dashboard: NextPage = (
       },
     ],
     {
-      onSettled: (data) => {
-        console.log('settled', data);
-      },
-      onSuccess: (data) => {
-        console.log('success', data);
-      },
       onError: (error: any) => {
         console.log('BoardError', { error });
-        // toast({
-        //   position: 'top-right',
-        //   duration: 5000,
-        //   variant: 'solid',
-        //   render: () => (
-        //     <Alert status='error'>
-        //       <AlertIcon />
-        //       {error.message}
-        //     </Alert>
-        //   ),
-        // });
+        toast({
+          position: 'top-right',
+          duration: 5000,
+          variant: 'solid',
+          render: () => (
+            <Alert status='error'>
+              <AlertIcon />
+              {error.message}
+            </Alert>
+          ),
+        });
         router.push('/');
       },
     }
@@ -143,7 +137,7 @@ const Dashboard: NextPage = (
       });
       router.push('/');
     }
-  }, []);
+  }, [router, session, toast]);
 
   if (!board || !session || isLoading) return <Loading />;
 
