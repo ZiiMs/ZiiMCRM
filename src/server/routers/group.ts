@@ -1,27 +1,21 @@
 import * as trpc from '@trpc/server';
 
 import { z } from 'zod';
-import { Context } from '../context';
+import { createAuthRouter } from '../createAuthRouter';
 
-export const groupRouter = trpc
-  .router<Context>()
+export const groupRouter = createAuthRouter()
   .mutation('create', {
     input: z.object({
       title: z.string(),
       boardId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      if (!ctx.session?.user) {
-        console.log('Not logged in');
-        throw new Error('Not logged in');
-      }
       const group = await ctx.prisma.group.create({
         data: {
           name: input.title,
           boardId: input.boardId,
         },
       });
-
 
       return { message: 'group created successfully', Comment: group };
     },

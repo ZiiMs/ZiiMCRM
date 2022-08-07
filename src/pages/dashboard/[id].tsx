@@ -24,11 +24,15 @@ import TicketCard from '@/components/ticket';
 import useDrawerStore from '@/stores/drawerStore';
 import { trpc } from '@/utils/trpc';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import type { NextPage } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  NextPage
+} from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { RiSettings3Line } from 'react-icons/ri';
 
@@ -36,52 +40,20 @@ const Drawer = dynamic(() => import('@/components/drawer'));
 const Group = dynamic(() => import('@/components/group'));
 const Card = dynamic(() => import('@/components/card'));
 
-const Dashboard: NextPage = () => {
+const Dashboard: NextPage = (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
   const [clickedGroup, setClickedGroup] = useState<string>('');
 
   const router = useRouter();
-  const toast = useToast();
   const { id } = router.query;
-  const { data: session } = useSession();
+  const toast = useToast();
+  const session = useSession();
   const [createGroupOpen, setCreateGroup] = useState(false);
   const [shareCodeOpen, setShareCode] = useState(false);
   const [createTicket, setCreateTicket] = useState(false);
 
-  if (!session || id === undefined) {
-    toast({
-      position: 'top-right',
-      duration: 5000,
-      variant: 'solid',
-      render: () => (
-        <Alert status='error'>
-          <AlertIcon />
-          You must be logged in to view this page.
-        </Alert>
-      ),
-    });
-    // router.push('/');
-    return null;
-  }
-
-  const { data: groups } = trpc.useQuery([
-    'group.get',
-    {
-      boardId: String(id),
-    },
-  ]);
-
-  const { data: tickets } = trpc.useQuery([
-    'ticket.get',
-    {
-      boardId: String(id),
-    },
-  ]);
-
-  const {
-    data: board,
-    isLoading,
-    error,
-  } = trpc.useQuery(
+  const { data: board, isLoading } = trpc.useQuery(
     [
       'findUserBoard',
       {
@@ -89,26 +61,91 @@ const Dashboard: NextPage = () => {
       },
     ],
     {
+      onSettled: (data) => {
+        console.log('settled', data);
+      },
+      onSuccess: (data) => {
+        console.log('success', data);
+      },
       onError: (error: any) => {
-        console.log({ error });
-
-        toast({
-          position: 'top-right',
-          duration: 5000,
-          variant: 'solid',
-          render: () => (
-            <Alert status='error'>
-              <AlertIcon />
-              {error.message}
-            </Alert>
-          ),
-        });
+        console.log('BoardError', { error });
+        // toast({
+        //   position: 'top-right',
+        //   duration: 5000,
+        //   variant: 'solid',
+        //   render: () => (
+        //     <Alert status='error'>
+        //       <AlertIcon />
+        //       {error.message}
+        //     </Alert>
+        //   ),
+        // });
         router.push('/');
       },
     }
   );
 
-  if (isLoading) return <Loading />;
+  const { data: groups } = trpc.useQuery(
+    [
+      'group.get',
+      {
+        boardId: String(id),
+      },
+    ],
+    {
+      onError: (error: any) => {
+        console.warn('groupError', error);
+      },
+    }
+  );
+
+  const { data: tickets } = trpc.useQuery(
+    [
+      'ticket.get',
+      {
+        boardId: String(id),
+      },
+    ],
+    {
+      onError: (error: any) => {
+        console.warn('ticketError', error);
+      },
+    }
+  );
+
+  useEffect(() => {
+    // if (!board) {
+    //   console.log('no board');
+    //   toast({
+    //     position: 'top-right',
+    //     duration: 5000,
+    //     variant: 'solid',
+    //     render: () => (
+    //       <Alert status='error'>
+    //         <AlertIcon />
+    //         You must be logged in to view this page.
+    //       </Alert>
+    //     ),
+    //   });
+    //   router.push('/');
+    // }
+    if (!session) {
+      toast({
+        position: 'top-right',
+        duration: 5000,
+        variant: 'solid',
+        render: () => (
+          <Alert status='error'>
+            <AlertIcon />
+            You must be logged in to view this page.
+          </Alert>
+        ),
+      });
+      router.push('/');
+    }
+  }, []);
+
+  if (!board || !session || isLoading) return <Loading />;
 
   return (
     <Layout>
@@ -237,17 +274,17 @@ const Dashboard: NextPage = () => {
           </VStack>
           <Drawer />
           <ShareCodeModal
-            boardId={board!.id}
+            boardId={board.id}
             open={shareCodeOpen}
             onClose={() => setShareCode(false)}
           />
           <CreateGroupModal
-            boardId={board!.id}
+            boardId={board.id}
             open={createGroupOpen}
             onClose={() => setCreateGroup(false)}
           />
           <CreateTicketModal
-            boardId={board!.id}
+            boardId={board.id}
             groupId={clickedGroup}
             open={createTicket}
             onClose={() => setCreateTicket(false)}
@@ -258,7 +295,7 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
 
   if (!session) {
@@ -271,9 +308,7 @@ export async function getServerSideProps(context: any) {
   }
 
   return {
-    props: {
-      session,
-    },
+    props: {},
   };
 }
 

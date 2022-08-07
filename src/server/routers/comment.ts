@@ -1,20 +1,15 @@
 import * as trpc from '@trpc/server';
 
 import { z } from 'zod';
-import { Context } from '../context';
+import { createAuthRouter } from '../createAuthRouter';
 
-export const commentRouter = trpc
-  .router<Context>()
+export const commentRouter = createAuthRouter()
   .mutation('create', {
     input: z.object({
       text: z.string(),
       ticketId: z.number(),
     }),
     async resolve({ ctx, input }) {
-      if (!ctx.session?.user) {
-        console.log('Not logged in');
-        throw new Error('Not logged in');
-      }
       const userId: string = ctx.session.user.id;
       const Comment = await ctx.prisma.comments.create({
         data: {
@@ -27,8 +22,8 @@ export const commentRouter = trpc
           Ticket: {
             connect: {
               id: input.ticketId,
-            }
-          }
+            },
+          },
         },
         select: {
           id: true,
@@ -43,7 +38,6 @@ export const commentRouter = trpc
           },
         },
       });
-
 
       return { message: 'Board created successfully', Comment };
     },

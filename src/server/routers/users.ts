@@ -2,10 +2,9 @@ import * as trpc from '@trpc/server';
 import { useRouter } from 'next/router';
 
 import { z } from 'zod';
-import { Context } from '../context';
+import { createAuthRouter } from '../createAuthRouter';
 
-export const userRouter = trpc
-  .router<Context>()
+export const userRouter = createAuthRouter()
   .mutation('create', {
     input: z.object({
       age: z.number().min(16).max(100),
@@ -14,7 +13,7 @@ export const userRouter = trpc
     async resolve({ ctx, input }) {
       const user = await ctx.prisma.user.update({
         where: {
-          id: ctx.session?.user.id,
+          id: ctx.session.user.id,
         },
         data: {
           age: input.age,
@@ -39,19 +38,21 @@ export const userRouter = trpc
       });
       return user;
     },
-  }).query('isRegistered', {
+  })
+  .query('isRegistered', {
     input: z.object({
       id: z.string(),
-    }), async resolve({ctx, input}) {
+    }),
+    async resolve({ ctx, input }) {
       const user = await ctx.prisma.user.findFirstOrThrow({
         where: {
           id: input.id,
         },
       });
-      const exists = (user.age !== null && user.gender !== null)
-      return exists
-    }
-  })
+      const exists = user.age !== null && user.gender !== null;
+      return exists;
+    },
+  });
 
 // export type definition of API
 

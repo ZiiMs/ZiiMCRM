@@ -1,10 +1,9 @@
 import * as trpc from '@trpc/server';
 
 import { z } from 'zod';
-import { Context } from '../context';
+import { createAuthRouter } from '../createAuthRouter';
 
-export const ticketRouter = trpc
-  .router<Context>()
+export const ticketRouter = createAuthRouter()
   .mutation('create', {
     input: z.object({
       title: z.string(),
@@ -13,10 +12,6 @@ export const ticketRouter = trpc
       boardId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      if (!ctx.session?.user) {
-        console.log('Not logged in');
-        throw new Error('Not logged in');
-      }
       const userId: string = ctx.session.user.id;
       const Ticket = await ctx.prisma.ticket.create({
         data: {
@@ -32,7 +27,6 @@ export const ticketRouter = trpc
         },
       });
 
-
       return { message: 'Ticket created successfully', Ticket };
     },
   })
@@ -47,7 +41,7 @@ export const ticketRouter = trpc
         },
         include: {
           Members: true,
-        }
+        },
       });
 
       return tickets;

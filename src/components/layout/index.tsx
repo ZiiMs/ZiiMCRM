@@ -2,13 +2,7 @@ import loginToggle from '@/stores/loginStore';
 import { Container, HStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import {
-  MouseEvent,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
+import { MouseEvent, PropsWithChildren, useEffect, useState } from 'react';
 
 import Loading from '@/components/loading';
 // import LoginModal from '@/components/login';
@@ -17,6 +11,7 @@ import Loading from '@/components/loading';
 // import SettingsModal from '@/components/settings';
 // import Navbar from './navbar';
 import useLoginStore from '@/stores/loginStore';
+import { trpc } from '@/utils/trpc';
 import dynamic from 'next/dynamic';
 import shallow from 'zustand/shallow';
 
@@ -36,6 +31,8 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
   );
   const [openBoard, setOpenBoard] = useState(false);
 
+  // const client = trpc.useContext();
+
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -43,6 +40,11 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     if (session === null && !showLogin) {
       router.push('/');
     }
+    // const prefetchBoards = async () => {
+    //   console.log('prefetching boards');
+    //   await client.prefetchQuery(['boards.fetch']);
+    // };
+    // prefetchBoards();
     return () => {};
   }, [router, session, showLogin, toggleLogin]);
 

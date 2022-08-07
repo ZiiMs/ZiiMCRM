@@ -1,5 +1,6 @@
 import { AutoAnimate } from '@/components/autoanimate';
 import FeaturesDropDown from '@/components/dropdowns/features';
+import SolutionsDropdown from '@/components/dropdowns/solutions';
 import Dropzone from '@/components/dropzone';
 import useLoginStore from '@/stores/loginStore';
 import useNavbarDrawer from '@/stores/navbarDrawerStore';
@@ -27,7 +28,7 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, ReactElement, useState } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { MdOutlineDeviceHub } from 'react-icons/md';
@@ -64,6 +65,14 @@ const HomeNavBar = () => {
   const toast = useToast();
 
   const router = useRouter();
+
+  const handleDropDown = (comp: ReactElement<any, any>) => {
+    if (isNavbarOpen) {
+      setType(comp);
+    } else {
+      toggleDrawer(comp);
+    }
+  };
 
   return (
     <>
@@ -106,7 +115,7 @@ const HomeNavBar = () => {
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  toggleDrawer(<FeaturesDropDown />);
+                  handleDropDown(<FeaturesDropDown />);
                 }}
                 spacing={0}
                 px={3}
@@ -124,23 +133,7 @@ const HomeNavBar = () => {
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isNavbarOpen) {
-                    setType(
-                      <VStack>
-                        <Text>Workgin</Text>
-                        <Text>wer</Text>
-                        <Text>erte</Text>
-                      </VStack>
-                    );
-                  } else {
-                    toggleDrawer(
-                      <VStack>
-                        <Text>Workgin</Text>
-                        <Text>wer</Text>
-                        <Text>erte</Text>
-                      </VStack>
-                    );
-                  }
+                  handleDropDown(<SolutionsDropdown />);
                 }}
                 spacing={0}
                 px={3}
@@ -150,11 +143,15 @@ const HomeNavBar = () => {
                 </Text>
                 <Icon as={BiChevronDown} />
               </HStack>
-              <HStack
+              {/* <HStack
                 as={'button'}
                 _hover={{
                   cursor: 'pointer',
                   textColor: 'brand.200',
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDropDown(<SolutionsDropdown />);
                 }}
                 spacing={0}
                 px={3}
@@ -170,6 +167,10 @@ const HomeNavBar = () => {
                   cursor: 'pointer',
                   textColor: 'brand.200',
                 }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDropDown(<SolutionsDropdown />);
+                }}
                 spacing={0}
                 px={3}
               >
@@ -177,13 +178,12 @@ const HomeNavBar = () => {
                   Support
                 </Text>
                 <Icon as={BiChevronDown} />
-              </HStack>
+              </HStack> */}
             </HStack>
           </HStack>
           <HStack px={2}>
             {session && user ? (
               <Menu
-                
                 placement='bottom'
                 isOpen={MenuOpen}
                 onClose={() => setMenuOpen(false)}

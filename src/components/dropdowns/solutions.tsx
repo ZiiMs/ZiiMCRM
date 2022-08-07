@@ -1,19 +1,13 @@
 import { Box, HStack, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
-import { BiChevronDown } from 'react-icons/bi';
 import { FaLayerGroup, FaProjectDiagram } from 'react-icons/fa';
 import { IoTicketSharp } from 'react-icons/io5';
 import { MdOutlineComment, MdSpaceDashboard } from 'react-icons/md';
 import DropDownCard from './dropCard';
 
-const FeaturesDropDown: React.FC = () => {
+const SolutionsDropdown: React.FC = () => {
   return (
-    <VStack
-      alignItems={'center'}
-      
-      w={'full'}
-      justifyContent={'center'}
-    >
+    <VStack alignItems={'center'} w={'full'} justifyContent={'center'}>
       <VStack textColor={'brand.300'} maxW={'50%'} w={'full'}>
         <Box w={'full'} alignItems={'flex-start'}>
           <Text fontWeight={'bold'} fontSize={14}>
@@ -29,35 +23,28 @@ const FeaturesDropDown: React.FC = () => {
         >
           <VStack py={6}>
             <DropDownCard
-              title='Boards'
-              description='Easy useable boards to manage your projects and tasks.'
+              title='Developers'
+              description='Ship code faster and more efficiently with the ZiiM.Dev developer platform.'
               icon={MdSpaceDashboard}
             />
 
             <DropDownCard
-              title='Groupings'
-              description='Groupings make it easy to keep track of tasks and issues within a project.'
+              title='Project Managment'
+              description='Keep track of progress and tasks with a very simple to use UI.'
               icon={FaLayerGroup}
             />
           </VStack>
           <VStack py={6}>
             <DropDownCard
-              title='Tickets'
-              description='Tickets are a way to track issues and tasks within a project. There simple ui makes it easy to manage your tickets.'
+              title='Sales'
+              description='Keep track of deals and sales with next to no effort.'
               icon={IoTicketSharp}
             />
 
             <DropDownCard
-              title='Comments'
-              description='Comments allow you to talk with your fellow developers and customers.'
+              title='Creative'
+              description='Easy and simple to share your designs and work with your team.'
               icon={MdOutlineComment}
-            />
-          </VStack>
-          <VStack py={6}>
-            <DropDownCard
-              title='Dashboard'
-              description='The dashboard makes it easy to see your board and join different boards with a single click.'
-              icon={FaProjectDiagram}
             />
           </VStack>
         </HStack>
@@ -66,5 +53,5 @@ const FeaturesDropDown: React.FC = () => {
   );
 };
 
-export default FeaturesDropDown;
+export default SolutionsDropdown;
 

@@ -2,10 +2,9 @@ import { Role } from '@prisma/client';
 import * as trpc from '@trpc/server';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
-import { Context } from '../context';
+import { createAuthRouter } from '../createAuthRouter';
 
-export const boardRouter = trpc
-  .router<Context>()
+export const boardRouter = createAuthRouter()
   .mutation('create', {
     input: z.object({
       boardName: z.string(),
@@ -14,9 +13,6 @@ export const boardRouter = trpc
       type: z.string(),
     }),
     async resolve({ ctx, input }) {
-      if (!ctx.session?.user) {
-        throw new Error('Not logged in');
-      }
       const userId: string = ctx.session.user.id;
       const board = await ctx.prisma.board.create({
         data: {
@@ -50,7 +46,6 @@ export const boardRouter = trpc
         },
       });
 
-
       return { message: 'Board created successfully', board };
     },
   })
@@ -59,13 +54,8 @@ export const boardRouter = trpc
       boardId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      if (!ctx.session?.user) {
-        throw new Error('Not logged in');
-      }
-
       const ONE_DAY = 24 * 60 * 60 * 1000;
       // const tempSeconds = 10000;
-      
 
       const storedKey = await ctx.prisma.shareKeys.create({
         data: {
@@ -99,7 +89,7 @@ export const boardRouter = trpc
         },
         data: {
           users: {
-            create: [{ user: { connect: { id: ctx.session?.user.id } } }],
+            create: [{ user: { connect: { id: ctx.session.user.id } } }],
           },
         },
       });
@@ -111,7 +101,7 @@ export const boardRouter = trpc
         where: {
           users: {
             some: {
-              userId: ctx.session?.user.id,
+              userId: ctx.session.user.id,
             },
           },
         },
