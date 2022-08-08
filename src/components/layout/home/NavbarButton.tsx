@@ -17,9 +17,9 @@ const NavbarButton: React.FC<INavbarProps> = ({ openBoard, text }) => {
       }}
       onClick={openBoard}
       spacing={0}
-      px={{ base: 'none', md: 3 }}
+      px={{ base: 'none', lg: 3 }}
     >
-      <Text textColor={'inherit'} mr={{ base: 0, md: 2 }}>
+      <Text textColor={'inherit'} mr={{ base: 0, lg: 2 }}>
         {text}
       </Text>
       <Icon as={BiChevronDown} />

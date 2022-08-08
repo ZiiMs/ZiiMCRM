@@ -11,11 +11,11 @@ const FeaturesDropDown: React.FC = () => {
     <VStack alignItems={'center'} w={'full'} justifyContent={'flex-start'}>
       <VStack
         textColor={'brand.300'}
-        maxW={{ base: 'full', md: '50%' }}
+        maxW={{ base: 'full', lg: '50%' }}
         w={'full'}
       >
         <Box w={'full'} alignItems={'flex-start'}>
-          <Text fontWeight={'bold'} fontSize={{ base: 12, md: 14 }}>
+          <Text fontWeight={'bold'} fontSize={{ base: 12, lg: 14 }}>
             Explore the features you need to help you succeed.
           </Text>
         </Box>

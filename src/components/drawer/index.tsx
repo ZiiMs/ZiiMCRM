@@ -177,18 +177,21 @@ const Drawer = () => {
           h={'100vh'}
           maxH={'100vh'}
           m={0}
+          flexShrink={0}
+          flexGrow={1}
           w={'full'}
           backgroundColor={'brand.700'}
           position={{
             base: 'absolute',
-            md: 'relative',
+            lg: 'relative',
           }}
+          float={{ lg: 'right' }}
           style={{
-            margin: '0px'
+            margin: '0px',
           }}
           maxW={{
             base: '100vw',
-            md: '17%',
+            lg: '17%',
           }}
         >
           <IconButton

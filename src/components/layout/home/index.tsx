@@ -3,11 +3,11 @@ import { Box, Container, HStack, VStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import {
-  MouseEvent,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState
+    MouseEvent,
+    PropsWithChildren,
+    useContext,
+    useEffect,
+    useState
 } from 'react';
 
 import Loading from '@/components/loading';
@@ -41,7 +41,7 @@ const HomeLayout = ({ children }: PropsWithChildren<{}>) => {
       w='100vw'
       minH={{
         base: 'auto',
-        md: '100vh',
+        lg: '100vh',
       }}
       minW={'100vw'}
       display={'flex'}

@@ -55,7 +55,17 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
   // if (status === 'loading') return <Loading />;
 
   return (
-    <Container minH={'100vh'} minW={'100vw'} display={'flex'} m={0} p={0}>
+    <Container
+      w='full'
+      minH={{
+        base: 'auto',
+        lg: '100vh',
+      }}
+      display={'flex'}
+      maxW='100%'
+      m={0}
+      p={0}
+    >
       <SettingsModal />
       <PlusBoard
         open={openBoard}
@@ -65,10 +75,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
       />
       <LoginModal />
       <RegisterModal />
-      <HStack key={'layoutstack'} alignItems={'flex-start'} justifyContent={'flex-start'} style={{
-        margin: '0px',
-        padding: '0px',
-      }} flex={1}>
+      <HStack key={'layoutstack'} m={0} p={0} display={'flex'} flex={1}>
         <Navbar openBoard={onClickOpen} placeholderBoards={boards} />
         {children}
       </HStack>

@@ -90,6 +90,8 @@ const Navbar = ({ openBoard, placeholderBoards }: INavbarProps) => {
       justifyContent='space-between'
       alignItems={'center'}
       bgColor={'brand.800'}
+      position={'sticky'}
+      flexGrow={0}
       m={0}
       p={0}
       h='100vh'

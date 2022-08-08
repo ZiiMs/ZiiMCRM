@@ -5,25 +5,25 @@ import Dropzone from '@/components/dropzone';
 import useLoginStore from '@/stores/loginStore';
 import useNavbarDrawer from '@/stores/navbarDrawerStore';
 import {
-  Avatar,
-  Box,
-  Button,
-  Collapse,
-  Container,
-  Fade,
-  Heading,
-  HStack,
-  Icon,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuGroup,
-  MenuItem,
-  MenuList,
-  Portal,
-  Text,
-  useToast,
-  VStack
+    Avatar,
+    Box,
+    Button,
+    Collapse,
+    Container,
+    Fade,
+    Heading,
+    HStack,
+    Icon,
+    Menu,
+    MenuButton,
+    MenuDivider,
+    MenuGroup,
+    MenuItem,
+    MenuList,
+    Portal,
+    Text,
+    useToast,
+    VStack
 } from '@chakra-ui/react';
 import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
@@ -83,7 +83,7 @@ const HomeNavBar = () => {
           alignItems={'center'}
           minW={{
             base: 'auto',
-            md: '100vw',
+            lg: '100vw',
           }}
           bgColor={'brand.800'}
           m={0}
@@ -94,10 +94,10 @@ const HomeNavBar = () => {
           <HStack
             px={2}
             py={4}
-            spacing={{ base: 4, md: 12 }}
+            spacing={{ base: 4, lg: 12 }}
             alignItems={'center'}
             justify={'flex-start'}
-            fontSize={{ base: 'sm', md: '3xl' }}
+            fontSize={{ base: 'sm', lg: '3xl' }}
             fontStyle={'italic'}
             textColor={'whiteAlpha.800'}
           >
@@ -107,7 +107,7 @@ const HomeNavBar = () => {
             </HStack>
             <HStack
               spacing={4}
-              fontSize={{ base: 'sm', md: 'xl' }}
+              fontSize={{ base: 'sm', lg: 'xl' }}
               fontStyle={'normal'}
               fontWeight={'medium'}
               textColor={'whiteAlpha.800'}

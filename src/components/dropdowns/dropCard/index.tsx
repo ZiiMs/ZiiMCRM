@@ -13,7 +13,7 @@ const DropDownCard: React.FC<ICard> = ({ title, description, icon }) => {
     <VStack
       alignItems={'flex-start'}
       as={'button'}
-      p={{ base: 2, md: 4 }}
+      p={{ base: 2, lg: 4 }}
       spacing={0}
       borderRadius={8}
       textColor={'whiteAlpha.700'}
@@ -26,7 +26,7 @@ const DropDownCard: React.FC<ICard> = ({ title, description, icon }) => {
       <HStack spacing={1} alignItems={'center'} justifyContent={'center'}>
         {icon && <Icon as={icon} />}
         <Text
-          fontSize={{ base: 'sm', md: 'lg' }}
+          fontSize={{ base: 'sm', lg: 'lg' }}
           fontWeight={'normal'}
           textColor={'inherit'}
         >
@@ -35,7 +35,7 @@ const DropDownCard: React.FC<ICard> = ({ title, description, icon }) => {
       </HStack>
 
       <Text
-        fontSize={{ base: '0.75rem', md: 'sm' }}
+        fontSize={{ base: '0.75rem', lg: 'sm' }}
         textColor={'inherit'}
         overflow={'hidden'}
       >

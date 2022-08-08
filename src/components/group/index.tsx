@@ -25,7 +25,7 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
       w={'full'}
       maxW={{
         base: 'full',
-        md: '19.5%',
+        lg: '19.5%',
       }}
       flexShrink={0}
       maxH={'full'}
