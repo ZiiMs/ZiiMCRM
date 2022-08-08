@@ -1,10 +1,12 @@
 import useDrawerStore from '@/stores/drawerStore';
+import { getStatusColor } from '@/utils/statusHelper';
 import {
   Avatar,
   AvatarGroup,
   Box,
   Button,
   HStack,
+  Tag,
   Text,
   VStack
 } from '@chakra-ui/react';
@@ -47,7 +49,10 @@ const TicketCard: React.FC<{
             {ticket.description}
           </Text>
         </VStack>
-        <HStack alignItems={'flex-end'} h={'full'} justifyContent={'flex-end'}>
+        <HStack w={'full'} h={'full'} justifyContent={'space-between'}>
+          <Tag textColor={'brand.100'} bgColor={getStatusColor(ticket.status)}>
+            {ticket.status.toLocaleLowerCase()}
+          </Tag>
           <AvatarGroup size='sm' max={4}>
             {ticket.Members.map((member) => (
               <Avatar
