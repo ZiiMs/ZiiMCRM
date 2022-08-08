@@ -202,8 +202,13 @@ const Dashboard: NextPage = (
             }} 
               w={'full'}
               h={'full'}
+              display={'flex'}
+              flex={1}
+              flexGrow={1}
+              flexBasis={0}
               spacing={2.5}
               overflowX={'auto'}
+              overflowY={'auto'}
               sx={{
                 '&::-webkit-scrollbar': {
                   width: '12px',
@@ -266,7 +271,14 @@ const Dashboard: NextPage = (
               )}{' '}
               {groups && groups.length > 0 ? (
                 <Button
-                  w={'19.5%'}
+                  w={{
+                    base: 'full',
+                    md: '19.5%',
+                  }}
+                  height={{
+                    base: '30%',
+                    md: 'full',
+                  }}
                   display={'flex'}
                   fontSize={'xl'}
                   textColor={'brand.300'}
@@ -274,7 +286,6 @@ const Dashboard: NextPage = (
                   variant={'ghost'}
                   flexShrink={0}
                   fontWeight={'bold'}
-                  h={'full'}
                   onClick={() => {
                     setCreateGroup(true);
                   }}
