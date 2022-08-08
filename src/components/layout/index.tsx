@@ -31,20 +31,18 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
   );
   const [openBoard, setOpenBoard] = useState(false);
 
-  // const client = trpc.useContext();
+  const client = trpc.useContext();
 
   const router = useRouter();
   const { data: session, status } = useSession();
+
+  const { data: boards, isLoading } = trpc.useQuery(['boards.fetch']);
 
   useEffect(() => {
     if (session === null && !showLogin) {
       router.push('/');
     }
-    // const prefetchBoards = async () => {
-    //   console.log('prefetching boards');
-    //   await client.prefetchQuery(['boards.fetch']);
-    // };
-    // prefetchBoards();
+
     return () => {};
   }, [router, session, showLogin, toggleLogin]);
 
@@ -53,20 +51,11 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     setOpenBoard(true);
   };
 
-  if (status === 'loading') return <Loading />;
+  if (isLoading) return <Loading />;
+  // if (status === 'loading') return <Loading />;
 
   return (
-    <Container
-      w='full'
-      minH={{
-        base: 'auto',
-        md: '100vh',
-      }}
-      display={'flex'}
-      maxW='100%'
-      m={0}
-      p={0}
-    >
+    <Container minH={'100vh'} minW={'100vw'} display={'flex'} m={0} p={0}>
       <SettingsModal />
       <PlusBoard
         open={openBoard}
@@ -76,8 +65,8 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
       />
       <LoginModal />
       <RegisterModal />
-      <HStack key={'layoutstack'} m={0} p={0} flex={1}>
-        <Navbar openBoard={onClickOpen} />
+      <HStack key={'layoutstack'} alignItems={'flex-start'} justifyContent={'flex-start'} m={0} p={0} flex={1}>
+        <Navbar openBoard={onClickOpen} placeholderBoards={boards} />
         {children}
       </HStack>
     </Container>

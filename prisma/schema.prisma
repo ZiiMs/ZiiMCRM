@@ -87,7 +87,7 @@ model Board {
 
 model Group {
   id        String   @id @default(cuid())
-  name      String   @unique
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Board     Board    @relation(fields: [boardId], references: [id])

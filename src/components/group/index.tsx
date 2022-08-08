@@ -23,7 +23,10 @@ const Group = ({ group, children, CreateTicket }: IBoard) => {
   return (
     <Box
       w={'full'}
-      maxW={'20%'}
+      maxW={{
+        base: 'full',
+        md: '19.5%',
+      }}
       h={'full'}
       py={2.5}
       px={1}

@@ -22,6 +22,7 @@ import {
   VStack
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { Board } from '@prisma/client';
 import { signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -35,9 +36,10 @@ import BrandIconButton from '../iconButton';
 
 interface INavbarProps {
   openBoard: (e: MouseEvent<HTMLButtonElement>) => void;
+  placeholderBoards: Board[] | undefined;
 }
 
-const Navbar = ({ openBoard }: any) => {
+const Navbar = ({ openBoard, placeholderBoards }: INavbarProps) => {
   const { showSettings, toggleSettings } = useSettingsStore(
     (state) => ({
       showSettings: state.showSettings,
@@ -52,7 +54,13 @@ const Navbar = ({ openBoard }: any) => {
   const userId = user?.id;
   const toast = useToast();
 
-  const { data: boards, isLoading, error } = trpc.useQuery(['boards.fetch']);
+  const {
+    data: boards,
+    isLoading,
+    error,
+  } = trpc.useQuery(['boards.fetch'], {
+    placeholderData: { boards: placeholderBoards },
+  });
 
   const router = useRouter();
 

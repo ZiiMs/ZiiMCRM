@@ -17,7 +17,7 @@ export const groupRouter = createAuthRouter()
         },
       });
 
-      return { message: 'group created successfully', Comment: group };
+      return { message: 'group created successfully', Group: group };
     },
   })
   .query('get', {

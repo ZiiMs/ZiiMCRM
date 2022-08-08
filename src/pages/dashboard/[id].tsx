@@ -6,6 +6,7 @@ import {
   Heading,
   HStack,
   Icon,
+  Stack,
   useToast,
   VStack
 } from '@chakra-ui/react';
@@ -187,30 +188,34 @@ const Dashboard: NextPage = (
                 Share
               </Button>
             </HStack>
-            <HStack w={'full'} spacing={4}>
+            <Stack direction={{
+              base: 'column',
+              md: 'row',
+            }} w={'full'} spacing={4}>
               <Card graph></Card>
               <Card></Card>
-            </HStack>
-            <HStack w={'full'} h={'full'} spacing={2.5}>
-              {groups && groups.length > 0 && groups.length < 5 ? (
-                <Button
-                  w={'full'}
-                  display={'flex'}
-                  fontSize={'xl'}
-                  textColor={'brand.300'}
-                  flexDir={'column'}
-                  variant={'ghost'}
-                  fontWeight={'bold'}
-                  h={'full'}
-                  onClick={() => {
-                    setCreateGroup(true);
-                  }}
-                >
-                  <Icon fontSize={'8xl'} as={AiOutlinePlus} />
-                  Create Groups
-                </Button>
-              ) : null}
-
+            </Stack>
+            <Stack
+            direction={{
+              base: 'column',
+              md: 'row',
+            }} 
+              w={'full'}
+              h={'full'}
+              spacing={2.5}
+              overflowX={'auto'}
+              sx={{
+                '&::-webkit-scrollbar': {
+                  width: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: `rgba(0, 0, 0, 0.15)`,
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  borderRadius: '8px',
+                  backgroundColor: `rgba(0, 0, 0, 0.4)`,
+                },
+              }}
+            >
               {groups && groups.length > 0 ? (
                 groups.map((group) => (
                   <React.Fragment key={group.id}>
@@ -258,13 +263,32 @@ const Dashboard: NextPage = (
                     Create Groups
                   </Button>
                 </Flex>
-              )}
+              )}{' '}
+              {groups && groups.length > 0 ? (
+                <Button
+                  w={'19.5%'}
+                  display={'flex'}
+                  fontSize={'xl'}
+                  textColor={'brand.300'}
+                  flexDir={'column'}
+                  variant={'ghost'}
+                  flexShrink={0}
+                  fontWeight={'bold'}
+                  h={'full'}
+                  onClick={() => {
+                    setCreateGroup(true);
+                  }}
+                >
+                  <Icon fontSize={'8xl'} as={AiOutlinePlus} />
+                  Create Groups
+                </Button>
+              ) : null}
               {/* <Board Title={'Title1'}></Board>
           <Board Title={'Title2'}></Board>
           <Board Title={'Title3'}></Board>
           <Board Title={'Title4'}></Board>
           <Board Title={'Title5'}></Board> */}
-            </HStack>
+            </Stack>
           </VStack>
           <Drawer />
           <ShareCodeModal

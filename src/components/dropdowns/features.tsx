@@ -8,7 +8,7 @@ import DropDownCard from './dropCard';
 
 const FeaturesDropDown: React.FC = () => {
   return (
-    <VStack alignItems={'center'} w={'full'} justifyContent={'center'}>
+    <VStack alignItems={'center'} w={'full'} justifyContent={'flex-start'}>
       <VStack
         textColor={'brand.300'}
         maxW={{ base: 'full', md: '50%' }}
@@ -21,12 +21,13 @@ const FeaturesDropDown: React.FC = () => {
         </Box>
         <HStack
           alignItems={'flex-start'}
+          w={'full'}
           justifyContent={'flex-start'}
           borderTop={'1px'}
           spacing={0}
           borderTopColor={'brand.300'}
         >
-          <VStack py={6}>
+          <VStack py={6} alignItems={'flex-start'}>
             <DropDownCard
               title='Boards'
               description='Easy useable boards to manage your projects and tasks.'
@@ -39,7 +40,7 @@ const FeaturesDropDown: React.FC = () => {
               icon={FaLayerGroup}
             />
           </VStack>
-          <VStack py={6}>
+          <VStack py={6} alignItems={'flex-start'}>
             <DropDownCard
               title='Tickets'
               description='Tickets are a way to track issues and tasks within a project. There simple ui makes it easy to manage your tickets.'
@@ -52,7 +53,7 @@ const FeaturesDropDown: React.FC = () => {
               icon={MdOutlineComment}
             />
           </VStack>
-          <VStack py={6}>
+          <VStack py={6} alignItems={'flex-start'}>
             <DropDownCard
               title='Dashboard'
               description='The dashboard makes it easy to see your board and join different boards with a single click.'

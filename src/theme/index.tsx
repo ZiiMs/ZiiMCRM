@@ -55,14 +55,11 @@ const theme = extendTheme({
     global: {
       'html, body': {
         bg: 'brand.900',
-        color: 'brand.300',
+        color: 'brand.100',
         padding: '0',
         margin: '0',
-        minHeight: '100vh',
-        minWidth: '100vw',
       },
       body: { minHeight: '100vh', minWidth: '100vw' },
-      __next: { minHeight: '100vh', minWidth: '100vw' },
     },
   },
 });
