@@ -4,7 +4,8 @@ import {
   Alert,
   AlertIcon,
   Avatar,
-  Box, Divider,
+  Box,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -175,10 +176,20 @@ const Drawer = () => {
         <Flex
           h={'100vh'}
           maxH={'100vh'}
+          m={0}
           w={'full'}
           backgroundColor={'brand.700'}
-          position={'relative'}
-          maxW={'17%'}
+          position={{
+            base: 'absolute',
+            md: 'relative',
+          }}
+          style={{
+            margin: '0px'
+          }}
+          maxW={{
+            base: '100vw',
+            md: '17%',
+          }}
         >
           <IconButton
             position={'absolute'}

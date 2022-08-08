@@ -145,6 +145,9 @@ const Dashboard: NextPage = (
   return (
     <Layout>
       <AutoAnimate
+        style={{
+          margin: '0px',
+        }}
         w={'full'}
         h={'full'}
         alignItems={'flex-start'}
@@ -155,6 +158,9 @@ const Dashboard: NextPage = (
           h={'full'}
           alignItems={'flex-start'}
           justifyContent={'flex-start'}
+          style={{
+            margin: '0px',
+          }}
         >
           <VStack
             w={'full'}
@@ -188,18 +194,22 @@ const Dashboard: NextPage = (
                 Share
               </Button>
             </HStack>
-            <Stack direction={{
-              base: 'column',
-              md: 'row',
-            }} w={'full'} spacing={4}>
+            <Stack
+              direction={{
+                base: 'column',
+                md: 'row',
+              }}
+              w={'full'}
+              spacing={4}
+            >
               <Card graph></Card>
               <Card></Card>
             </Stack>
             <Stack
-            direction={{
-              base: 'column',
-              md: 'row',
-            }} 
+              direction={{
+                base: 'column',
+                md: 'row',
+              }}
               w={'full'}
               h={'full'}
               display={'flex'}

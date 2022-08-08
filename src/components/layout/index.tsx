@@ -65,7 +65,10 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
       />
       <LoginModal />
       <RegisterModal />
-      <HStack key={'layoutstack'} alignItems={'flex-start'} justifyContent={'flex-start'} m={0} p={0} flex={1}>
+      <HStack key={'layoutstack'} alignItems={'flex-start'} justifyContent={'flex-start'} style={{
+        margin: '0px',
+        padding: '0px',
+      }} flex={1}>
         <Navbar openBoard={onClickOpen} placeholderBoards={boards} />
         {children}
       </HStack>
