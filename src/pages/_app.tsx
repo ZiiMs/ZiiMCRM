@@ -1,5 +1,5 @@
 import Layout from '@/components/layout';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Box, ChakraProvider } from '@chakra-ui/react';
 import { withTRPC } from '@trpc/next';
 import { getSession, SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
@@ -7,13 +7,23 @@ import theme from 'src/theme';
 import superjson from 'superjson';
 import { AppRouter } from '../server/routers';
 
+export function reportWebVitals(metric: any) {
+  console.log(metric);
+}
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </SessionProvider>
+    <>
+      <meta
+        name='viewport'
+        content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
+      />
+      <SessionProvider session={session}>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </SessionProvider>
+    </>
   );
 }
 

@@ -18,17 +18,17 @@ const theme = extendTheme({
       900: '#1d1d1d',
     },
     zred: {
-      "50": "#FF9C9C",
-      "100": "#EA7979",
-      "200": "#D55A5A",
-      "300": "#C03F3F",
-      "400": "#AB2727",
-      "500": "#961414",
-      "600": "#5A0D0D",
-      "700": "#470707",
-      "800": "#350202",
-      "900": "#230000"
-    }
+      '50': '#FF9C9C',
+      '100': '#EA7979',
+      '200': '#D55A5A',
+      '300': '#C03F3F',
+      '400': '#AB2727',
+      '500': '#961414',
+      '600': '#5A0D0D',
+      '700': '#470707',
+      '800': '#350202',
+      '900': '#230000',
+    },
   },
   components: {
     Text: {
@@ -40,22 +40,29 @@ const theme = extendTheme({
       baseStyle: {
         dialog: {
           bg: 'brand.800',
-        }
-      }
+        },
+      },
     },
     Menu: {
       baseStyle: {
         list: {
           bg: 'brand.800',
-        }
-      }
+        },
+      },
     },
   },
   styles: {
     global: {
-      body: {
+      'html, body': {
         bg: 'brand.900',
+        color: 'brand.300',
+        padding: '0',
+        margin: '0',
+        minHeight: '100vh',
+        minWidth: '100vw',
       },
+      body: { minHeight: '100vh', minWidth: '100vw' },
+      __next: { minHeight: '100vh', minWidth: '100vw' },
     },
   },
 });

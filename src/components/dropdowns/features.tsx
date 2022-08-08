@@ -8,15 +8,14 @@ import DropDownCard from './dropCard';
 
 const FeaturesDropDown: React.FC = () => {
   return (
-    <VStack
-      alignItems={'center'}
-      
-      w={'full'}
-      justifyContent={'center'}
-    >
-      <VStack textColor={'brand.300'} maxW={'50%'} w={'full'}>
+    <VStack alignItems={'center'} w={'full'} justifyContent={'center'}>
+      <VStack
+        textColor={'brand.300'}
+        maxW={{ base: 'full', md: '50%' }}
+        w={'full'}
+      >
         <Box w={'full'} alignItems={'flex-start'}>
-          <Text fontWeight={'bold'} fontSize={14}>
+          <Text fontWeight={'bold'} fontSize={{ base: 12, md: 14 }}>
             Explore the features you need to help you succeed.
           </Text>
         </Box>

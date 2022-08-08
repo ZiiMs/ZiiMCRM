@@ -4,10 +4,8 @@ const Loading: React.FC = () => {
   return (
     <VStack
       w='full'
-      minH={{
-        base: 'auto',
-        md: '100vh',
-      }}
+      minH={'100vh'}
+      minW={'100vw'}
       display='flex'
       justifyContent='center'
       alignItems='center'

@@ -33,6 +33,7 @@ import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { MdOutlineDeviceHub } from 'react-icons/md';
 import shallow from 'zustand/shallow';
+import NavbarButton from './NavbarButton';
 
 interface INavbarProps {
   openBoard: (e: MouseEvent<HTMLButtonElement>) => void;
@@ -80,6 +81,10 @@ const HomeNavBar = () => {
         <HStack
           as={'nav'}
           alignItems={'center'}
+          minW={{
+            base: 'auto',
+            md: '100vw',
+          }}
           bgColor={'brand.800'}
           m={0}
           p={0}
@@ -89,60 +94,39 @@ const HomeNavBar = () => {
           <HStack
             px={2}
             py={4}
-            spacing={12}
+            spacing={{ base: 4, md: 12 }}
             alignItems={'center'}
             justify={'flex-start'}
-            fontSize={'3xl'}
+            fontSize={{ base: 'sm', md: '3xl' }}
             fontStyle={'italic'}
             textColor={'whiteAlpha.800'}
           >
             <HStack spacing={1}>
               <Icon as={MdOutlineDeviceHub} />
-              <Heading fontSize={'3xl'}>ZiiM.Dev</Heading>
+              <Heading fontSize={'inherit'}>ZiiM.Dev</Heading>
             </HStack>
             <HStack
               spacing={4}
-              fontSize={'xl'}
+              fontSize={{ base: 'sm', md: 'xl' }}
               fontStyle={'normal'}
               fontWeight={'medium'}
               textColor={'whiteAlpha.800'}
             >
-              <HStack
-                as={'button'}
-                _hover={{
-                  cursor: 'pointer',
-                  textColor: 'brand.200',
-                }}
-                onClick={(e) => {
+              <NavbarButton
+                openBoard={(e) => {
                   e.preventDefault();
                   handleDropDown(<FeaturesDropDown />);
                 }}
-                spacing={0}
-                px={3}
-              >
-                <Text textColor={'inherit'} mr={2}>
-                  Features
-                </Text>
-                <Icon as={BiChevronDown} />
-              </HStack>
-              <HStack
-                as={'button'}
-                _hover={{
-                  cursor: 'pointer',
-                  textColor: 'brand.200',
-                }}
-                onClick={(e) => {
+                text={'Features'}
+              />
+              <NavbarButton
+                openBoard={(e) => {
                   e.preventDefault();
                   handleDropDown(<SolutionsDropdown />);
                 }}
-                spacing={0}
-                px={3}
-              >
-                <Text textColor={'inherit'} mr={2}>
-                  Solutions
-                </Text>
-                <Icon as={BiChevronDown} />
-              </HStack>
+                text={'Solutions'}
+              />
+
               {/* <HStack
                 as={'button'}
                 _hover={{
@@ -267,9 +251,11 @@ const HomeNavBar = () => {
             margin: '0',
           }}
         >
-          <Container maxW={'none'} width={'100vw'} bgColor={'brand.600'}>
+          <Container maxW={'100vw'} width={'100vw'} bgColor={'brand.600'}>
             <VStack w='full' spacing={4}>
-              <Box p={4}>{type}</Box>
+              <Box w={'full'} p={4}>
+                {type}
+              </Box>
             </VStack>
           </Container>
         </Collapse>

@@ -35,15 +35,15 @@ const HomeLayout = ({ children }: PropsWithChildren<{}>) => {
     shallow
   );
 
-  const { data: session } = useSession();
 
   return (
-    <Container
-      w='full'
+    <Box
+      w='100vw'
       minH={{
         base: 'auto',
         md: '100vh',
       }}
+      minW={'100vw'}
       display={'flex'}
       maxW='100%'
       m={0}
@@ -52,11 +52,11 @@ const HomeLayout = ({ children }: PropsWithChildren<{}>) => {
       <LoginModal />
       <RegisterModal />
 
-      <VStack key={'layoutstack'} m={0} p={0} flex={1}>
+      <VStack key={'layoutstack'} minW={'100vw'} m={0} p={0} flex={1}>
         <Navbar />
         {children}
       </VStack>
-    </Container>
+    </Box>
   );
 };
 
