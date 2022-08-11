@@ -67,6 +67,9 @@ export const ticketRouter = createAuthRouter()
           ...members,
           ...statusCheck,
         },
+        include: {
+          Members: true,
+        }
       });
 
       return { message: 'Ticket updated successfully', ticket };

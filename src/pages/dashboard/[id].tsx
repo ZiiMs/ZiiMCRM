@@ -256,7 +256,7 @@ const Dashboard: NextPage = (
                   <Group
                     group={group}
                     role={userRole.role}
-                    CreateTicket={(e, id) => {
+                    CreateTicket={(e: any, id: any) => {
                       e.preventDefault();
                       setClickedGroup(id);
                       setCreateTicket(true);

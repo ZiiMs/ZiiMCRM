@@ -63,11 +63,12 @@ interface IDrawer {
 }
 
 const Drawer = () => {
-  const { showDrawer, role, ticket, closeDrawer } = useDrawerStore(
+  const { showDrawer, role, ticket, closeDrawer, setTicket } = useDrawerStore(
     (state) => ({
       showDrawer: state.showDrawer,
       ticket: state.ticket,
       role: state.userRole,
+      setTicket: state.setTicket,
       closeDrawer: state.closeDrawer,
     }),
     shallow
@@ -85,6 +86,7 @@ const Drawer = () => {
     {
       onSuccess: (data) => {
         client.invalidateQueries(['ticket.get']);
+        setTicket(data.ticket);
 
         console.log(data);
         toast({
