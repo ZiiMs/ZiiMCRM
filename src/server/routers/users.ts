@@ -1,5 +1,3 @@
-import * as trpc from '@trpc/server';
-import { useRouter } from 'next/router';
 
 import { z } from 'zod';
 import { createAuthRouter } from '../createAuthRouter';
