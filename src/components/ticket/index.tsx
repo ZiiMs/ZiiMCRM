@@ -55,7 +55,7 @@ const TicketCard: React.FC<{
             {ticket.status.charAt(0).toLocaleUpperCase() +
               ticket.status.slice(1).toLocaleLowerCase()}
           </Tag>
-          <AvatarGroup  size='sm' max={4}>
+          <AvatarGroup size='sm' max={4}>
             {ticket.Members.map((member) => (
               <Avatar
                 key={member.id}

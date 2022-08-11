@@ -81,6 +81,30 @@ const Drawer = () => {
 
   const [status, setStatus] = useState<string>('New Ticket');
   const client = trpc.useContext();
+  const { mutate: deleteTicket, isLoading: isDeleting } = trpc.useMutation(
+    ['ticket.delete'],
+    {
+      onSuccess: (data) => {
+        client.invalidateQueries(['ticket.get']);
+        closeDrawer();
+
+        console.log(data);
+        toast({
+          title: 'Success',
+          description: 'Ticket updated',
+          duration: 5000,
+          isClosable: true,
+          render: () => (
+            <Alert status='success' variant='solid'>
+              <AlertIcon />
+              {`Deleted ticket: ${data.message}`}
+            </Alert>
+          ),
+        });
+      },
+    }
+  );
+
   const { mutate: mutateTicket, isLoading } = trpc.useMutation(
     ['ticket.update'],
     {
@@ -273,10 +297,16 @@ const Drawer = () => {
                       size={'sm'}
                       variant={'ghost'}
                       color={'zred.300'}
-                      onClick={() => console.log('woeijrwoei')}
+                      disabled={isDeleting}
                       fontSize={'lg'}
                       icon={<RiDeleteBinFill />}
                       aria-label={'deleteTicketButton'}
+                      onClick={() => {
+                        deleteTicket({
+                          id: ticket.id,
+                          userRole: role,
+                        });
+                      }}
                     />
                   ) : null}
                 </HStack>
@@ -412,15 +442,16 @@ const Drawer = () => {
                             member: 'cl6p41g0g4501p8taxehpnwmj',
                           });
                         }}
+                        style={{ width: '100%' }}
                       >
-                        <Flex alignItems={'center'} justifyContent={'center'}>
+                        <Flex alignItems={'center'}>
                           <Icon
                             as={BsPlusCircleFill}
                             color={'blue.600'}
                             boxSize={4}
                             mr={2}
                           />
-                          <Text color={'gray.200'}>Add Member</Text>
+                          <Text color={'gray.200'}>Manage Member</Text>
                         </Flex>
                       </Button>
                     </ListItem>

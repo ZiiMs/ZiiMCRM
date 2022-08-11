@@ -28,14 +28,16 @@ const CreateTicketModal: React.FC<Props> = ({
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState('');
   const client = trpc.useContext();
-  const { mutate: mutateTickets } = trpc.useMutation(['ticket.create'], {
-    onSuccess: () => {
-      client.invalidateQueries(['ticket.get']);
-      onClose();
-      setTitle('');
-      setDescription('');
-    },
-  });
+
+  const { mutate: mutateTickets, isLoading: isCreatingTicket } =
+    trpc.useMutation(['ticket.create'], {
+      onSuccess: () => {
+        client.invalidateQueries(['ticket.get']);
+        onClose();
+        setTitle('');
+        setDescription('');
+      },
+    });
   const CreateTicket = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('Create Ticket');
@@ -51,8 +53,15 @@ const CreateTicketModal: React.FC<Props> = ({
     }
   };
 
+  const handleClose = () => {
+    if (isCreatingTicket) {
+      return;
+    }
+    onClose();
+  };
+
   return (
-    <Modal isOpen={open} onClose={onClose}>
+    <Modal isOpen={open} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create Group</ModalHeader>
@@ -73,10 +82,10 @@ const CreateTicketModal: React.FC<Props> = ({
           />
         </ModalBody>
         <ModalFooter>
-          <Button mr={2} onClick={CreateTicket}>
+          <Button mr={2} onClick={CreateTicket} disabled={isCreatingTicket}>
             Create
           </Button>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={handleClose}>Close</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

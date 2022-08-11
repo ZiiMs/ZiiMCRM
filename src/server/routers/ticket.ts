@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Role, Status } from '@prisma/client';
 import * as trpc from '@trpc/server';
 
 import { z } from 'zod';
@@ -48,6 +48,40 @@ export const ticketRouter = createAuthRouter()
       return tickets;
     },
   })
+  .mutation('delete', {
+    input: z.object({
+      id: z.number(),
+      userRole: z.nativeEnum(Role),
+    }),
+    async resolve({ ctx, input }) {
+      const userId: string = ctx.session.user.id;
+
+      if (input.userRole === Role.ADMIN) {
+        await ctx.prisma.ticket.delete({
+          where: {
+            id: input.id,
+          },
+        });
+      } else if (input.userRole === Role.USER || input.userRole === Role.CLIENT) {
+        await ctx.prisma.ticket.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            Members: {
+              disconnect: {
+                id: userId,
+              },
+            },
+          },
+        });
+      } else {
+        throw new Error('Invalid user role');
+      }
+
+      return { message: 'Ticket deleted successfully' };
+    },
+  })
   .mutation('update', {
     input: z.object({
       id: z.number(),
@@ -69,7 +103,7 @@ export const ticketRouter = createAuthRouter()
         },
         include: {
           Members: true,
-        }
+        },
       });
 
       return { message: 'Ticket updated successfully', ticket };
