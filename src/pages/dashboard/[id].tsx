@@ -80,7 +80,7 @@ const Dashboard: NextPage = (
     }
   );
 
-  const { data: groups } = trpc.useQuery(
+  const { data: groups, isLoading: isGroupLoading } = trpc.useQuery(
     [
       'group.get',
       {
@@ -94,7 +94,7 @@ const Dashboard: NextPage = (
     }
   );
 
-  const { data: tickets } = trpc.useQuery(
+  const { data: tickets, isLoading: isTicketLoading } = trpc.useQuery(
     [
       'ticket.get',
       {
@@ -140,7 +140,30 @@ const Dashboard: NextPage = (
     }
   }, [router, session, toast]);
 
-  if (!board || !session || isLoading) return <Loading />;
+  const { data: userRole, isLoading: isRoleLoading } = trpc.useQuery(
+    [
+      'users.getRole',
+      {
+        boardId: String(id),
+      },
+    ],
+    {
+      onError: (error: any) => {
+        console.warn('userRoleError', error);
+      },
+    }
+  );
+
+  if (
+    !board ||
+    !session ||
+    !userRole ||
+    isLoading ||
+    isRoleLoading ||
+    isGroupLoading ||
+    isTicketLoading
+  )
+    return <Loading />;
 
   return (
     <Layout>
@@ -180,6 +203,7 @@ const Dashboard: NextPage = (
                 Settings
               </BrandIconButton>
             </HStack>
+            <Heading>Role {userRole?.role}</Heading>
             <Button
               onClick={() => {
                 if (!board?.id) return;
@@ -231,6 +255,7 @@ const Dashboard: NextPage = (
                 <React.Fragment key={group.id}>
                   <Group
                     group={group}
+                    role={userRole.role}
                     CreateTicket={(e, id) => {
                       e.preventDefault();
                       setClickedGroup(id);
@@ -240,7 +265,7 @@ const Dashboard: NextPage = (
                     {tickets
                       ? tickets.map((ticket) => {
                           if (ticket.groupId === group.id) {
-                            return <TicketCard ticket={ticket} />;
+                            return <TicketCard role={userRole.role} ticket={ticket} />;
                           }
                           return;
                         })

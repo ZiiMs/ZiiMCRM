@@ -10,14 +10,15 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
-import { Ticket, User } from '@prisma/client';
+import { Role, Ticket, User } from '@prisma/client';
 import React from 'react';
 
 const TicketCard: React.FC<{
   ticket: Ticket & {
     Members: User[];
   };
-}> = ({ ticket }) => {
+  role: Role;
+}> = ({ ticket, role }) => {
   const openDrawer = useDrawerStore((state) => state.openDrawer);
 
   return (
@@ -27,7 +28,7 @@ const TicketCard: React.FC<{
       boxShadow={'lg'}
       py={4}
       px={2}
-      onClick={() => openDrawer(ticket)}
+      onClick={() => openDrawer(ticket, role)}
       bgColor={'brand.800'}
       borderRadius={9}
       w={'full'}
@@ -51,9 +52,10 @@ const TicketCard: React.FC<{
         </VStack>
         <HStack w={'full'} h={'full'} justifyContent={'space-between'}>
           <Tag textColor={'brand.100'} bgColor={getStatusColor(ticket.status)}>
-            {ticket.status.toLocaleLowerCase()}
+            {ticket.status.charAt(0).toLocaleUpperCase() +
+              ticket.status.slice(1).toLocaleLowerCase()}
           </Tag>
-          <AvatarGroup size='sm' max={4}>
+          <AvatarGroup  size='sm' max={4}>
             {ticket.Members.map((member) => (
               <Avatar
                 key={member.id}

@@ -4,7 +4,9 @@ import {
   Alert,
   AlertIcon,
   Avatar,
+  AvatarGroup,
   Box,
+  Button,
   Divider,
   Flex,
   Heading,
@@ -25,16 +27,19 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react';
-import { Ticket } from '@prisma/client';
+import { Status, Ticket } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 import {
   AiFillStar,
+  AiOutlineDelete,
   AiOutlineDoubleRight,
   AiOutlineStar
 } from 'react-icons/ai';
+import { BsPlusCircleFill } from 'react-icons/bs';
 import { IoSend } from 'react-icons/io5';
-import { RiArrowDownSFill } from 'react-icons/ri';
+import { MdCardMembership } from 'react-icons/md';
+import { RiArrowDownSFill, RiDeleteBinFill } from 'react-icons/ri';
 import shallow from 'zustand/shallow';
 import { AutoAnimate } from '../autoanimate';
 // import Comment from '../comment';
@@ -58,10 +63,11 @@ interface IDrawer {
 }
 
 const Drawer = () => {
-  const { showDrawer, ticket, closeDrawer } = useDrawerStore(
+  const { showDrawer, role, ticket, closeDrawer } = useDrawerStore(
     (state) => ({
       showDrawer: state.showDrawer,
       ticket: state.ticket,
+      role: state.userRole,
       closeDrawer: state.closeDrawer,
     }),
     shallow
@@ -74,6 +80,25 @@ const Drawer = () => {
 
   const [status, setStatus] = useState<string>('New Ticket');
   const client = trpc.useContext();
+  const { mutate: mutateTicket } = trpc.useMutation(['ticket.update'], {
+    onSuccess: (data) => {
+      client.invalidateQueries(['ticket.get']);
+
+      console.log(data);
+      toast({
+        title: 'Success',
+        description: 'Ticket updated',
+        duration: 5000,
+        isClosable: true,
+        render: () => (
+          <Alert status='success' variant='solid'>
+            <AlertIcon />
+            {'updated'}
+          </Alert>
+        ),
+      });
+    },
+  });
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
       // client.invalidateQueries(['comments.get']);
@@ -155,6 +180,8 @@ const Drawer = () => {
     });
   };
 
+  const enumValues: `${Status}`[] = Object.values(Status);
+
   // useEffect(() => {
   //   const getComments = async () => {
   //     const res = await fetch('https://jsonplaceholder.typicode.com/comments');
@@ -215,26 +242,38 @@ const Drawer = () => {
                 p={2}
                 w='full'
               >
-                <HStack spacing={1} w='full'>
-                  <IconButton
-                    variant={'unstyled'}
-                    size={'md'}
-                    style={{
-                      margin: '0',
-                      padding: '0',
-                      minWidth: 'unset',
-                    }}
-                    m={0}
-                    p={0}
-                    w={'16px'}
-                    h={'16px'}
-                    icon={favorite ? <AiFillStar /> : <AiOutlineStar />}
-                    color={favorite ? 'yellow.500' : 'whiteAlpha.600'}
-                    onClick={() => setFavorite(!favorite)}
-                    aria-label={'icon-button-favorite'}
-                  />
-
-                  <Text color={'whiteAlpha.600'}>#{ticket?.id}</Text>
+                <HStack spacing={1} w='full' justifyContent={'space-between'}>
+                  <HStack>
+                    <IconButton
+                      variant={'unstyled'}
+                      size={'md'}
+                      style={{
+                        margin: '0',
+                        padding: '0',
+                        minWidth: 'unset',
+                      }}
+                      m={0}
+                      p={0}
+                      w={'16px'}
+                      h={'16px'}
+                      icon={favorite ? <AiFillStar /> : <AiOutlineStar />}
+                      color={favorite ? 'yellow.500' : 'whiteAlpha.600'}
+                      onClick={() => setFavorite(!favorite)}
+                      aria-label={'icon-button-favorite'}
+                    />
+                    <Text color={'whiteAlpha.600'}>#{ticket.id}</Text>
+                  </HStack>
+                  {role.toLowerCase() === 'admin' ? (
+                    <IconButton
+                      size={'sm'}
+                      variant={'ghost'}
+                      color={'zred.300'}
+                      onClick={() => console.log('woeijrwoei')}
+                      fontSize={'lg'}
+                      icon={<RiDeleteBinFill />}
+                      aria-label={'deleteTicketButton'}
+                    />
+                  ) : null}
                 </HStack>
                 <Heading size={'md'} textColor={'gray.200'}>
                   {ticket?.title}
@@ -276,7 +315,8 @@ const Drawer = () => {
                       alignItems={'center'}
                     >
                       <Flex>
-                        {status}
+                        {status.charAt(0).toLocaleUpperCase() +
+                          status.slice(1).toLocaleLowerCase()}
                         <Icon
                           as={RiArrowDownSFill}
                           display={'inline'}
@@ -287,15 +327,24 @@ const Drawer = () => {
                       </Flex>
                     </MenuButton>
                     <MenuList>
-                      {['New Ticket', 'In Progress', 'Resolved', 'Closed'].map(
-                        (item) => (
-                          <MenuItem key={item} onClick={() => setStatus(item)}>
-                            <Text fontSize={'md'} color={'gray.200'}>
-                              {item}
-                            </Text>
-                          </MenuItem>
-                        )
-                      )}
+                      {enumValues.map((item) => (
+                        <MenuItem
+                          key={item}
+                          onClick={() => {
+                            setStatus(item);
+
+                            mutateTicket({
+                              id: ticket.id,
+                              status: item,
+                            });
+                          }}
+                        >
+                          <Text fontSize={'md'} color={'gray.200'}>
+                            {item.charAt(0).toLocaleUpperCase() +
+                              item.slice(1).toLocaleLowerCase()}
+                          </Text>
+                        </MenuItem>
+                      ))}
                     </MenuList>
                   </Menu>
                   <Text fontSize={'md'} color={'whiteAlpha.600'}>
@@ -310,26 +359,69 @@ const Drawer = () => {
                     Members:
                   </Text>
                   <List>
-                    {ticket?.Members.map((member) => (
-                      <ListItem key={member.id}>
-                        <Flex alignItems={'center'}>
-                          <Avatar
-                            size='sm'
-                            name={member.name ? member.name : 'Unknown'}
-                            bgColor={member.image ? 'transparent' : undefined}
-                            src={member.image ?? undefined}
+                    {ticket.Members.map((member, i) => (
+                      <>
+                        {i >= 2 ? (
+                          <Box
+                            bgColor={'brand.400'}
+                            boxSize={8}
+                            fontSize={'md'}
+                            textColor={'brand.900'}
+                            display={'flex'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            borderRadius={'full'}
+                            p={3}
+                          >
+                            <Text fontSize={'sm'} textColor={'inherit'}>
+                              {'+' + String(ticket.Members.length - 2)}
+                            </Text>
+                          </Box>
+                        ) : (
+                          <ListItem key={member.id}>
+                            <Flex alignItems={'center'}>
+                              <Avatar
+                                size='sm'
+                                name={member.name ? member.name : 'Unknown'}
+                                bgColor={
+                                  member.image ? 'transparent' : undefined
+                                }
+                                src={member.image ?? undefined}
+                                mr={2}
+                              />
+                              <Text color={'gray.200'}>
+                                {member.name ? member.name : 'Unknown'}
+                              </Text>
+                            </Flex>
+                          </ListItem>
+                        )}
+                      </>
+                    ))}
+                    <ListItem>
+                      <Button
+                        variant={'ghost'}
+                        onClick={() => {
+                          mutateTicket({
+                            id: ticket.id,
+                            member: 'cl6p41g0g4501p8taxehpnwmj',
+                          });
+                        }}
+                      >
+                        <Flex alignItems={'center'} justifyContent={'center'}>
+                          <Icon
+                            as={BsPlusCircleFill}
+                            color={'blue.600'}
+                            boxSize={4}
                             mr={2}
                           />
-                          <Text color={'gray.200'}>
-                            {member.name ? member.name : 'Unknown'}
-                          </Text>
+                          <Text color={'gray.200'}>Add Member</Text>
                         </Flex>
-                      </ListItem>
-                    ))}
+                      </Button>
+                    </ListItem>
                   </List>
                 </SimpleGrid>
                 <Box w={'100%'}>
-                  {ticket?.description ? (
+                  {ticket.description ? (
                     <>
                       <Text fontSize={'md'} color={'whiteAlpha.600'}>
                         Description:

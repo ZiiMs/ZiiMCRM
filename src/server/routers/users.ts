@@ -39,6 +39,22 @@ export const userRouter = createAuthRouter()
       return user;
     },
   })
+  .query('getRole', {
+    input: z.object({
+      boardId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const user = await ctx.prisma.userRoles.findFirstOrThrow({
+        where: {
+          userId: ctx.session.user.id,
+          boardId: input.boardId,
+        },
+      });
+
+      console.log('RolesrpoIJWQ', user);
+      return user;
+    },
+  })
   .query('isRegistered', {
     input: z.object({
       id: z.string(),

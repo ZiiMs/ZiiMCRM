@@ -1,3 +1,4 @@
+import { Status } from '@prisma/client';
 import * as trpc from '@trpc/server';
 
 import { z } from 'zod';
@@ -45,6 +46,30 @@ export const ticketRouter = createAuthRouter()
       });
 
       return tickets;
+    },
+  })
+  .mutation('update', {
+    input: z.object({
+      id: z.number(),
+      status: z.nativeEnum(Status).optional(),
+      member: z.string().optional(),
+    }),
+    async resolve({ ctx, input }) {
+      const statusCheck = input.status ? { status: input.status } : {};
+      const members = input.member
+        ? { Members: { connect: { id: input.member } } }
+        : {};
+      const ticket = await ctx.prisma.ticket.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...members,
+          ...statusCheck,
+        },
+      });
+
+      return { message: 'Ticket updated successfully', ticket };
     },
   });
 

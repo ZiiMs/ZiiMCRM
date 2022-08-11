@@ -78,18 +78,30 @@ export const boardRouter = createAuthRouter()
         where: {
           code: input.code,
         },
+
         include: {
           Board: true,
         },
       });
-
-      const boards = await ctx.prisma.board.update({
+      await ctx.prisma.board.update({
         where: {
           id: foundBoard?.Board.id,
         },
         data: {
           users: {
             create: [{ user: { connect: { id: ctx.session.user.id } } }],
+          },
+          UserRoles: {
+            create: [
+              {
+                User: {
+                  connect: {
+                    id: ctx.session.user.id,
+                  },
+                },
+                role: Role.USER,
+              },
+            ],
           },
         },
       });

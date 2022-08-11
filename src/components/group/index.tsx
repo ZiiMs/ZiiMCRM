@@ -7,7 +7,7 @@ import {
   VStack
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { Group } from '@prisma/client';
+import { Group, Role } from '@prisma/client';
 import React, { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { RiMoreFill } from 'react-icons/ri';
@@ -16,10 +16,11 @@ import { AutoAnimate } from '../autoanimate';
 interface IBoard {
   group: Group;
   children?: ReactNode;
+  role: Role
   CreateTicket: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
-const Group = ({ group, children, CreateTicket }: IBoard) => {
+const Group = ({ group, role, children, CreateTicket }: IBoard) => {
   return (
     <Box
       w={'full'}
