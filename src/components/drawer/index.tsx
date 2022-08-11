@@ -80,25 +80,28 @@ const Drawer = () => {
 
   const [status, setStatus] = useState<string>('New Ticket');
   const client = trpc.useContext();
-  const { mutate: mutateTicket } = trpc.useMutation(['ticket.update'], {
-    onSuccess: (data) => {
-      client.invalidateQueries(['ticket.get']);
+  const { mutate: mutateTicket, isLoading } = trpc.useMutation(
+    ['ticket.update'],
+    {
+      onSuccess: (data) => {
+        client.invalidateQueries(['ticket.get']);
 
-      console.log(data);
-      toast({
-        title: 'Success',
-        description: 'Ticket updated',
-        duration: 5000,
-        isClosable: true,
-        render: () => (
-          <Alert status='success' variant='solid'>
-            <AlertIcon />
-            {'updated'}
-          </Alert>
-        ),
-      });
-    },
-  });
+        console.log(data);
+        toast({
+          title: 'Success',
+          description: 'Ticket updated',
+          duration: 5000,
+          isClosable: true,
+          render: () => (
+            <Alert status='success' variant='solid'>
+              <AlertIcon />
+              {'updated'}
+            </Alert>
+          ),
+        });
+      },
+    }
+  );
   const { mutate } = trpc.useMutation(['comments.create'], {
     onSuccess: (newData) => {
       // client.invalidateQueries(['comments.get']);
@@ -400,6 +403,7 @@ const Drawer = () => {
                     <ListItem>
                       <Button
                         variant={'ghost'}
+                        disabled={isLoading}
                         onClick={() => {
                           mutateTicket({
                             id: ticket.id,
