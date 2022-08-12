@@ -15,7 +15,7 @@ type Props = {
   onClose: () => void;
 };
 
-const ShareCodeModal: React.FC<Props> = ({ open, onClose, boardId }) => {
+export const ShareCodeModal: React.FC<Props> = ({ open, onClose, boardId }) => {
   const [copied, setCopied] = useState(false);
   const { data, mutate, isLoading } = trpc.useMutation(['boards.genKey'], {
     onSuccess: (data) => {

@@ -145,3 +145,6 @@ dist
 
 #VScode cache 
 .vscode/
+
+#VScode counter cache 
+.VSCodeCounter/

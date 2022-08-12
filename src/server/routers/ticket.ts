@@ -1,5 +1,4 @@
 import { Role, Status } from '@prisma/client';
-import * as trpc from '@trpc/server';
 
 import { z } from 'zod';
 import { createAuthRouter } from '../createAuthRouter';

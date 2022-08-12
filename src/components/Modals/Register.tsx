@@ -38,7 +38,7 @@ import {
 } from 'react';
 import shallow from 'zustand/shallow';
 
-const RegisterModal = () => {
+export const RegisterModal = () => {
   const [isAgeValid, setAgeValid] = useState(true);
   const [isGenderValid, setGenderValid] = useState(true);
   const { mutate } = trpc.useMutation(['users.create'], {

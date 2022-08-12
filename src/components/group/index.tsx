@@ -6,7 +6,6 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Group, Role } from '@prisma/client';
 import React, { ReactNode } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';

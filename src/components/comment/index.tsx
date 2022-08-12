@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  HStack,
-  Link,
-  Text,
-  VStack
-} from '@chakra-ui/react';
+import { Avatar, Box, HStack, Link, Text, VStack } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
 interface IComment {
@@ -20,8 +12,8 @@ const Comment = ({ comment, user }: IComment) => {
       as='li'
       backgroundColor={'brand.800'}
       borderRadius={'8px'}
-      my={2}
       w={'full'}
+      mb={2}
       p={2}
     >
       <HStack justifyContent={'flex-start'} alignItems={'flex-start'}>

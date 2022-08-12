@@ -37,7 +37,7 @@ interface Iplusboard {
   toggleOpen: () => void;
 }
 
-const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
+export const PlusBoard = ({ open, toggleOpen }: Iplusboard) => {
   const toast = useToast();
   const client = trpc.useContext();
   const { mutate: joinBoard } = trpc.useMutation(['boards.join'], {

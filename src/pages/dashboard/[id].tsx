@@ -7,6 +7,7 @@ import {
   HStack,
   Icon,
   Stack,
+  Text,
   useToast,
   VStack
 } from '@chakra-ui/react';
@@ -17,14 +18,13 @@ import {
 import { AutoAnimate } from '@/components/autoanimate';
 import BrandIconButton from '@/components/iconButton';
 import Layout from '@/components/layout';
-import Loading from '@/components/loading';
-import CreateGroupModal from '@/components/Modals/Group';
-import ShareCodeModal from '@/components/Modals/Share';
-import CreateTicketModal from '@/components/Modals/Ticket';
+import {
+  CreateGroupModal,
+  CreateTicketModal,
+  ShareCodeModal
+} from '@/components/Modals';
 import TicketCard from '@/components/ticket';
-import useDrawerStore from '@/stores/drawerStore';
 import { trpc } from '@/utils/trpc';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -41,8 +41,10 @@ const Drawer = dynamic(() => import('@/components/drawer'));
 const Group = dynamic(() => import('@/components/group'));
 const Card = dynamic(() => import('@/components/card'));
 
-const Dashboard: NextPage = () =>
-  // props: InferGetServerSidePropsType<typeof getServerSideProps>
+const Dashboard: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = (props) =>
+  // props:
   {
     const [clickedGroup, setClickedGroup] = useState<string>('');
 
@@ -76,8 +78,9 @@ const Dashboard: NextPage = () =>
             ),
           });
           router.push('/');
-        },refetchOnWindowFocus: false,
-        refetchOnMount: false,
+        },
+        refetchOnWindowFocus: true,
+        refetchOnMount: true,
       }
     );
 
@@ -164,7 +167,22 @@ const Dashboard: NextPage = () =>
       isGroupLoading ||
       isTicketLoading
     )
-      return <Loading />;
+      return (
+        <VStack
+          alignItems={'center'}
+          justifyContent={'center'}
+          w={'full'}
+          h={'full'}
+        >
+          <Text>Board {String(!board)}</Text>
+          <Text>Session {String(!session)}</Text>
+          <Text>Roles {String(!userRole)}</Text>
+          <Text>BoardLoading {String(isLoading)}</Text>
+          <Text> RoleLoading {String(isRoleLoading)}</Text>
+          <Text> GroupLoading {String(isGroupLoading)}</Text>
+          <Text>TicketLoading {String(isTicketLoading)}</Text>
+        </VStack>
+      );
 
     return (
       <Layout>
@@ -331,13 +349,14 @@ const Dashboard: NextPage = () =>
                 </Button>
               ) : null}
               {/* <Board Title={'Title1'}></Board>
-        <Board Title={'Title2'}></Board>
-        <Board Title={'Title3'}></Board>
-        <Board Title={'Title4'}></Board>
-        <Board Title={'Title5'}></Board> */}
+      <Board Title={'Title2'}></Board>
+      <Board Title={'Title3'}></Board>
+      <Board Title={'Title4'}></Board>
+      <Board Title={'Title5'}></Board> */}
             </Stack>
           </VStack>
-          <Drawer />
+
+            <Drawer />
           <ShareCodeModal
             boardId={board.id}
             open={shareCodeOpen}
@@ -358,7 +377,6 @@ const Dashboard: NextPage = () =>
       </Layout>
     );
   };
-
 {
   /* <AutoAnimate
 style={{
@@ -372,22 +390,22 @@ justifyContent={'flex-start'}
 </AutoAnimate> */
 }
 
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const session = await getSession(context);
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context);
 
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: '/',
-//         permanent: false,
-//       },
-//     };
-//   }
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 
-//   return {
-//     props: {},
-//   };
-// }
+  return {
+    props: {},
+  };
+}
 
 export default Dashboard;
 

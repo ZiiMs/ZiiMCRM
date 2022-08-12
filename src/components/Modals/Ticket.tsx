@@ -19,7 +19,7 @@ type Props = {
   onClose: () => void;
 };
 
-const CreateTicketModal: React.FC<Props> = ({
+export const CreateTicketModal: React.FC<Props> = ({
   open,
   onClose,
   groupId,

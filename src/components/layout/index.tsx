@@ -1,4 +1,3 @@
-import loginToggle from '@/stores/loginStore';
 import { Container, HStack } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -10,16 +9,18 @@ import Loading from '@/components/loading';
 // import RegisterModal from '@/components/register';
 // import SettingsModal from '@/components/settings';
 // import Navbar from './navbar';
+import {
+  LoginModal,
+  PlusBoard,
+  RegisterModal,
+  SettingsModal
+} from '@/components/Modals';
 import useLoginStore from '@/stores/loginStore';
 import { trpc } from '@/utils/trpc';
 import dynamic from 'next/dynamic';
 import shallow from 'zustand/shallow';
 
 const Navbar = dynamic(() => import('./navbar'));
-const SettingsModal = dynamic(() => import('@/components/Modals/Settings'));
-const LoginModal = dynamic(() => import('@/components/Modals/Login'));
-const RegisterModal = dynamic(() => import('@/components/Modals/Register'));
-const PlusBoard = dynamic(() => import('@/components/Modals/PlusBoard'));
 
 const Layout = ({ children }: PropsWithChildren<{}>) => {
   const { showLogin, toggleLogin } = useLoginStore(

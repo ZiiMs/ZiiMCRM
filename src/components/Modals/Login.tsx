@@ -20,7 +20,7 @@ import { FaDiscord, FaFacebookSquare, FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import shallow from 'zustand/shallow';
 
-const LoginModal = () => {
+export const LoginModal = () => {
   const [error, setError] = useState<String | null>(null);
   const { showLogin, toggleLogin } = useLoginStore(
     (state) => ({

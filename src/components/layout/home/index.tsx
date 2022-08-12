@@ -1,30 +1,21 @@
-import loginToggle from '@/stores/loginStore';
-import { Box, Container, HStack, VStack } from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { Box, VStack } from '@chakra-ui/react';
 import {
-    MouseEvent,
-    PropsWithChildren,
-    useContext,
-    useEffect,
-    useState
+  PropsWithChildren
 } from 'react';
 
-import Loading from '@/components/loading';
 // import LoginModal from '@/components/login';
 // import PlusBoard from '@/components/plusboard';
 // import RegisterModal from '@/components/register';
 // import SettingsModal from '@/components/settings';
 // import Navbar from './navbar';
+import {
+  LoginModal, RegisterModal
+} from '@/components/Modals';
 import useLoginStore from '@/stores/loginStore';
 import dynamic from 'next/dynamic';
 import shallow from 'zustand/shallow';
 
 const Navbar = dynamic(() => import('./navbar'));
-const SettingsModal = dynamic(() => import('@/components/Modals/Settings'));
-const LoginModal = dynamic(() => import('@/components/Modals/Login'));
-const RegisterModal = dynamic(() => import('@/components/Modals/Register'));
-const PlusBoard = dynamic(() => import('@/components/Modals/PlusBoard'));
 
 const HomeLayout = ({ children }: PropsWithChildren<{}>) => {
   const { showLogin, toggleLogin } = useLoginStore(
@@ -34,7 +25,6 @@ const HomeLayout = ({ children }: PropsWithChildren<{}>) => {
     }),
     shallow
   );
-
 
   return (
     <Box

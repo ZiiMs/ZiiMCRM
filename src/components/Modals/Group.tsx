@@ -18,7 +18,7 @@ type Props = {
   onClose: () => void;
 };
 
-const CreateGroupModal: React.FC<Props> = ({ open, onClose, boardId }) => {
+export const CreateGroupModal: React.FC<Props> = ({ open, onClose, boardId }) => {
   const [name, setName] = useState('');
   const client = trpc.useContext();
   const { mutate } = trpc.useMutation(['group.create'], {
