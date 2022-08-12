@@ -273,7 +273,7 @@ const Drawer = () => {
               base: 'absolute',
               lg: 'relative',
             }}
-            float={{ lg: 'right' }}
+            float={{ lg: 'right', base: 'inline-start' }}
             style={{
               margin: '0px',
             }}
@@ -541,7 +541,7 @@ const Drawer = () => {
                     comments.pages[0].comments.length) > 0 ? (
                     <>
                       {comments!.pages.map((group, i) => (
-                        <AutoAnimate key={i} w={'full'} h={'full'} px={2} >
+                        <AutoAnimate key={i} w={'full'} h={'full'} px={2}>
                           {group.comments.map((comment) => (
                             <Comment
                               key={String(comment.id)}

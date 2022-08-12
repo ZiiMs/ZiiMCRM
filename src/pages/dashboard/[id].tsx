@@ -40,10 +40,10 @@ import { RiSettings3Line } from 'react-icons/ri';
 const Drawer = dynamic(() => import('@/components/drawer'));
 const Group = dynamic(() => import('@/components/group'));
 const Card = dynamic(() => import('@/components/card'));
-
-const Dashboard: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = (props) =>
+{
+  /* <InferGetServerSidePropsType<typeof getServerSideProps>>  */
+}
+const Dashboard: NextPage = (props) =>
   // props:
   {
     const [clickedGroup, setClickedGroup] = useState<string>('');
@@ -56,7 +56,11 @@ const Dashboard: NextPage<
     const [shareCodeOpen, setShareCode] = useState(false);
     const [createTicket, setCreateTicket] = useState(false);
 
-    const { data: board, isLoading } = trpc.useQuery(
+    const {
+      data: board,
+      isLoading,
+      refetch: boardFetch,
+    } = trpc.useQuery(
       [
         'findUserBoard',
         {
@@ -81,10 +85,15 @@ const Dashboard: NextPage<
         },
         refetchOnWindowFocus: true,
         refetchOnMount: true,
+        retry: true,
       }
     );
 
-    const { data: groups, isLoading: isGroupLoading } = trpc.useQuery(
+    const {
+      data: groups,
+      isLoading: isGroupLoading,
+      refetch: groupFetch,
+    } = trpc.useQuery(
       [
         'group.get',
         {
@@ -95,10 +104,15 @@ const Dashboard: NextPage<
         onError: (error: any) => {
           console.warn('groupError', error);
         },
+        retry: true,
       }
     );
 
-    const { data: tickets, isLoading: isTicketLoading } = trpc.useQuery(
+    const {
+      data: tickets,
+      isLoading: isTicketLoading,
+      refetch: ticketFetch,
+    } = trpc.useQuery(
       [
         'ticket.get',
         {
@@ -109,6 +123,22 @@ const Dashboard: NextPage<
         onError: (error: any) => {
           console.warn('ticketError', error);
         },
+        retry: true,
+      }
+    );
+
+    const { data: userRole, isLoading: isRoleLoading } = trpc.useQuery(
+      [
+        'users.getRole',
+        {
+          boardId: String(id),
+        },
+      ],
+      {
+        onError: (error: any) => {
+          console.warn('userRoleError', error);
+        },
+        retry: true,
       }
     );
 
@@ -128,6 +158,16 @@ const Dashboard: NextPage<
       //   });
       //   router.push('/');
       // }
+      if (
+        !board ||
+        !session ||
+        !userRole ||
+        isLoading ||
+        isRoleLoading ||
+        isGroupLoading ||
+        isTicketLoading
+      ) {
+      }
       if (!session) {
         toast({
           position: 'top-right',
@@ -142,21 +182,17 @@ const Dashboard: NextPage<
         });
         router.push('/');
       }
-    }, [router, session, toast]);
-
-    const { data: userRole, isLoading: isRoleLoading } = trpc.useQuery(
-      [
-        'users.getRole',
-        {
-          boardId: String(id),
-        },
-      ],
-      {
-        onError: (error: any) => {
-          console.warn('userRoleError', error);
-        },
-      }
-    );
+    }, [
+      board,
+      isGroupLoading,
+      isLoading,
+      isRoleLoading,
+      isTicketLoading,
+      router,
+      session,
+      toast,
+      userRole,
+    ]);
 
     if (
       !board ||
@@ -166,7 +202,17 @@ const Dashboard: NextPage<
       isRoleLoading ||
       isGroupLoading ||
       isTicketLoading
-    )
+    ) {
+      // setTimeout(() => {
+      //   console.log('loading too long sending to home.');
+      //   // router.push('/');
+      // }, 8000);
+      if (!board && !isLoading) {
+        // setTimeout(() => {
+        //   // boardFetch();
+        // }, 100);
+      }
+
       return (
         <VStack
           alignItems={'center'}
@@ -183,6 +229,7 @@ const Dashboard: NextPage<
           <Text>TicketLoading {String(isTicketLoading)}</Text>
         </VStack>
       );
+    }
 
     return (
       <Layout>
@@ -356,7 +403,7 @@ const Dashboard: NextPage<
             </Stack>
           </VStack>
 
-            <Drawer />
+          <Drawer />
           <ShareCodeModal
             boardId={board.id}
             open={shareCodeOpen}
@@ -390,22 +437,22 @@ justifyContent={'flex-start'}
 </AutoAnimate> */
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getSession(context);
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//   const session = await getSession(context);
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: '/',
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {},
-  };
-}
+//   return {
+//     props: {},
+//   };
+// }
 
 export default Dashboard;
 
