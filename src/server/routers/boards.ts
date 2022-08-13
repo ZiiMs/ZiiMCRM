@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { BoardsOnUsers, Role, User } from '@prisma/client';
 import * as trpc from '@trpc/server';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
@@ -105,6 +105,34 @@ export const boardRouter = createAuthRouter()
           },
         },
       });
+    },
+  })
+  .query('get-users', {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const users = await ctx.prisma.boardsOnUsers.findMany({
+        where: {
+          boardId: input.id,
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      const usersGood = users.map((user) => {
+        return {
+          id: user.user.id,
+          name: user.user.name,
+          email: user.user.email,
+          image: user.user.image,
+          age: user.user.age,
+          emailVerified: user.user.emailVerified,
+          gender: user.user.gender,
+        };
+      });
+      return usersGood ? usersGood : [];
     },
   })
   .query('fetch', {

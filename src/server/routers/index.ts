@@ -22,9 +22,7 @@ export const appRouter = createAuthRouter()
 
       try {
         const board = await ctx.prisma.board.findFirstOrThrow({
-          include: {
-            users: true,
-          },
+
           where: {
             AND: [
               {

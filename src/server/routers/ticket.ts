@@ -47,6 +47,31 @@ export const ticketRouter = createAuthRouter()
       return tickets;
     },
   })
+  .mutation('user.remove', {
+    input: z.object({
+      id: z.number(),
+      userId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const tickets = await ctx.prisma.ticket.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          Members: {
+            disconnect: {
+              id: input.userId,
+            },
+          },
+        },
+        include: {
+          Members: true,
+        },
+      });
+
+      return tickets;
+    },
+  })
   .mutation('delete', {
     input: z.object({
       id: z.number(),
@@ -61,7 +86,10 @@ export const ticketRouter = createAuthRouter()
             id: input.id,
           },
         });
-      } else if (input.userRole === Role.USER || input.userRole === Role.CLIENT) {
+      } else if (
+        input.userRole === Role.USER ||
+        input.userRole === Role.CLIENT
+      ) {
         await ctx.prisma.ticket.update({
           where: {
             id: input.id,

@@ -21,6 +21,7 @@ import Layout from '@/components/layout';
 import {
   CreateGroupModal,
   CreateTicketModal,
+  ManageMembers,
   ShareCodeModal
 } from '@/components/Modals';
 import TicketCard from '@/components/ticket';
@@ -414,6 +415,7 @@ const Dashboard: NextPage = (props) =>
             open={createGroupOpen}
             onClose={() => setCreateGroup(false)}
           />
+          <ManageMembers BoardId={board.id} />
           <CreateTicketModal
             boardId={board.id}
             groupId={clickedGroup}

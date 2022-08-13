@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 import { createAuthRouter } from '../createAuthRouter';
 
@@ -37,6 +36,22 @@ export const userRouter = createAuthRouter()
       return user;
     },
   })
+  // .query('get-all', {
+  //   input: z.object({
+  //     userIds: z.array(z.string()),
+  //     boardId: z.string(),
+  //   }),
+  //   async resolve({ ctx, input }) {
+  //     const user = await ctx.prisma.boardsOnUsers.findMany({
+  //       where: [{
+          
+  //       }, {
+
+  //       }]
+  //     });
+  //     return user;
+  //   },
+  // })
   .query('getRole', {
     input: z.object({
       boardId: z.string(),

@@ -60,13 +60,14 @@ interface IDrawer {
 }
 
 const Drawer = () => {
-  const { showDrawer, role, ticket, closeDrawer, setTicket } = useDrawerStore(
+  const { showDrawer, role, ticket, closeDrawer, setTicket, toggleManageMembers } = useDrawerStore(
     (state) => ({
       showDrawer: state.showDrawer,
       ticket: state.ticket,
       role: state.userRole,
       setTicket: state.setTicket,
       closeDrawer: state.closeDrawer,
+      toggleManageMembers: state.toggleManageMembers
     }),
     shallow
   );
@@ -469,10 +470,9 @@ const Drawer = () => {
                           variant={'ghost'}
                           disabled={isLoading}
                           onClick={() => {
-                            mutateTicket({
-                              id: ticket.id,
-                              member: 'cl6p41g0g4501p8taxehpnwmj',
-                            });
+                            console.log('add member');
+                            toggleManageMembers();
+      
                           }}
                           style={{ width: '100%' }}
                         >

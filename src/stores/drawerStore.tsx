@@ -6,10 +6,12 @@ type ticket = Ticket & {
 };
 
 interface DrawerState {
+  showManageMembers: boolean;
   showDrawer: boolean;
   ticket: ticket | null;
   userRole: Role;
   openDrawer: (ticket: ticket, role: Role) => void;
+  toggleManageMembers: () => void;
   setTicket: (ticket: ticket) => void;
   closeDrawer: () => void;
 }
@@ -18,6 +20,9 @@ const useDrawerStore = create<DrawerState>()((set) => ({
   showDrawer: false,
   ticket: null,
   userRole: Role.CLIENT,
+  showManageMembers: false,
+  toggleManageMembers: () =>
+    set((state) => ({ showManageMembers: !state.showManageMembers })),
   setTicket: (ticket: ticket) => set((state) => ({ ...state, ticket: ticket })),
   closeDrawer: () =>
     set((state) => ({
